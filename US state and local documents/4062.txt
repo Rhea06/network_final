@@ -1,0 +1,206 @@
+The people of the State of California do enact as follows:
+
+SECTION 1. Chapter 25 (commencing with Section 22756) is added to Division 8 of the Business and Professions Code, to read:
+	
+CHAPTER  25. Automated Decision Systems
+
+22756. As used in this chapter:
+	
+(a) “Algorithmic discrimination” means the condition in which an automated decision system contributes to unlawful discrimination, including differential treatment or impacts disfavoring people based on their actual or perceived race, color, ethnicity, sex, religion, age, national origin, limited English proficiency, disability, veteran status, genetic information, reproductive health, or any other classification protected by state or federal law.
+
+(b) “Artificial intelligence” means an engineered or machine-based system that varies in its level of autonomy and that can, for explicit or implicit objectives, infer from the input it receives how to generate outputs that can influence physical or virtual environments.
+
+(c) (1) “Automated decision system” means, consistent with Section 11546.45.5 of the Government Code, a computational process derived from machine learning, statistical modeling, data analytics, or artificial intelligence that issues simplified output, including a score, classification, or recommendation, that is used to assist or replace human discretionary decisionmaking and that is used to make, or be a substantial factor in making, a consequential decision.
+(2) “Automated decision system” does not mean a spam email filter, firewall, antivirus software, identity and access management tool, calculator, database, dataset, or other compilation of data.
+
+(d) “Consequential decision” means a decision or judgment that has a legal, material, or similarly significant effect on an individual’s life relating to access to government benefits or services, assignments of penalties by government, or the impact of, access to, or the cost, terms, or availability of, employment with respect to all of the following:
+(1) Pay or promotion.
+(2) Hiring or termination.
+(3) Automated task allocation that limits, segregates, or classifies employees for the purpose of assigning or determining material terms or conditions of employment.
+
+(e) “Deployer” means a person, partnership, developer, corporation, or any contractor or agent of those entities, that uses an automated decision system to make a consequential decision.
+
+(f) “Developer” means a person, partnership, or corporation that designs, codes, or produces an automated decision system, or substantially modifies an artificial intelligence system or service for the intended purpose of making, or being a substantial factor in making, consequential decisions, whether for its own use or for use by a third party.
+
+(g) “Impact assessment” means a documented risk-based evaluation of an automated decision system that meets the criteria of Section 22756.1.
+
+(h) “Sex” includes pregnancy, childbirth, and related conditions, gender identity, intersex status, and sexual orientation.
+
+(i) “Substantial factor” means an element of a decisionmaking process that is capable of altering the outcome of the process.
+
+(j) “Substantial modification” means a new version, new release, or other update to an automated decision system that materially changes its uses, intended uses, or outcomes.
+
+(k) “Unlawful discrimination” means any act that violates Section 51 of the Civil Code, any act that constitutes an unlawful practice or unlawful employment practice under Part 2.8 (commencing with Section 12900) of Division 3 of Title 2 of the Government Code, or any other practice or act that otherwise violates a state or federal law against discrimination.
+
+22756.1. (a) (1) Subject to paragraph (2), a deployer shall perform an impact assessment on any automated decision system before the system is first deployed and annually thereafter.
+(2) (A) With respect to an automated decision system that a deployer first used prior to January 1, 2025, the deployer shall perform an impact assessment on that automated decision system before January 1, 2026, and annually thereafter.
+(B) This subdivision does not require a deployer to perform an impact assessment on an automated decision tool system before using it if all of the following are true:
+(i) The deployer uses the automated decision system only for its intended use as determined by the developer of the automated decision system.
+(ii) The deployer does not make any substantial modifications to the automated decision system.
+(iii) The developer of the automated decision system has performed any impact assessment on the automated decision system required by subdivision (c).
+(iv) The developer of the automated decision system has provided documentation to the deployer pursuant to Section 22756.3.
+
+(b) A deployer shall ensure that an impact assessment prepared pursuant to subdivision (a) includes all of the following:
+(1) A statement of the purpose of the automated decision system and its intended benefits, uses, and deployment contexts.
+
+(2) A description of all of the following:
+(A) The personal characteristics or attributes that the automated decision system will measure or assess.
+(B) The method by which the automated decision system measures or assesses those attributes or characteristics.
+(C) How those attributes or characteristics are relevant to the consequential decisions for which the automated decision system will be used.
+(D) The automated decision system’s outputs.
+(E) How outputs are used to make, or be a substantial factor in making, a consequential decision.
+
+(3) A summary of the categories of information collected from natural persons and processed by the automated decision system when it is used to make, or be a substantial factor in making, a consequential decision, including, but not limited to, all of the following:
+(A) Each category of personal information identified by reference to the applicable subparagraph enumerated under paragraph (1) of subdivision (v) of Section 1798.140 of the Civil Code.
+(B) Each category of sensitive personal information identified by reference to the applicable paragraph and subparagraph enumerated under subdivision (ae) of Section 1798.140 of the Civil Code.
+(C) Each category of information related to a natural person’s receipt of sensitive services, as defined in Section 56.05 of the Civil Code, identified by reference to the specific category of sensitive service enumerated in the definition.
+
+(4) A statement of the extent to which the deployer’s use of the automated decision system is consistent with or varies from the statement required of the developer by Section 22756.3.
+
+(5) An analysis of the risk of algorithmic discrimination, including adverse impacts on the basis of sex, race, color, ethnicity, religion, age, national origin, limited English proficiency, disability, veteran status, genetic information, or any other classification protected by state or federal law, resulting from the deployer’s use of the automated decision system.
+
+(6) A description of the safeguards implemented, or that will be implemented, by the deployer to address any reasonably foreseeable risks of algorithmic discrimination arising from the use of the automated decision system. The description shall address all of the following:
+(A) Whether the automated decision system could be modified to mitigate the risk of algorithmic discrimination.
+(B) Whether effective accommodations can be provided for any limitations on accessibility.
+(C) Whether less discriminatory procedures or methods could be employed to mitigate the risk of algorithmic discrimination.
+(7) A description of how the automated decision system will be used by a natural person, or be monitored when it is used autonomously, to make, or be a substantial factor in making, a consequential decision.
+(8) A description of how the automated decision system has been or will be evaluated for validity, reliability, and relevance.
+
+(c) (1) Subject to paragraph (2), a developer, before making an automated decision system that it designs, codes, or produces available to potential deployers, shall perform an impact assessment on the automated decision system and annually thereafter.
+(2) With respect to an automated decision system that a developer first made available to potential deployers before January 1, 2025, the developer shall perform an impact assessment on the automated decision system before January 1, 2026, and annually thereafter.
+
+(d) A developer shall ensure that an impact assessment prepared pursuant to subdivision (c) includes all of the following:
+(1) A statement of the purpose of the automated decision system and its intended benefits, uses, and deployment contexts.
+
+(2) A description of the automated decision system’s outputs and how they are used to make, or be a substantial factor in making, a consequential decision.
+
+(3) A summary of the categories of information collected from natural persons and processed by the automated decision system when it is used to make, or be a substantial factor in making, a consequential decision, including, but not limited to, all of the following:
+(A) Each category of personal information identified by reference to the applicable subparagraph enumerated under paragraph (1) of subdivision (v) of Section 1798.140 of the Civil Code.
+(B) Each category of sensitive personal information identified by reference to the applicable paragraph and subparagraph enumerated under subdivision (ae) of Section 1798.140 of the Civil Code.
+(C) Each category of information related to a natural person’s receipt of sensitive services, as defined in Section 56.05 of the Civil Code, identified by reference to the specific category of sensitive service enumerated in the definition.
+
+(4) An analysis of the risk of algorithmic discrimination, including adverse impacts on the basis of sex, race, color, ethnicity, religion, age, national origin, limited English proficiency, disability, veteran status, genetic information, or any other classification protected by state or federal law, resulting from the deployer’s use of the automated decision system.
+
+(5) A description of the measures taken by the developer to mitigate the risk of algorithmic discrimination arising from the use of the automated decision system.
+
+(6) A description of how the automated decision system can be used by a natural person, or be monitored when it is used autonomously, to make, or be a substantial factor in making, a consequential decision.
+
+(7) A description of how the automated decision system has been evaluated for validity, reliability, and relevance.
+
+(e) A deployer or developer shall perform, as soon as feasible, an impact assessment with respect to any substantial modification to an automated decision  system.
+
+(f) This section does not apply to a deployer with fewer than 55 employees unless the deployer used an automated decision system that impacted more than 999 people during the previous calendar year.
+
+22756.2. (a) (1) Prior to an automated decision system making a consequential decision, or being a substantial factor in making a consequential decision, a deployer shall notify any natural person that is subject to the consequential decision that an automated decision system is being used.
+
+(2) A deployer shall provide to a natural person notified pursuant to this subdivision all of the following:
+(A) A statement of the purpose of the automated decision system.
+(B) Contact information for the deployer.
+(C) A plain language description of the automated decision system that includes all of the following:
+(i) The personal characteristics or attributes that the automated decision system will measure or assess.
+(ii) The method by which the automated decision system measures or assesses those attributes or characteristics.
+(iii) How those attributes or characteristics contribute to the consequential decision.
+(iv) The format and structure of the automated decision system’s outputs.
+(v) How those outputs are used to make, be a substantial factor in making, a consequential decision.
+(vi) A summary of the most recent impact assessment performed on the automated decision system.
+(D) Information sufficient to enable the natural person to request to be subject to an alternative selection process or accommodation, as applicable, in lieu of the automated decision system, as provided in subdivision (b).
+
+(b) (1) If a consequential decision is made solely based on the output of an automated decision system, a deployer shall, if technically feasible, accommodate a natural person’s request to not be subject to the automated decision system and to instead be subject to an alternative selection process or accommodation.
+
+(2) After a request pursuant to paragraph (1), a deployer may reasonably request, collect, and process information from a natural person for the purposes of identifying the person and the associated consequential decision. If the person does not provide that information, the deployer shall not be obligated to provide an alternative selection process or accommodation.
+
+(c) A deployer that has deployed an automated decision system, to make, or be a substantial factor in making, a consequential decision concerning a natural person, shall provide to the natural person all of the following:
+(1) A simple and actionable explanation that identifies the principal factors, characteristics, logic, and other information related to the individual that led to the consequential decision.
+(2) The role that the automated decision system played in the decisionmaking process.
+(3) The opportunity to correct any incorrect personal data that the automated decision system processed in making, or as a substantial factor in making, the consequential decision.
+
+(d) All notices and other communications described in this section shall be all of the following:
+(1) Transmitted directly to the subject of the consequential decision when possible, or else made available in a manner reasonably calculated to ensure that the subjects of consequential decisions receive actual notice.
+(2) Provided in English, in any non-English language spoken by at least 1 percent of the population of this state as of the most recent United States Census, and in any other language that the deployer regularly uses to communicate with the subjects of consequential decisions.
+(3) Written in clear and plain language.
+(4) Made available in formats that are accessible to people who are blind or have other disabilities.
+(5) Otherwise presented in a manner that ensures the communication clearly and effectively conveys the required information to subjects of the relevant consequential decisions.
+
+22756.3. (a) A developer shall provide a deployer with the results of any impact assessment performed on an automated decision system that the developer sells, licenses, or otherwise transfers to the deployer, along with documentation describing all of the following:
+(1) The intended uses of the automated decision system.
+(2) The known limitations of the automated decision  system, including any reasonably foreseeable risks of algorithmic discrimination arising from its intended use.
+(3) The type of data used to program or train the automated decision system.
+(4) How the automated decision system was evaluated for validity and explainability before sale or licensing.
+(5) The deployer’s responsibilities under this chapter.
+(6) Any technical information necessary for a deployer to fulfill their obligations under Section 22756.2.
+
+(b) This section does not require the disclosure of trade secrets, as defined in Section 3426.1 of the Civil Code. To the extent that a developer withholds information pursuant to this section, the developer shall notify the deployer and provide a basis for the withholding.
+
+22756.4. (a) (1) A deployer or developer shall establish, document, implement, and maintain a governance program that contains reasonable administrative and technical safeguards designed to map, measure, and manage the reasonably foreseeable risks of algorithmic discrimination associated with the use or intended use of an automated decision system.
+
+(2) The safeguards required by this subdivision shall be appropriate to all of the following:
+(A) The use or intended use of the automated decision system.
+(B) The deployer’s or developer’s role as a deployer or developer.
+(C) The size, complexity, and resources of the deployer or developer.
+(D) The nature, context, and scope of the activities of the deployer or developer in connection with the automated decision system.
+(E) The technical feasibility and cost of available systems, assessments, and other means used by a deployer or developer to map, measure, manage, and govern the risks associated with an automated decision system.
+
+(b) The governance program required by this section shall be designed to do all of the following:
+(1) (A) Designate at least one employee to be responsible for overseeing and maintaining the governance program and compliance with this chapter.
+(B) (i) An employee designated pursuant to this paragraph shall have the authority to assert to the employee’s employer a good faith belief that the design, production, or use of an automated decision system fails to comply with the requirements of this chapter.
+(ii) An employer of an employee designated pursuant to this paragraph shall conduct a prompt and complete assessment of any compliance issue raised by that employee.
+
+(2) Identify and implement safeguards to address reasonably foreseeable risks of algorithmic discrimination resulting from the use or intended use of an automated decision system.
+
+(3) If established by a deployer, provide for the performance of impact assessments as required by Section 22756.1.
+
+(4) If established by a developer, provide for compliance with Sections 22756.2 and 22756.3.
+
+(5) Conduct an annual and comprehensive review of policies, practices, and procedures to ensure compliance with this chapter.
+
+(6) Maintain for five years after completion the results of an impact assessment.
+
+(7) Evaluate and make reasonable adjustments to administrative and technical safeguards in light of material changes in technology, the risks associated with the automated decision system, the state of technical standards, and changes in business arrangements or operations of the deployer or developer.
+
+(c) This section does not apply to a deployer with fewer than 55 employees unless the deployer used an automated decision system that impacted more than 999 people during the previous calendar year.
+
+22756.5. A deployer and developer shall make publicly available, in a readily accessible manner, a clear policy that provides a summary of both of the following:
+	
+(a) The types of automated decision systems currently in use or made available to others by the deployer or developer.
+
+(b) How the deployer or developer manages the reasonably foreseeable risks of algorithmic discrimination that may arise from the use of the automated decision systems it currently uses or makes available to others.
+
+22756.6. (a) If an impact assessment performed by a deployer pursuant to Section 22756.1 identifies a reasonable risk of algorithmic discrimination, the deployer shall not use the automated decision system until the risk has been mitigated.
+
+(b) If an impact assessment performed by a developer pursuant to Section 22756.1 identifies a reasonable risk of algorithmic discrimination under deployment conditions reasonably likely to occur in this state, the developer shall not make the automated decision system available to potential deployers until the risk has been mitigated.
+
+22756.7. (a) The Civil Rights Department may investigate a possible violation of this chapter and may request an impact assessment performed pursuant to this chapter in order to carry out the investigation.
+
+(b) (1) Within 30 days of receiving a request from the Civil Rights Department, a deployer or a developer shall provide any impact assessment that it performed pursuant to this chapter to the Civil Rights Department.
+(2) The disclosure of an impact assessment pursuant to this subdivision does not constitute a waiver of any attorney-client privilege or work-product protection that might otherwise exist with respect to the impact assessment and any information contained in the impact assessment.
+(3) An impact assessment disclosed to the Civil Rights Department pursuant to this chapter shall be exempt from the California Public Records Act (Division 10 (commencing with Section 7920.000) of Title 1 of the Government Code).
+
+22756.9. (a) The Civil Rights Department may bring a civil action against a deployer or developer for a violation of this chapter.
+
+(b) A court may award in an action brought pursuant to this section all of the following:
+(1) Injunctive relief.
+(2) Declaratory relief.
+(3) Reasonable attorney’s fees and litigation costs.
+(4) Only in an action for a violation involving algorithmic discrimination, a civil penalty of twenty-five thousand dollars ($25,000) per violation.
+
+(c) (1) The Civil Rights Department, before commencing an action pursuant to this section for injunctive relief, shall provide 45 days’ written notice to a deployer or developer of the alleged violations of this chapter.
+(2) (A) The developer or deployer may cure, within 45 days of receiving the written notice described in paragraph (1), the noticed violation and provide the person who gave the notice an express written statement, made under penalty of perjury, that the violation has been cured.
+(B) If the developer or deployer cures the noticed violation and provides the express written statement pursuant to subparagraph (A), a claim for injunctive relief shall not be maintained for the noticed violation.
+
+22756.10. It shall be unlawful for a deployer or developer to retaliate against a natural person for that person’s exercise of rights provided for under this chapter.
+
+22756.11. This chapter does not apply to cybersecurity-related technology, including technology designed to detect, protect against, or respond to security incidents, identity theft, fraud, harassment, malicious or deceptive activities or any illegal activity, preserve the integrity or security of systems, or investigate, report, or prosecute those responsible for those actions.
+
+22756.12. (a) The rights, remedies, and penalties established by this chapter are cumulative and shall not be construed to supersede the rights, remedies, or penalties established under other laws, including, but not limited to, Chapter 6 (commencing with Section 12940) of Part 2.8 of Division 3 of Title 2 of the Government Code and Section 51 of the Civil Code.
+
+(b) This chapter does not diminish the rights, privileges, or remedies of an employee under any other federal or state law or under any employment contract or collective bargaining agreement.
+
+(c) This chapter does not authorize any use of automated decision systems that may be limited, restricted, or prohibited under any other applicable law.
+
+(d) (1) This chapter does not require the disclosure of trade secrets, as defined in Section 3426.1 of the Civil Code.
+(2) If a developer or deployer withholds information pursuant to this subdivision, the developer or deployer shall notify the relevant entity or natural person and provide a basis for the withholding.
+
+SEC. 2. The Legislature finds and declares that Section 1 of this act, which adds Chapter 25 (commencing with Section 22756) to Division 8 of the Business and Professions Code, imposes a limitation on the public’s right of access to the meetings of public bodies or the writings of public officials and agencies within the meaning of Section 3 of Article I of the California Constitution. Pursuant to that constitutional provision, the Legislature makes the following findings to demonstrate the interest protected by this limitation and the need for protecting that interest:
+In order to protect proprietary information, it is necessary that trade secrets disclosed in impact assessments to agencies and departments pursuant to Section 1 of this act remain confidential.
+
+SEC. 3. No reimbursement is required by this act pursuant to Section 6 of Article XIII B of the California Constitution because the only costs that may be incurred by a local agency or school district will be incurred because this act creates a new crime or infraction, eliminates a crime or infraction, or changes the penalty for a crime or infraction, within the meaning of Section 17556 of the Government Code, or changes the definition of a crime within the meaning of Section 6 of Article XIII B of the California Constitution.

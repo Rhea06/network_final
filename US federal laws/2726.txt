@@ -1,0 +1,259 @@
+
+TITLE V--AERONAUTICS
+
+SEC. 501. DEFINITIONS.
+
+    In this title:
+
+            (1) Advanced air mobility; aam.--The terms ``advanced air 
+        mobility'' and ``AAM'' mean a transportation system that is 
+        comprised of urban air mobility and regional air mobility using 
+        manned or unmanned aircraft.
+
+            (2) Regional air mobility.--The term ``regional air 
+        mobility'' means the movement of passengers or property by air 
+        between 2 points using an airworthy aircraft that--
+
+                    (A) has advanced technologies, such as distributed 
+                propulsion, vertical takeoff and landing, powered lift, 
+                nontraditional power systems, or autonomous 
+                technologies;
+
+                    (B) has a maximum takeoff weight of greater than 
+                1,320 pounds; and
+
+                    (C) is not urban air mobility.
+
+            (3) Unmanned aircraft system.--The term ``unmanned aircraft 
+        system'' has the meanings given such term in section 44801 of 
+        title 49, United States Code.
+
+            (4) Urban air mobility.--The term ``urban air mobility'' 
+        means the movement of passengers or property by air between 2 
+        points in different cities or 2 points within the same city 
+        using an airworthy aircraft that--
+
+                    (A) has advanced technologies, such as distributed 
+                propulsion, vertical takeoff and landing, powered lift, 
+                nontraditional power systems, or autonomous 
+                technologies; and
+
+                    (B) has a maximum takeoff weight of greater than 
+                1,320 pounds.
+
+SEC. 502. HYPERSONIC RESEARCH.
+
+    (a) Sense of Congress.--It is the sense of Congress that--
+
+            (1) basic and applied hypersonic research--
+
+                    (A) is critical for enabling the development of 
+                advanced high-speed aeronautical and space systems; and
+
+                    (B) can improve understanding of technical 
+                challenges related to high-speed and reusable vehicle 
+                technologies, including those related to propulsion, 
+                noise, advanced materials, and entry, descent, and 
+                landing operations;
+
+            (2) investments in hypersonic research are critical to 
+        sustaining United States global leadership in space and 
+        aeronautics; and
+
+            (3) NASA efforts to study hypersonic research--
+
+                    (A) should not duplicate, and may complement, 
+                research supported by the Department of Defense; and
+
+                    (B) should be conducted in partnership with 
+                universities and industry, as appropriate.
+
+    (b) Hypersonic Research.--The Administrator, in coordination with 
+the Administrator of the Federal Aviation Administration and the 
+Secretary of Defense, as appropriate, and in consultation with industry 
+and academia, shall continue to carry out basic and applied hypersonic 
+research.
+
+    (c) Hypersonic Research Roadmap.--
+
+            (1) In general.--Not later than 180 days after the date of 
+        the enactment of this Act, the Administrator, in consultation 
+        with the Administrator of the Federal Aviation Administration, 
+        the Secretary of Defense, industry, and academic institutions, 
+        shall update the hypersonic research roadmap required under 
+        section 603 of the National Aeronautics and Space 
+        Administration Transition Authorization Act of 2017 (Public Law 
+        115-10; 131 Stat. 55).
+
+            (2) Considerations.--In updating the research roadmap, the 
+        Administrator may consider--
+
+                    (A) advancements in--
+
+                            (i) system level design, analysis, and 
+                        validation of hypersonic aircraft technologies;
+
+                            (ii) propulsion capabilities and 
+                        technologies;
+
+                            (iii) vehicle technologies, including 
+                        vehicle flow physics and vehicle thermal 
+                        management associated with aerodynamic heating;
+
+                            (iv)(I) advanced materials, including 
+                        materials capable of withstanding high 
+                        temperatures;
+
+                            (II) demonstrating durable materials; and
+
+                            (III) efforts to apply such materials; and
+
+                            (v) other areas of hypersonic research as 
+                        determined appropriate by the Administrator; 
+                        and
+
+                    (B) data trends regarding sonic boom overpressures 
+                associated with hypersonic aircraft.
+
+    (d) Report and Briefing.--Not later than 1 year after the date of 
+the enactment of this Act, the Administrator shall--
+
+            (1) submit to the appropriate committees of Congress the 
+        updated research roadmap under subsection (c); and
+
+            (2) provide the appropriate committees of Congress with a 
+        briefing on the research conducted under subsection (b), 
+        including with respect to the manner in which such research 
+        aligns with such updated research roadmap.
+
+SEC. 503. ADVANCED MATERIALS AND MANUFACTURING TECHNOLOGY.
+
+    (a) Report.--Not later than 180 days after the date of the 
+enactment of this Act, the Administrator shall submit to the 
+appropriate committees of Congress a report on the status of NASA 
+activities relating to subsections (e) and (f) of section 10831 of the 
+National Aeronautics and Space Administration Authorization Act of 2022 
+(Public Law 117-167; 51 U.S.C. 40102 note).
+
+    (b) Update and Briefing.--Not later than 2 years after the date on 
+which the report required by subsection (a) is submitted, the 
+Administrator shall--
+
+            (1) submit to the appropriate committees of Congress an 
+        update to the findings contained in such report; and
+
+            (2) provide the appropriate committees of Congress with a 
+        briefing on such update.
+
+SEC. 504. UNMANNED AIRCRAFT SYSTEM AND ADVANCED AIR MOBILITY.
+
+    The Administrator shall continue research, as appropriate and 
+necessary, in collaboration with the Administrator of Federal Aviation 
+Administration, the heads of other relevant Federal agencies, and 
+appropriate representatives of academia and industry, on unmanned 
+aircraft systems and advanced air mobility.
+
+SEC. 505. ADVANCED CAPABILITIES FOR EMERGENCY RESPONSE OPERATIONS.
+
+    (a) In General.--The Administrator may continue to conduct research 
+and development activities under the Advanced Capabilities for 
+Emergency Response Operations (ACERO) project, or appropriate successor 
+project or projects, to improve aerial responses to wildfires.
+    (b) Briefing.--
+
+            (1) In general.--Not later than 180 days after the date of 
+        the enactment of this Act, the Administrator shall provide the 
+        appropriate committees of Congress with a briefing on ongoing 
+        research and development activities related to improving aerial 
+        responses to wildfires.
+
+            (2) Elements.--The briefing required by paragraph (1) shall 
+        include the following:
+
+                    (A) An identification of any topic related to 
+                improvement of aerial responses to wildfires that could 
+                benefit from further research.
+
+                    (B) A description of collaboration with other 
+                relevant Federal agencies.
+
+                    (C) A description of any continuing efforts under 
+                this section.
+
+                    (D) Any other information the Administrator 
+                considers appropriate.
+
+SEC. 506. HYDROGEN AVIATION.
+
+    (a) In General.--Subject to the availability of appropriations for 
+such purpose, the Administrator may carry out research on emerging 
+technologies related to hydrogen aviation.
+
+    (b) Report.--Not later than 180 days after the date of the 
+enactment of this Act, the Administrator shall provide the appropriate 
+committees of Congress with a briefing on the ongoing research under 
+subsection (a) that includes--
+
+            (1) an identification of any agency with which NASA has 
+        partnered on such research; and
+
+            (2) a description of anticipated further actions and 
+        activities related to the topic of hydrogen aviation.
+
+SEC. 507. HIGH-PERFORMANCE CHASE AIRCRAFT.
+
+    (a) Sense of Congress.--It is the sense of Congress that--
+
+            (1) NASA programs benefit from and rely upon high-
+        performance chase aircraft for providing research and mission 
+        support; and
+
+            (2) NASA currently faces maintenance challenges related to 
+        its aging high-performance aircraft fleet, which is resulting 
+        in increased program costs.
+
+    (b) Briefing.--Not later than 60 days after the date of the 
+enactment of this Act, and biannually thereafter, the Administrator 
+shall provide the appropriate committees of Congress with a briefing on 
+the strategy of NASA relating to the following:
+
+            (1) Collaboration with the Department of Defense on efforts 
+        for research and flight asset sharing to support NASA's 
+
+        research mission support and pilot training requirements.
+            (2) Efforts to seek aircraft parts and engines to keep 
+        NASA's current fleet of chase aircraft operational, including 
+        potential use of 3D additive manufactured parts.
+
+            (3) Strategies for acquiring or using through loan, 
+        sharing, or other agreements, as appropriate, Department of 
+        Defense aircraft to support NASA's research and mission support 
+        activities, as required.
+
+SEC. 508. COLLABORATION WITH ACADEMIA.
+
+    It is the sense of Congress that--
+
+            (1) colleges and universities are hubs of research and 
+        innovation, with expertise in various fields of science and 
+        aeronautics;
+
+            (2) collaborating with academia allows NASA to access 
+        cutting-edge research and expertise that can further enable 
+        advancements in aeronautics research and technology and address 
+        complex aeronautical challenges;
+
+            (3) a cutting-edge civil aeronautics research and 
+        development program can inspire the next generation to pursue 
+        education and careers in science, technology, engineering, and 
+        mathematics, including aeronautics; and
+
+            (4) opportunities for students to participate in NASA-
+        supported academic research and development projects, such as 
+        the University Leadership Initiative, the University Students 
+        Research Challenge, the National Space Grant College and 
+        Fellowship Project, and related aeronautic projects and 
+        competitions, contributes to training the next generation and 
+        developing the aeronautics workforce to support continued 
+        United States leadership and economic growth in civil 
+        aeronautics and aviation.

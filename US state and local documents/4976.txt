@@ -1,0 +1,38 @@
+The people of the State of California do enact as follows:
+
+SECTION 1. The Legislature finds and declares all of the following:
+(a) In response to the rapid advancement of generative artificial intelligence (GenAI) and its growing integration across public and private sectors, the Governor issued Executive Order No. N-12-23, which established a comprehensive policy framework to responsibly explore and govern the deployment of GenAI systems within the state.
+(b) The Governor convened the Joint California Policy Working Group on AI Frontier Models to evaluate the potential risks and governance needs associated with the deployment of powerful artificial intelligence models.
+(c) The Governor’s executive order also emphasized the urgent need for workforce development and training to ensure that public sector employees have the technical expertise and practical tools necessary to oversee and manage artificial intelligence systems safely and effectively.
+
+SEC. 2. Article 6.6 (commencing with Section 8954.50) is added to Chapter 7 of Division 1 of Title 2 of the Government Code, to read:
+Article  6.6. Artificial Intelligence and Critical Infrastructure
+
+8954.50. For purposes of this section, the following definitions apply:
+(a) “Artificial intelligence” (“AI”) means an engineered or machine-based system that varies in its level of autonomy and that can, for explicit or implicit objectives, infer from the input it receives how to generate outputs that can influence physical or virtual environments.
+(b) “Automated decision system” means a computational process derived from machine learning, statistical modeling, data analytics, or artificial intelligence that issues simplified output, including a score, classification, or recommendation, that is used to assist or replace human discretionary decisionmaking and materially impacts natural persons. “Automated decision system” does not include a spam email filter, firewall, antivirus software, identity and access management tools, or a calculator.
+(c) “Covered AI system” means an AI system or automated decision system that an operator uses to operate, manage, oversee, or control access to critical infrastructure.
+(d) “Critical infrastructure” means systems or assets so vital to the state that the incapacity or destruction of those networks, systems, or assets would have a debilitating impact on public health, safety, economic security, or any combination thereof, but not unintended use, including, but not limited to, the following sectors: chemical, commercial facilities, communications, critical manufacturing, dams, defense industrial base, emergency services, energy, financial services, food and agriculture, government facilities, health care and public health, information technology, nuclear reactors, materials, and waste, transportation systems, and water and wastewater systems.
+(e) “Department” means the Department of Technology.
+(f) “Office” means the Office of Emergency Services.
+(g) “Operator” means a state agency responsible for operating, managing, overseeing, or controlling access to critical infrastructure.
+(h) “State agency” has the same meaning set forth in Section 11000.
+
+8954.51. (a) On or before July 1, 2026, an oversight personnel for an operator that deploys a covered AI system shall establish a human oversight mechanism that ensures a human does both of the following:
+(1) Monitors the artificial intelligence system’s operations in real time.
+(2) (A) Except as provided in subparagraph (B), reviews and approves any plan or action proposed by an artificial intelligence system before execution.
+(B) If oversight personnel determine that prior review and approval under subparagraph (A) is substantially disruptive to the operation of the covered AI system, the operator shall instead implement a process for periodically reviewing the actions of the covered AI system to ensure accuracy and reliability.
+
+(b) (1) The department shall develop specialized training in AI safety protocols and risk management techniques to be given annually to oversight personnel.
+(2) An operator shall designate at least one employee to serve as oversight personnel who is responsible for administering the human oversight mechanism. The oversight personnel shall complete the annual training under paragraph (1).
+
+(c) (1) Oversight personnel for an operator that deploys a covered AI system shall conduct an annual assessment of its covered AI systems that does all of the following:
+(A) Evaluates the operator’s compliance with this section.
+(B) Evaluates covered AI system performance and safety.
+(C) Identifies and evaluates potential risks and vulnerabilities associated with the operation of the covered AI system, including those that could lead to mass casualty events or property damage in excess of five hundred thousand dollars ($500,000).
+(D) Identifies any necessary updates to the human oversight mechanism used by the operator.
+(2) Oversight personnel for an operator that deploys a covered AI system shall submit a summary of the assessment findings to the department.
+8954.52 The office shall not disclose any record or information within a record of the office related to this article that is privileged, protected by copyright, or otherwise prohibited by law from being disclosed that is exempt from disclosure to the public under express provisions of the California Public Records Act (Division 10 (commencing with Section 7920.000) of Title 1) or in which, based on the facts of the particular case, the public interest served by not disclosing the record clearly outweighs the public interest served by disclosure of the record.
+
+SEC. 3. The Legislature finds and declares that Section 3 2 of this act, which adds Section 8954.52 to the Government Code, imposes a limitation on the public’s right of access to the meetings of public bodies or the writings of public officials and agencies within the meaning of Section 3 of Article I of the California Constitution. Pursuant to that constitutional provision, the Legislature makes the following findings to demonstrate the interest protected by this limitation and the need for protecting that interest:
+To protect the sensitive information related to operating, managing, overseeing, or controlling access to critical infrastructure, it is necessary to limit the public’s right of access to these records.

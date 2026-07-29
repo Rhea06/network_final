@@ -1,0 +1,100 @@
+Be It Enacted by the Legislature of the State of Idaho:
+
+SECTION 1. That Title 48, Idaho Code, be, and the same is hereby amended by the addition thereto of a NEW CHAPTER, to be known and designated as Chapter 21, Title 48, Idaho Code, and to read as follows:
+
+CHAPTER 21
+CONVERSATIONAL AI SAFETY ACT
+
+48-2101. SHORT TITLE.
+
+This chapter shall be known and may be cited as the "Conversational AI Safety Act."
+
+48-2102. DEFINITIONS.
+
+As used in this chapter:
+
+(1) "Account holder" means an individual who has or opens an account or profile to use a conversational AI service.
+
+(2)(a) "Conversational AI service" means an artificial intelligence software application, web interface, or computer program that is accessible to the general public and that primarily simulates human conversation and interaction through textual, visual, or aural communications.
+
+	(b) "Conversational AI service" does not include a software application, web interface, or computer program that is any of the following:
+
+		(i) Primarily designed and marketed for use by developers or researchers;
+	
+		(ii) A feature within another software application, web interface, or computer program that is not a conversational AI service;
+	
+		(iii) Designed to provide outputs relating to a narrow and discrete topic;
+	
+		(iv) Primarily designed and marketed for commercial use by business entities, including those whose primary intended users are employees, contractors, or clients of business entities, whether delivered via cloud, on premises, or hybrid deployments;
+	
+		(v) Designed to function as a speaker and voice command interface or voice-activated virtual assistant for a consumer electronic device;
+	
+		(vi) Used by a business solely for internal purposes; or
+	
+		(vii) Accessible only to individuals who have entered into a commercial agreement, enterprise contract, or similar business arrangement with the operator.
+
+(3) "Individual" means a natural person.
+
+(4) "Minor" means an individual under circumstances where an operator has actual knowledge or reasonable certainty that the individual is under eighteen (18) years of age.
+
+(5) "Minor account holder" means an account holder who is a minor.
+
+(6) "Operator" means a person who develops and makes available a conversational AI service to the public. Operator does not include mobile application stores or search engines solely because they provide access to a conversational AI service.
+
+(7) "Person" means a natural person or legal entity.
+
+(8) "Sexually explicit conduct" and "visual depiction" have the same meanings as provided in 18 U.S.C. 2256.
+
+48-2103. OPERATOR REQUIREMENTS.
+
+(1) If reasonable persons would be misled to believe that they are interacting with a human, an operator shall clearly and conspicuously disclose that the conversational AI service is artificial intelligence.
+
+(2) An operator shall adopt a protocol for the conversational AI service to respond to user prompts regarding suicidal ideation that includes but is not limited to making reasonable efforts to provide a response to users that refers them to crisis service providers such as a suicide hotline, crisis text line, or other appropriate crisis services.
+
+(3) An operator shall not knowingly and intentionally cause or program a conversational AI service to make any representation or statement that explicitly indicates that the conversational AI service is designed to provide professional mental or behavioral health care.
+
+48-2104. OPERATOR REQUIREMENTS -- MINORS.
+
+(1) An operator shall clearly and conspicuously disclose to minor account holders that they are interacting with artificial intelligence:
+
+	(a) As a persistent visible disclaimer; or
+	
+	(b) Both:
+	
+		(i) At the beginning of each session; and
+	
+		(ii) Appearing at least every three (3) hours in a continuous conversational AI service interaction.
+
+(2) Where an operator knows or has reasonable certainty that an account holder is a minor, the operator shall not provide the user with points or similar rewards at unpredictable intervals with the intent to encourage increased engagement with the conversational AI service.
+
+(3) For minor account holders, an operator shall institute reasonable measures to prevent the conversational AI service from:
+
+	(a) Producing visual material of sexually explicit conduct;
+	
+	(b) Generating direct statements that the account holder should engage in sexually explicit conduct; or
+	
+	(c) Generating statements that sexually objectify the account holder.
+
+(4) For minor account holders, an operator shall institute reasonable measures to prevent a conversational AI service from generating statements that would lead reasonable persons to believe that they are interacting with a human, including:
+
+	(a) Explicit claims that the conversational AI service is sentient or human;
+	
+	(b) Statements that simulate emotional dependence;
+	
+	(c) Statements that simulate romantic or sexual innuendos; or
+	
+	(d) Role-playing of adult-minor romantic relationships.
+
+(5) An operator shall offer tools for minor account holders and, where such account holders are under thirteen (13) years of age, their parents or guardians, to manage the account holder's privacy and account settings. An operator shall also offer related tools to the parents or guardians of minor account holders thirteen (13) years of age and older, as appropriate based on relevant risks.
+
+48-2105. PENALTIES AND ENFORCEMENT.
+
+(1) An operator that violates the provisions of this chapter shall be subject to an injunction and liable for civil penalties of one thousand dollars ($1,000) per violation, not to exceed five hundred thousand dollars ($500,000) per operator, or actual damages, whichever is greater.
+
+(2) Civil penalties for violations of the provisions of this chapter are to be sought by the attorney general. Nothing in this chapter shall be construed as creating a private right of action to enforce the provisions of this chapter or to support a private right of action under any other law.
+
+(3) This chapter shall not create liability for the developer of an AI model for any violation of this chapter by an AI system developed by a third party to provide a conversational AI service.
+
+SECTION 2.
+
+This act shall be in full force and effect on and after July 1, 2027.

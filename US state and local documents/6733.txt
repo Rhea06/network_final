@@ -1,0 +1,19 @@
+BE IT ENACTED BY THE LEGISLATURE OF THE STATE OF MINNESOTA:
+
+Section 1. [325M.40] MINOR ACCESS TO CHATBOTS.
+
+Subdivision 1. Definitions. (a) For the purposes of this section, the following terms have the meanings given.
+
+	(b) "Chatbot" means a computer program designed to simulate conversation with human users, especially over the internet.
+	
+	(c) "Minor" means an individual under the age of 18.
+
+Subd. 2. Prohibition. It is unlawful for a person who owns or controls a website,
+application, software, or program to allow a minor to access chatbots for recreational purposes.
+
+Subd. 3. Proof of age. A person who offers chatbot services for recreational purposes
+must require an individual to provide proof of the individual's age before allowing the individual to access a chatbot.
+
+Subd. 4. Remedies; enforcement. (a) An individual injured by a violation of this section may bring a civil action for damages, statutory damages not to exceed $1,000, injunctive relief, and costs and reasonable attorney fees.
+
+	(b) The attorney general may enforce this section under section 8.31. In an action brought under this paragraph, the person who owns or controls a website, application, software, or program and violates this section is liable for a civil penalty not to exceed $5,000,000.

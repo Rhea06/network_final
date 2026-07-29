@@ -1,0 +1,65 @@
+The people of the State of California do enact as follows:
+
+SECTION 1. The Legislature finds and declares all of the following:
+
+(a) The deployment of autonomous vehicles (AVs) for commercial purposes poses potential risks to road safety, especially given the technology's reliance on complex algorithms that can be prone to unforeseen errors and failures.
+
+(b) The widespread use of AVs in the delivery industry threatens the livelihoods of thousands of Californians employed as drivers and delivery personnel whose work provides stable, well-paying jobs that support families and communities.
+
+(c) While technological innovation is valuable, it must be balanced against the potential displacement of workers and the economic impact on local economies. Preserving good jobs and ensuring robust workforce participation is essential to California's long-term economic health.
+
+(d) The state must prioritize the development and enforcement of regulations that protect public safety, promote job security, and maintain oversight over emerging technologies.
+
+SEC. 2. Section 38760 is added to the Vehicle Code, to read:
+
+38760. For purposes of Sections 38761 and 38762, the following definitions shall apply:
+
+(a) "Autonomous vehicle" has the same meaning as that term is defined in paragraph (2) of subdivision (a) of Section 38750.
+
+(b) "Commercial goods" means any goods, wares, merchandise, or other tangible items requiring transportation for a fee or a commercial purpose. Commercial goods include any items for which a motor carrier permit is required pursuant to Division 14.85 (commencing with Section 34600).
+
+(c) (1) "Human safety operator" means a person operating an autonomous vehicle or vehicle equipped with autonomous technology who is trained in operating and shutting off the vehicle. A human safety operator shall meet all federal and state qualifications for the type of vehicle being operated, whether in automated or nonautomated mode.
+
+	(2) The definition of "operator," as that term is defined in paragraph (4) of subdivision (a) of Section 38750, is separate and distinct and does not apply to Section 38761.
+
+(d) "Motor carrier permit" means the authorization issued by the department that allows motor carriers to transport property for compensation pursuant to Chapter 2 (commencing with Section 34620) of Division 14.85.
+
+SEC. 3. Section 38761 is added to the Vehicle Code, to read:
+
+38761. (a) Notwithstanding any other law, the delivery of commercial goods directly to a residence or to a business for its use or retail sale through the operation of an autonomous vehicle without a human safety operator is prohibited on a highway within the State of California.
+
+(b) (1) The department shall impose an administrative fine of ten thousand dollars ($10,000) for a first violation of this section.
+
+	(2) The department shall impose an administrative fine of twenty-five thousand dollars ($25,000) for each subsequent violation of this section.
+
+	(3) Penalties assessed pursuant to this section shall be recoverable by the department and deposited into the Motor Vehicle Account in the State Transportation Fund for use by the department in administering this chapter.
+
+(c) The department may, subject to regulations adopted pursuant to subdivision (d) of Section 38750 and the notice and hearing requirements of Chapter 5 (commencing with Section 11500) of Part 1 of Division 3 of Title 2 of the Government Code, suspend or revoke the permit of an autonomous vehicle manufacturer for repeated violations of this section.
+
+SEC. 4. Section 38762 is added to the Vehicle Code, to read:
+
+38762. (a) (1) By January 1, 2031, or five years after commencement of testing, whichever occurs later, and upon appropriation by the Legislature, the department shall submit a report to the Legislature and the relevant policy and fiscal committees evaluating the performance of autonomous vehicle technology and its impact on public safety and employment in the transportation sector for autonomous vehicles utilized to deliver commercial goods.
+
+	(2) The report shall include both of the following:
+
+		(A) A summary of disengagements, crashes, and other information the department believes is relevant.
+
+		(B) A recommendation on whether the Legislature should remove, modify, or maintain the requirement for an autonomous vehicle utilized to deliver commercial goods to operate with a human safety operator physically present in the vehicle.
+
+	(3) While preparing the report, the department shall consult with all of the following:
+
+		(A) The Department of the California Highway Patrol regarding traffic impacts, driver and passenger safety risks, and impacts on other motorists, bicyclists, and pedestrians.
+
+		(B) The Labor and Workforce Development Agency regarding job-related impacts, including worker displacement and shortcomings in retraining opportunities.
+
+		(C) The Department of Transportation regarding infrastructure impacts, deficiencies, and needs.
+
+		(D) The State Air Resources Board regarding how autonomous vehicles utilized to deliver commercial goods impact the 2022 Scoping Plan for Achieving Carbon Neutrality.
+
+		(E) Independent experts regarding the performance of the technology, public safety impacts, and other relevant factors in considering deployment.
+
+(b) The Department of the California Highway Patrol, the Labor and Workforce Development Agency, the Department of Transportation, the State Air Resources Board, and all other relevant state agencies shall provide information, as specified by the department, that is needed to research the report required by this section.
+
+(c) It is the intent of the Legislature to, upon issuance of the report required in subdivision (a), conduct an oversight hearing to assess the state of autonomous vehicle technology for vehicles utilized to deliver commercial goods.
+
+(d) The department shall not issue a deployment permit for use of an autonomous vehicle utilized to deliver commercial goods without a human safety operator earlier than one year after the oversight hearing described in subdivision (c) and only if a later enacted statute authorizes the issuance of a permit for that purpose.

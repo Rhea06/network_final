@@ -1,0 +1,355 @@
+Be it enacted by the Legislature of the state of Utah:
+
+Section 1. Section 76-9-201 is amended to read:
+
+76-9-201. Electronic Communication Harassment -- Definitions -- Penalties.
+
+(1) As used in this section:
+
+   (a) (i) "Adult" means an individual 18 years old or older.
+
+      (ii) "Adult" does not include an individual who is 18 years old and enrolled in high school.
+
+   (b) "Electronic communication" means a communication by electronic, electro-mechanical, or electro-optical communication device for the transmission and reception of audio, image, or text but does not include broadcast transmissions or similar communications that are not targeted at a specific individual.
+
+   (c) "Electronic communication device" includes a telephone, a facsimile machine, electronic mail, a pager, a computer, or another device or medium that can be used to communicate electronically.
+
+   (d) (i) "Minor" means an individual who is younger than 18 years old.
+
+      (ii) "Minor" includes an individual who is 18 years old and enrolled in high school.
+
+   (e) "Minor victim" means a minor who is a victim of a violation of Subsection (4).
+
+   (f) "Personal identifying information" means the same as that term is defined in Section 76-6-1101.
+
+(2) Except to the extent the person's conduct constitutes an offense under Section 76-9-203, a person is guilty of electronic communication harassment and subject to prosecution in the jurisdiction where the communication originated or was received if with intent to intimidate, abuse, threaten, harass, frighten, or disrupt the electronic communications of another, the person:
+
+   (a) (i) makes repeated contact by means of electronic communications, regardless of whether a conversation ensues; or
+
+      (ii) after the recipient has requested or informed the person not to contact the recipient, and the person repeatedly or continuously:
+
+         (A) contacts the electronic communication device of the recipient; or
+
+         (B) causes an electronic communication device of the recipient to ring or to receive other notification of attempted contact by means of electronic communication;
+
+    (b) makes contact by means of electronic communication and insults, taunts, or challenges the recipient of the communication or any person at the receiving location in a manner likely to provoke a violent or disorderly response;
+
+   (c) makes contact by means of electronic communication and threatens to inflict injury, physical harm, or damage to any person or the property of any person; or
+
+   (d) causes disruption, jamming, or overload of an electronic communication system through excessive message traffic or other means utilizing an electronic communication device.
+
+(3) A person is guilty of electronic communication harassment if the person:
+
+   (a) electronically publishes, posts, or otherwise discloses personal identifying information of another individual in a public online site or forum with the intent to abuse, threaten, or disrupt the other individual's electronic communication and without the other individual's permission; or
+
+   (b) sends a communication by electronic mail, instant message, or other similar means, if:
+
+      (i) the communication references personal identifying information of another individual;
+
+      (ii) the person sends the communication:
+
+         (A) without the individual's consent; and
+
+         (B) with the intent to cause a recipient of the communication to reasonably believe that the individual authorized or sent the communication; and
+
+      (iii) with the intent to:
+
+         (A) cause an individual physical, emotional, or economic injury or damage; or
+
+         (B) defraud an individual.
+
+(4) A person is guilty of electronic communication harassment if:
+
+   (a) the person:
+
+      (i) is an adult;
+
+      (ii) electronically publishes, posts, or otherwise discloses in a public online site or forum personal identifying information of a minor who is unrelated by blood, marriage, or adoption to the person; and
+
+      (iii) knows of, but consciously disregards, a substantial and unjustifiable risk that performing the action described in Subsection (4)(a)(ii) will result in the minor being the victim of an offense described in Title 76, Chapter 5, Offenses Against the Individual; and
+
+   (b) the minor described in Subsection (4)(a)(ii) is aware of the person's action described in Subsection (4)(a)(ii).
+
+(5) (a) Except as provided in Subsection (5)(b), a violation of Subsection (2) or (3) is a class B misdemeanor.
+
+   (b) A second or subsequent violation of Subsection (2) or (3) is a class A misdemeanor.
+
+   (c) A violation of Subsection (4) is a class A misdemeanor.
+
+(6) (a) Except as provided under Subsection (6)(b), criminal prosecution under this section does not affect an individual's right to bring a civil action for damages suffered as a result of the commission of an offense under this section.
+
+   (b) This section does not create a civil cause of action based on electronic communications made for legitimate business purposes.
+
+(7) (a) A minor victim has a civil right of action against an actor who violates Subsection (4).
+
+   (b) A minor victim who brings a successful civil action under Subsection (7)(a) is entitled to recover from the actor:
+
+      (i) damages resulting from the violation of Subsection (4);
+
+      (ii) reasonable attorney fees; and
+
+      (iii) court costs.
+
+Section 2. Section 78B-3-1101 is enacted to read:
+
+Part 11. Harm to Minors by Algorithmically Curated Social Media Service
+
+78B-3-1101. Definitions.
+
+As used in this part:
+
+(1) "Account holder" means a person who has, creates, or opens an account or profile to use an algorithmically curated social media service.
+
+(2) (a) "Adverse mental health outcome" means a condition affecting a minor's mental health that is:
+
+      (i) diagnosable by a licensed mental health care provider; and
+
+      (ii) acknowledged by professional mental health experts as having a negative impact on a minor's well-being.
+
+   (b) "Adverse mental health outcome" includes depression, anxiety, suicidal thoughts or behaviors, and self-harm thoughts or behaviors.
+
+(3) "Algorithmically curated social media service" means a social media service that drives user engagement primarily through the use of:
+
+   (a) a curation algorithm; and
+
+   (b) engagement driven design elements.
+
+(4) "Content" means any information, visual depiction, or other material that appears on or is available or enabled through a social media service.
+
+(5) (a) "Curation algorithm" means a computational process or set of rules used by a social media platform that determines, influences, or personalizes, designed to encourage prolonged or frequent engagement:
+
+      (i) the content a user views;
+
+      (ii) the order in which content is displayed;
+
+      (iii) how prominently content is displayed; or
+
+      (iv) the manner in which content is displayed.
+
+   (b) "Curation algorithm" does not include the curation of:
+
+      (i) responses to specific user queries or user prompts requesting content related to defined topics or interests selected by the user; or
+
+      (ii) content to ensure only age appropriate material is provided to a user based on the user's age;
+
+      (iii) content that prevents a minor from viewing violent, bullying, threatening, or harassing content; or
+
+      (iv) content to comply with any state or federal law restricting the display of material harmful to minors.
+
+(6) "Engagement driven design elements" means:
+
+   (a) autoplay features that continuously play content without requiring user interaction;
+
+   (b) scroll or pagination that loads additional content as long as the user continues scrolling; or
+
+   (c) push notifications.
+
+(7) "Excessive use" means the use of a social media service by a minor to an extent that the use substantially interferes with the minor's normal functioning in:
+
+   (a) academic performance;
+
+   (b) sleep;
+
+   (c) in-person relationships;
+
+   (d) mental health; or
+
+   (e) physical health.
+
+(8) "Minor" means an individual who is under 18 years old that:
+
+   (a) has not been emancipated as that term is defined in Section 80-7-102; or
+
+   (b) has not been married.
+
+(9) "Parent" includes a legal guardian.
+
+(10) "Push notification" means an automatic electronic message displayed on an account holder's device, when the user interface for the social media service is not actively open or visible on the device, that prompts the account holder to repeatedly check and engage with the social media service.
+
+(11) "Resident" means the same as that term is defined in Section 53-3-102.
+
+(12) "Social media company" means an entity that owns or operates a social media service.
+
+(13) (a) "Social media service" means a public website or application that:
+
+      (i) displays content that is primarily generated by account holders and not by the social media company;
+
+      (ii) permits an individual to register as an account holder and create a profile that is made visible to the general public or a set of other users defined by the account holder;
+
+      (iii) connects account holders to allow users to interact socially with each other within the website or application;
+
+      (iv) makes available to each account holder a list or lists of other account holders with whom the account holder shares a connection within the system; and
+
+      (v) allows account holders to post content viewable by other users.
+
+   (b) "Social media service" does not include:
+
+      (i) email;
+
+      (ii) cloud storage; or
+
+      (iii) document viewing, sharing, or collaboration services.
+
+(14) "User" means an individual who accesses or uses an algorithmically curated social media service.
+
+(15) (a) "Utah account holder" means a person who is a Utah resident and an account holder.
+
+   (b) "Utah account holder" includes a Utah minor account holder.
+
+(16) "Utah minor account holder" means a Utah account holder who is a minor.
+
+Section 3. Section 78B-3-1102 is enacted to read:
+
+78B-3-1102. Legislative findings.
+
+The Legislature finds that:
+
+(1) social media services utilize curation algorithms and engagement driven design elements to maximize user engagement;
+
+(2) minors are particularly vulnerable to manipulation by the use of curation algorithms and engagement driven design elements;
+
+(3) a minor's excessive use of an algorithmically curated social media service is likely to cause adverse mental health outcomes in minors, regardless of the content being viewed;
+
+(4) the risk of an adverse mental health outcome resulting from the excessive use of an algorithmically curated social media service increases when a minor uses the service for more than three hours per day, or during regular sleeping hours;
+
+(5) algorithmically curated social media services are designed without sufficient tools to allow adequate parental oversight, exposing minors to risks that could be mitigated with additional parental control;
+
+(6) protecting minors from the risks associated with the use of algorithmically curated social media services requires intervention at a societal level, informed by expertise in technology, psychology, and youth mental health;
+
+(7) the state has a long-established role and responsibility in implementing protections and regulations to safeguard the health and welfare of minors;
+
+(8) the state has enacted safeguards around products and activities that pose risks to minors, including regulations on motor vehicles, medications, and products and services targeted to children;
+
+(9) any adverse mental health outcomes for minors that are linked to the excessive use of algorithmically curated social media services are a serious public health concern for the state; and
+
+(10) the state has a compelling interest to protect minors in the state against adverse mental health outcomes.
+
+Section 4. Section 78B-3-1103 is enacted to read:
+
+78B-3-1103. Private right of action.
+
+(1) A Utah minor account holder or a Utah minor account holder's parent may bring a cause of action against a social media company in court for an adverse mental health outcome arising, in whole or in part, from the minor's excessive use of the social media company's algorithmically curated social media service.
+
+(2) To recover damages in a cause of action brought under this section, a person bringing the cause of action must demonstrate:
+
+   (a) that the Utah minor account holder has been diagnosed by a licensed mental health care provider with an adverse mental health outcome; and
+
+   (b) that the adverse mental health outcome was caused by the Utah minor account holder's excessive use of an algorithmically curated social media service.
+
+(3) Except as provided in Subsection (4), a person who brings an action described in Subsection (1), is entitled to a rebuttable presumption that:
+
+   (a) the Utah minor account holder's adverse mental health outcome was caused, in whole or in part, by the Utah minor account holder's excessive use of the algorithmically curated social media service; and
+
+   (b) the Utah minor account holder's excessive use of the algorithmically curated social media service was caused, in whole or in part, by the algorithmically curated social media service's curation algorithm and engagement driven design elements.
+
+(4) A social media company that complies with the provisions of Section 78B-11-1104 is entitled to a rebuttable presumption that:
+
+   (a) the Utah minor account holder's adverse mental health outcome was not caused, in whole or in part, by the Utah minor account holder's excessive use of the algorithmically curated social media service; and
+
+   (b) the Utah minor account holder's excessive use of the algorithmically curated social media service was not caused, in whole or in part, by the algorithmically curated social media service's curation algorithm and engagement driven design elements.
+
+(5) If a court or fact finder finds that a Utah minor account holder suffered any adverse mental health outcome as a result of the Utah minor account holder's use of a social media company's algorithmically curated social media service, the person seeking relief is entitled to:
+
+   (a) an award of reasonable attorney fees and court costs; and
+
+   (b) an amount equal to the greater of:
+
+      (i) $10,000 for each adverse mental health outcome incidence; or
+
+      (ii) the amount of actual damages.
+
+(6) A social media company may not be held liable under this part:
+
+   (a) based on the content of material posted by users of the algorithmically curated social media service; or
+
+   (b) for declining to restrict access to or modify user posts based solely on the content of those posts.
+
+(7) Nothing in this part shall displace any other available remedies or rights authorized under the laws of this state or the United States.
+
+Section 5. Section 78B-3-1104 is enacted to read:
+
+78B-3-1104. Affirmative defense.
+
+(1) A person is not entitled to the rebuttable presumption described in Subsection 78B-11-1103(3), and a social media company is entitled to the rebuttable presumption described in Subsection 78B-11-1103(4), if the social media company demonstrates to the court that the social media company:
+
+   (a) limits a Utah minor account holder's use of the algorithmically curated social media service to no more than three hours in a 24 hour period across all devices;
+
+   (b) restricts a Utah minor account holder from accessing the algorithmically curated social media service between the hours of 10:30 p.m. and 6:30 a.m.;
+
+   (c) requires the parent or legal guardian of the minor to consent to a Utah minor account holder's use of the algorithmically curated social media service; and
+
+   (d) disables engagement driven design elements for a Utah minor account holder's account.
+
+(2) A social media company may utilize settings that are enabled at the device level to impose the requirements described in Subsection (1).
+
+(3) Notwithstanding Subsection (2), a social media company remains liable to ensure that the Utah minor account holder's account is subject to the restrictions of Subsection (1).
+
+Section 6. Section 78B-3-1105 is enacted to read:
+
+78B-3-1105. Waiver prohibited.
+
+A waiver or limitation, or a purported waiver or limitation, of any of the following is void as unlawful, is against public policy, and a court or arbitrator may not enforce or give effect to the waiver, notwithstanding any contract or choice-of-law provision in a contract:
+
+(1) a protection or requirement provided under this chapter;
+
+(2) the right to cooperate with or file a complaint with a government agency;
+
+(3) the right to a private right of action as provided under this chapter; or
+
+(4) the right to recover actual damages, statutory damages, civil penalties, costs, or fees as allowed by this chapter.
+
+Section 7. Section 78B-3-1106 is enacted to read:
+
+78B-3-1106. Severability.
+
+(1) If any provision of this chapter or the application of any provision to any person or circumstance is held invalid by a final decision of a court of competent jurisdiction, the remainder of this chapter shall be given effect without the invalid provision or application.
+
+(2) The provisions of this chapter are severable.
+
+Section 8. Repealer.
+
+This bill repeals:
+
+Section 13-63-101, Definitions.
+
+Section 13-63-102, Age requirements for use of social media platform -- Parental consent -- Rulemaking authority of division.
+
+Section 13-63-103, Prohibition on data collection for certain accounts -- Prohibition on advertising -- Use of information -- Search results -- Directed content.
+
+Section 13-63-104, Parental access to social media account.
+
+Section 13-63-105, Limited hours of access for minors -- Parental access and options.
+
+Section 13-63-201, Investigative powers of the division.
+
+Section 13-63-202, Enforcement powers of the division.
+
+Section 13-63-203, Division report.
+
+Section 13-63-301, Private right of action.
+
+Section 13-63-401, Social media platform design regulations -- Enforcement and auditing authority -- Penalties.
+
+Section 13-63-501, Private right of action for harm to a minor -- Rebuttable presumption of harm and causation.
+
+Section 13-63-601, Waiver prohibited.
+
+Section 13-63-701, Severability.
+
+Section 9. Effective date.
+
+(1) Except as provided in Subsection (2), this bill takes effect on May 1, 2024.
+
+(2) The actions affecting the following sections take effect on October 1, 2024:
+
+   (a) Section 78B-3-1101;
+
+   (b) Section 78B-3-1102;
+
+   (c) Section 78B-3-1103;
+
+   (d) Section 78B-3-1104;
+
+   (e) Section 78B-3-1105; and
+
+   (f) Section 78B-3-1106.

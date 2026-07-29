@@ -1,0 +1,91 @@
+ The people of the State of California do enact as follows:
+
+SECTION 1. All of the following are the intent of the Legislature:
+
+	(a) To prioritize public safety, job security, and infrastructure needs in the development and deployment of autonomous vehicles on California roads.
+	
+	(b) To ensure that public policy adapts to rapid advancements in autonomous vehicle technology.
+	
+	(c) To revisit and amend applicable laws as necessary to reflect advancements that address threats to public safety and jobs.
+
+SEC. 2. Section 38754 is added to the Vehicle Code, to read:
+
+	38754. (a) An autonomous vehicle with a gross vehicle weight of 10,001 pounds or more shall not be operated on public roads for testing purposes, transporting goods, or transporting passengers without a human safety operator physically present in the autonomous vehicle at the time of operation.
+	
+	(b) For purposes of this section, the following terms have the following meanings:
+	
+		(1) "Autonomous vehicle" has the same meaning as defined in Section 38750.
+		
+		(2) "Human safety operator" means a person operating an autonomous vehicle or vehicle equipped with autonomous technology who is trained in operating and shutting off the vehicle. A human safety operator shall meet all federal and state qualifications for the type of vehicle being operated, whether in automated or nonautomated mode.
+
+SEC. 3. Section 38756 is added to the Vehicle Code, to read:
+
+38756. (a) By January 1, 2030, or five years after commencement of testing, whichever occurs later, and upon appropriation by the Legislature, the Department of Motor Vehicles shall submit a report to the appropriate policy and fiscal committees of the Legislature evaluating the performance of autonomous vehicle technology and its impact on public safety and employment in the transportation sector for autonomous vehicles with a gross vehicle weight of 10,001 pounds or more. The report shall include a summary of disengagements, crashes, and other information the department believes is relevant. The report shall include a recommendation on whether the Legislature should remove, modify, or maintain the requirement for an autonomous vehicle with a gross vehicle weight of 10,001 pounds or more to operate with a human safety operator physically present in the vehicle.
+
+While preparing the report, the Department of Motor Vehicles shall do all of the following:
+
+	(1) Consult with the Department of the California Highway Patrol on traffic impacts, driver and passenger safety risks, and impacts on other motorists, bicyclists, and pedestrians.
+	
+	(2) Consult with the Labor and Workforce Development Agency on any job-related impacts, including worker displacement and shortcomings in retraining opportunities.
+	
+	(3) Consult with the Department of Transportation on infrastructure impacts, deficiencies, and needs.
+	
+	(4) Consult with the State Air Resources Board on how autonomous vehicles with a gross vehicle weight of 10,001 pounds or more impact the 2022 Scoping Plan for Achieving Carbon Neutrality.
+	
+	(5) Consult with independent experts on the performance of the technology, public safety impacts, and any other relevant factors in considering deployment.
+
+(b) The Department of the California Highway Patrol, the Labor and Workforce Development Agency, the Department of Transportation, the State Air Resources Board, and all other relevant state agencies shall provide additional information, as specified by the Department of Motor Vehicles, as needed to research the report required by this section.
+
+(c) Upon issuance of the report described in subdivision (a), it is the intent of the Legislature to conduct an oversight hearing to assess the state of autonomous vehicle technology for vehicles with a gross vehicle weight of 10,001 pounds or more.
+
+(d) The Department of Motor Vehicles shall not issue a deployment permit for use of autonomous vehicles with a gross vehicle weight of 10,001 pounds or more without a human safety operator earlier than one year after the oversight hearing described in subdivision (c), and only after express authorization of the Legislature and Governor.
+
+SEC. 4. Section 38757 is added to the Vehicle Code, to read:
+
+38757. (a) (1) In addition to any other reporting requirement, for autonomous vehicles with a gross vehicle weight of 10,001 pounds or more, a manufacturer whose autonomous vehicle is in any manner involved in a collision originating from the operation of the autonomous vehicle on a public road that resulted in the damage of property, bodily injury, or death while operating under a valid testing or deployment permit shall report the collision to the department, within 10 days of the collision, on a form specified by the department.
+
+	(2) Paragraph (1) does not relieve a person from compliance with any other statutory or regulatory collision reporting requirement.
+
+(b) (1) In addition to any other reporting requirement, for autonomous vehicles with a gross vehicle weight of 10,001 pounds or more with a valid testing or deployment permit that authorizes the vehicle to operate on public roads, a manufacturer shall submit disengagement reports on an annual basis to the department.
+
+	(2) Disengagement reports shall summarize the circumstances or conditions at the time of the disengagement, including all of the following:
+
+		(A) The location of the disengagement on or in one of the following:
+			
+			(i) On an interstate.
+			
+			(ii) On a highway.
+			
+			(iii) On a rural road.
+			
+			(iv) On a city street.
+			
+			(v) In a parking facility.
+		
+(B) Whether the vehicle was operating with or without a driver at the time of the disengagement.
+		
+		(C) A description of the facts causing the disengagement, including all of the following:
+		
+			(i) Weather conditions.
+			
+			(ii) Road surface conditions.
+			
+			(iii) Traffic conditions.
+			
+			(iv) Emergency conditions.
+			
+			(v) Whether there was a collision.
+		
+		(D) The party that initiated the disengagement, including one of the following:
+			
+			(i) The autonomous technology.
+			
+			(ii) An autonomous vehicle test driver.
+			
+			(iii) A remote operator.
+			
+			(iv) A passenger.
+
+(3) The description shall be written in plain language with enough detail that a nontechnical person can understand the circumstances triggering the disengagement.
+
+(c) For purposes of this section, "disengagement" means a deactivation of the autonomous mode when a failure of the autonomous technology is detected or when the safe operation of the vehicle requires that the autonomous vehicle test driver disengage the autonomous mode and take immediate manual control of the vehicle, or in the case of driverless vehicles, when the safety of the vehicle, the occupants of the vehicle, or the public requires that the autonomous technology be deactivated.

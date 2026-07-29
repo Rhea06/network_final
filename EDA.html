@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Text Dataset Exploratory Data Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="EDA_files/libs/clipboard/clipboard.min.js"></script>
+<script src="EDA_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="EDA_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="EDA_files/libs/quarto-html/popper.min.js"></script>
+<script src="EDA_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="EDA_files/libs/quarto-html/anchor.min.js"></script>
+<link href="EDA_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="EDA_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="EDA_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="EDA_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="EDA_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Text Dataset Exploratory Data Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="1f85434e" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imports </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> sent_tokenize</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os <span class="im">as</span> os</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil <span class="im">as</span> shutil</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"documents.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="5e9197a9" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>collection_counts <span class="op">=</span> df[<span class="st">'Collections'</span>].value_counts()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"total number of txt files per Collection type:"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(collection_counts.to_string())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>total number of txt files per Collection type:
+Collections
+U.S. federal laws                                                         572
+U.S. state and local documents                                            345
+U.S. regulations, executive orders, and agency policies                    37
+NDAA provisions;U.S. federal laws;FY2026 NDAA                              37
+U.S. federal laws;NDAA provisions;FY2023 NDAA                              30
+Chinese law and policy                                                     26
+Miscellaneous documents                                                    25
+U.S. federal laws;NDAA provisions;FY2021 NDAA                              24
+NDAA provisions;FY2025 NDAA                                                23
+U.S. federal laws;NDAA provisions;FY2024 NDAA                              22
+Corporate policies and commitments                                         12
+U.S. federal laws;NDAA provisions;FY2022 NDAA                              12
+Editors' Picks;U.S. regulations, executive orders, and agency policies     10
+Multinational                                                              10
+Editors' Picks;U.S. state and local documents                               9
+Editors' Picks;Multinational                                                9
+Editors' Picks;Chinese law and policy                                       7
+U.S. regulations, executive orders, and agency policies;Editors' Picks      6
+Editors' Picks;Corporate policies and commitments                           5
+Editors' Picks;Miscellaneous documents                                      4
+Editors' Picks                                                              4
+Editors' Picks;U.S. federal laws                                            1
+U.S. state and local documents;Editors' Picks                               1
+Chinese law and policy;Editors' Picks                                       1</code></pre>
+</div>
+</div>
+<p>It looks like some txt files may belong to multiple Collections, or that there are disinct subcategories for some collections (ex.U.S. federal laws;NDAA provisions;FY2023 NDAA and U.S. federal laws;NDAA provisions;FY2022 NDAA).</p>
+<div id="074e3acd" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtering txt files by collection </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_agora_ids_by_collection(df, collections):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    filters a .csv file by the given collection and returns a list of matching Agora IDs </span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean whitespace </span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    matched_rows <span class="op">=</span> df[df[<span class="st">'Collections'</span>].astype(<span class="bu">str</span>).<span class="bu">str</span>.strip() <span class="op">==</span> collections.strip()]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># extract ids, drop nulls, convert to str </span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    id_list <span class="op">=</span> matched_rows[<span class="st">'AGORA ID'</span>].dropna().astype(<span class="bu">str</span>).tolist()</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> id_list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="b9489ef3" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extracting targested collection </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>target_collection <span class="op">=</span> <span class="st">"Chinese law and policy"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>matching_ids <span class="op">=</span> get_agora_ids_by_collection(df, target_collection)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># id_string = ", ".join(str(id) for id in matching_ids)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># view results </span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IDs found for '</span><span class="sc">{</span>target_collection<span class="sc">}</span><span class="ss">':"</span>, matching_ids)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'total number of matches:  </span><span class="sc">{</span><span class="bu">len</span>(matching_ids)<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>IDs found for 'Chinese law and policy': ['1117', '1064', '6736', '6683', '6769', '2099', '1123', '1373', '1144', '2098', '1125', '1390', '1137', '1127', '1126', '1129', '1395', '1151', '1128', '1138', '1135', '2261', '1065', '37', '1723', '35']
+total number of matches:  26</code></pre>
+</div>
+</div>
+<p>if id = id.txt, then do eda (word count, sentinment, frequency of words, length) or, if id = id.txt, then create a seperate folder with the all the txt files for collection name</p>
+<div id="dbb587ff" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> group_collection_text_files(df, collection_name, source_folder<span class="op">=</span><span class="st">"fulltext"</span>, output_base_folder<span class="op">=</span><span class="st">"."</span>):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">    looks inside the 'fulltext' subfolder for {id}.txt files matching a collection and copies them into a new collection folder.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filter and extract integer IDs, drop NA's, make int, convert to list </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    matched_rows <span class="op">=</span> df[df[<span class="st">'Collections'</span>].astype(<span class="bu">str</span>).<span class="bu">str</span>.strip() <span class="op">==</span> collection_name.strip()]</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    matching_ids <span class="op">=</span> matched_rows[<span class="st">'AGORA ID'</span>].dropna().astype(<span class="bu">int</span>).tolist()</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"found </span><span class="sc">{</span><span class="bu">len</span>(matching_ids)<span class="sc">}</span><span class="ss"> matching records in the documents csv for: '</span><span class="sc">{</span>collection_name<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> matching_ids:</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"no matching IDs found for this collection name."</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> matching_ids</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. create destination folder </span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    safe_folder_name <span class="op">=</span> <span class="st">""</span>.join(c <span class="cf">for</span> c <span class="kw">in</span> collection_name <span class="cf">if</span> c.isalnum() <span class="kw">or</span> c <span class="kw">in</span> (<span class="st">' '</span>, <span class="st">'_'</span>, <span class="st">'-'</span>)).strip()</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    destination_folder <span class="op">=</span> os.path.join(output_base_folder, safe_folder_name)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    os.makedirs(destination_folder, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"created/verified destination folder at: '</span><span class="sc">{</span>destination_folder<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. search 'fulltext' folder and copy corresponding '{id}.txt' files</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    copied_count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> agora_id <span class="kw">in</span> matching_ids:</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        filename <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>agora_id<span class="sc">}</span><span class="ss">.txt"</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># look INSIDE the fulltext subfolder</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        source_file_path <span class="op">=</span> os.path.join(source_folder, filename)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># put INSIDE the newly created collection folder</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        destination_file_path <span class="op">=</span> os.path.join(destination_folder, filename)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> os.path.exists(source_file_path):</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>            shutil.copy2(source_file_path, destination_file_path)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>            copied_count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"successfully copied </span><span class="sc">{</span>copied_count<span class="sc">}</span><span class="ss"> out of </span><span class="sc">{</span><span class="bu">len</span>(matching_ids)<span class="sc">}</span><span class="ss"> text files into '</span><span class="sc">{</span>safe_folder_name<span class="sc">}</span><span class="ss">/'"</span>)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> matching_ids</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="59062aed" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># running function </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>target_collection <span class="op">=</span> <span class="st">"U.S. regulations, executive orders, and agency policies"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>matching_ids <span class="op">=</span> group_collection_text_files(df, target_collection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>found 37 matching records in the documents csv for: 'U.S. regulations, executive orders, and agency policies'
+created/verified destination folder at: './US regulations executive orders and agency policies'
+successfully copied 37 out of 37 text files into 'US regulations executive orders and agency policies/'</code></pre>
+</div>
+</div>
+<p>EDA</p>
+<div id="00fe6f27" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eda_function(folder_path, stop_words_lang <span class="op">=</span> <span class="st">'english'</span>):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">    reads all txt files in the collection folders and perfoms text EDA focusing </span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">    on word counts, file length, sentiment, and word frequencies</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    search_path <span class="op">=</span> os.path.join(folder_path, <span class="st">'*.txt'</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    file_paths <span class="op">=</span> glob.glob(search_path)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"text EDA report for folder: '</span><span class="sc">{</span>folder_path<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"total text files found: </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># metrics </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    data_metrics <span class="op">=</span> []</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    all_words_compiled <span class="op">=</span> []</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    stop_words_set <span class="op">=</span> <span class="bu">set</span>(stopwords.words(stop_words_lang))</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> path <span class="kw">in</span> file_paths: </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        file_name <span class="op">=</span> os.path.basename(path)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(f"DEBUG: attempting to read file -&gt; {file_name}")</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>: </span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(path, <span class="st">'r'</span>, errors <span class="op">=</span> <span class="st">'ignore'</span>) <span class="im">as</span> f:</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                raw_text <span class="op">=</span> f.read().strip()</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"read error on '</span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">': </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span> </span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> raw_text:</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"SKIPPED: '</span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">' is completely empty (0 characters)."</span>) </span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># convert text structure </span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        char_counts <span class="op">=</span> <span class="bu">len</span>(raw_text)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        words <span class="op">=</span> word_tokenize(raw_text)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        sentences <span class="op">=</span> sent_tokenize(raw_text)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        word_count <span class="op">=</span> <span class="bu">len</span>(words)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>        sentence_count <span class="op">=</span> <span class="bu">len</span>(sentences)</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># avg word length </span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>        avg_word_length <span class="op">=</span> np.mean([<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words]) <span class="cf">if</span> word_count <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># frequency analysis </span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>        clean_file_words <span class="op">=</span> [w.lower() <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> w.isalpha()]</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>        all_words_compiled.extend(clean_file_words)</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># entry metrics </span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>        data_metrics.append({</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>            <span class="st">'file name'</span> : file_name, </span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>            <span class="st">'charecter length'</span>: char_counts, </span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>            <span class="st">'word count'</span>: word_count,</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">'sentence count'</span>: sentence_count, </span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>            <span class="st">'avg word length'</span>: avg_word_length, </span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(f"parsed '{file_name}' successfully")</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>    metrics_df <span class="op">=</span> pd.DataFrame(data_metrics)</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metrics_df.empty: </span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'warning: no readable data extracted from .txt files'</span>)</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># statistical summaries </span></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'length and summary profiles:'</span>)</span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(metrics_df[[<span class="st">'charecter length'</span>, <span class="st">'word count'</span>, <span class="st">'sentence count'</span>, <span class="st">'avg word length'</span>]].describe().to_string())</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># frequency </span></span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>    meaningful_words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> all_words_compiled <span class="cf">if</span> w <span class="kw">not</span> <span class="kw">in</span> stop_words_set]</span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>    word_frequencies <span class="op">=</span> Counter(meaningful_words)</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'top 10 most frequent meaningful words, excluding stop words'</span>)</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word, count <span class="kw">in</span> word_frequencies.most_common(<span class="dv">10</span>):</span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  • </span><span class="sc">{</span>word<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>        <span class="co"># visualizations </span></span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize <span class="op">=</span> (<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>        <span class="co"># word count distributions </span></span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>    sns.histplot(metrics_df[<span class="st">'word count'</span>], kde <span class="op">=</span> <span class="va">True</span>, ax <span class="op">=</span> axes[<span class="dv">0</span>], color <span class="op">=</span> <span class="st">'blue'</span>, bins <span class="op">=</span> <span class="dv">5</span>)</span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_title(<span class="st">'distribution of file word counts'</span>)</span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_xlabel(<span class="st">'words per file'</span>)</span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>        <span class="co"># file length </span></span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>    sns.histplot(metrics_df[<span class="st">'charecter length'</span>], kde <span class="op">=</span> <span class="va">True</span>,ax<span class="op">=</span>axes[<span class="dv">1</span>], color<span class="op">=</span><span class="st">'indigo'</span>, bins <span class="op">=</span> <span class="dv">5</span> )</span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_title(<span class="st">'distribution of file character lengths'</span>)</span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_xlabel(<span class="st">'characters per file'</span>)</span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a>    plt.show() </span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> metrics_df </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="c94079f1" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Files actually found by Python:"</span>, os.listdir(<span class="st">"./US state and local documents"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Files actually found by Python: ['1721.txt', '6728.txt', '6714.txt', '276.txt', '1537.txt', '2980.txt', '2002.txt', '2189.txt', '302.txt', '303.txt', '4062.txt', '1481.txt', '5022.txt', '1536.txt', '277.txt', '4857.txt', '6729.txt', '1734.txt', '6717.txt', '1508.txt', '1454.txt', '1468.txt', '1497.txt', '301.txt', '329.txt', '1680.txt', '314.txt', '300.txt', '4713.txt', '1496.txt', '2014.txt', '1535.txt', '1521.txt', '274.txt', '6716.txt', '4897.txt', '2212.txt', '6712.txt', '2010.txt', '1519.txt', '1525.txt', '1531.txt', '1445.txt', '4717.txt', '304.txt', '310.txt', '311.txt', '1444.txt', '1336.txt', '2159.txt', '2171.txt', '1726.txt', '6713.txt', '4104.txt', '6705.txt', '4106.txt', '6711.txt', '1730.txt', '2239.txt', '2013.txt', '1532.txt', '1526.txt', '1446.txt', '1485.txt', '2198.txt', '1484.txt', '1447.txt', '4271.txt', '1527.txt', '2012.txt', '1725.txt', '2210.txt', '1719.txt', '299.txt', '5256.txt', '6763.txt', '1781.txt', '4809.txt', '1554.txt', '1420.txt', '1434.txt', '2667.txt', '4982.txt', '375.txt', '4955.txt', '4968.txt', '360.txt', '374.txt', '4983.txt', '4571.txt', '1435.txt', '2074.txt', '3424.txt', '1555.txt', '2262.txt', '6762.txt', '2248.txt', '6760.txt', '1769.txt', '1782.txt', '1972.txt', '1543.txt', '2062.txt', '2089.txt', '1437.txt', '4995.txt', '1621.txt', '4771.txt', '3778.txt', '389.txt', '362.txt', '376.txt', '377.txt', '363.txt', '4770.txt', '4994.txt', '3745.txt', '2117.txt', '1556.txt', '1768.txt', '2249.txt', '6771.txt', '1778.txt', '2265.txt', '6765.txt', '3147.txt', '2067.txt', '1552.txt', '2107.txt', '1432.txt', '1426.txt', '3755.txt', '4953.txt', '367.txt', '366.txt', '1816.txt', '1625.txt', '2112.txt', '1553.txt', '2066.txt', '1989.txt', '3146.txt', '6758.txt', '2264.txt', '1779.txt', '2270.txt', '6772.txt', '1974.txt', '210.txt', '1579.txt', '2070.txt', '1551.txt', '2058.txt', '1545.txt', '5092.txt', '1431.txt', '4987.txt', '4978.txt', '4944.txt', '365.txt', '1829.txt', '4951.txt', '371.txt', '4979.txt', '4992.txt', '2111.txt', '72.txt', '1544.txt', '1550.txt', '1777.txt', '2242.txt', '1993.txt', '208.txt', '2068.txt', '1549.txt', '2732.txt', '2120.txt', '3772.txt', '3996.txt', '368.txt', '1830.txt', '1158.txt', '3767.txt', '1399.txt', '2121.txt', '2069.txt', '1560.txt', '2257.txt', '2243.txt', '1762.txt', '2269.txt', '1760.txt', '1774.txt', '6741.txt', '1562.txt', '2043.txt', '1416.txt', '1402.txt', '4234.txt', '380.txt', '4022.txt', '4977.txt', '4963.txt', '357.txt', '1826.txt', '356.txt', '4976.txt', '381.txt', '3764.txt', '1403.txt', '1417.txt', '1588.txt', '2081.txt', '6581.txt', '2042.txt', '1991.txt', '1775.txt', '1761.txt', '1759.txt', '2250.txt', '1765.txt', '2052.txt', '3364.txt', '2668.txt', '1407.txt', '3760.txt', '385.txt', '390.txt', '384.txt', '1406.txt', '2127.txt', '2047.txt', '1764.txt', '2245.txt', '2247.txt', '1996.txt', '1766.txt', '2045.txt', '2723.txt', '1558.txt', '2092.txt', '2125.txt', '392.txt', '4781.txt', '379.txt', '4970.txt', '1613.txt', '4757.txt', '1411.txt', '1439.txt', '2050.txt', '2044.txt', '2722.txt', '2252.txt', '1714.txt', '280.txt', '294.txt', '6709.txt', '6721.txt', '1728.txt', '2037.txt', '3063.txt', '4094.txt', '6697.txt', '6318.txt', '1517.txt', '4862.txt', '1729.txt', '281.txt', '1715.txt', '6722.txt', '1501.txt', '1515.txt', '2034.txt', '1663.txt', '4096.txt', '308.txt', '309.txt', '6694.txt', '5404.txt', '1460.txt', '1528.txt', '2021.txt', '2035.txt', '4322.txt', '1500.txt', '2009.txt', '5000.txt', '6723.txt', '1716.txt', '6733.txt', '6727.txt', '292.txt', '3111.txt', '286.txt', '3844.txt', '1538.txt', '2031.txt', '2025.txt', '5004.txt', '1504.txt', '1510.txt', '2019.txt', '5010.txt', '2145.txt', '2151.txt', '1470.txt', '1464.txt', '6684.txt', '4087.txt', '6691.txt', '6685.txt', '1459.txt', '6322.txt', '1505.txt', '1539.txt', '244.txt', '278.txt', '287.txt', '293.txt', '6726.txt', '6732.txt', '6730.txt', '285.txt', '3847.txt', '1513.txt', '1507.txt', '4523.txt', '6320.txt', '2146.txt', '4047.txt', '6693.txt', '6686.txt', '1664.txt', '4052.txt', '1658.txt', '6651.txt', '1499.txt', '5006.txt', '5012.txt', '4867.txt', '247.txt', '290.txt', '284.txt', '6731.txt']</code></pre>
+</div>
+</div>
+<p>US state and local documents</p>
+<div id="b084ea06" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US state and local documents"</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>text EDA report for folder: 'US state and local documents'
+total text files found: 345
+length and summary profiles:
+       charecter length    word count  sentence count  avg word length
+count        345.000000    345.000000      345.000000       345.000000
+mean       10754.556522   1950.394203       55.860870         4.632397
+std        10984.695933   2003.238873       56.724685         0.297351
+min          329.000000     59.000000        1.000000         3.795673
+25%         3768.000000    700.000000       19.000000         4.446234
+50%         7205.000000   1301.000000       39.000000         4.615164
+75%        13192.000000   2446.000000       70.000000         4.797587
+max        70618.000000  12646.000000      449.000000         5.737485
+top 10 most frequent meaningful words, excluding stop words
+  • section: 4689
+  • shall: 4673
+  • intelligence: 3063
+  • artificial: 3057
+  • state: 2649
+  • ai: 2552
+  • information: 2463
+  • use: 2431
+  • b: 2319
+  • system: 2206</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>US regulations executive orders and agency policies</p>
+<div id="7c4cfdf1" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US regulations executive orders and agency policies"</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>text EDA report for folder: 'US regulations executive orders and agency policies'
+total text files found: 37
+length and summary profiles:
+       charecter length    word count  sentence count  avg word length
+count         37.000000     37.000000       37.000000        37.000000
+mean       21206.621622   3701.837838      101.216216         4.831365
+std        27021.611165   4537.846403      123.368269         0.314888
+min          874.000000    163.000000        7.000000         3.735101
+25%         3446.000000    610.000000       21.000000         4.612097
+50%        10496.000000   1773.000000       51.000000         4.860370
+75%        30116.000000   5064.000000      135.000000         5.053120
+max       138992.000000  22344.000000      608.000000         5.336153
+top 10 most frequent meaningful words, excluding stop words
+  • ai: 1762
+  • use: 550
+  • data: 519
+  • agencies: 444
+  • must: 431
+  • information: 428
+  • systems: 420
+  • may: 413
+  • including: 389
+  • federal: 303</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-11-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>US regulations executive orders and agency policies</p>
+<div id="f1c169c2" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US regulations executive orders and agency policies"</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>text EDA report for folder: 'US regulations executive orders and agency policies'
+total text files found: 37
+length and summary profiles:
+       charecter length    word count  sentence count  avg word length
+count         37.000000     37.000000       37.000000        37.000000
+mean       21206.621622   3701.837838      101.216216         4.831365
+std        27021.611165   4537.846403      123.368269         0.314888
+min          874.000000    163.000000        7.000000         3.735101
+25%         3446.000000    610.000000       21.000000         4.612097
+50%        10496.000000   1773.000000       51.000000         4.860370
+75%        30116.000000   5064.000000      135.000000         5.053120
+max       138992.000000  22344.000000      608.000000         5.336153
+top 10 most frequent meaningful words, excluding stop words
+  • ai: 1762
+  • use: 550
+  • data: 519
+  • agencies: 444
+  • must: 431
+  • information: 428
+  • systems: 420
+  • may: 413
+  • including: 389
+  • federal: 303</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
