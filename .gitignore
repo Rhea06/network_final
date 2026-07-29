@@ -1,6 +1,14 @@
 <<<<<<< HEAD
 # Ignore raw text data folders
 fulltext/
+NDAA provisionsUS federal lawsFY2026 NDAA
+US federal laws
+US federal lawsNDAA provisionsFY2021 NDAA
+US federal lawsNDAA provisionsFY2022 NDAA
+US federal lawsNDAA provisionsFY2023 NDAA
+US federal lawsNDAA provisionsFY2024 NDAA
+US regulations executive orders and agency policies
+US state and local documents
 
 # Ignore local datasets
 *.csv
