@@ -1,0 +1,11 @@
+# Ignore raw text data folders
+fulltext/
+
+
+
+# Ignore local datasets
+*.csv
+
+# Ignore Quarto rendering caches and outputs
+/.quarto/
+*_cache/
