@@ -2,8 +2,6 @@
 # Ignore raw text data folders
 fulltext/
 
-
-
 # Ignore local datasets
 *.csv
 

@@ -1,12 +1,17 @@
 ---
 jupyter: python3
-title: "Text Dataset Exploratory Data Analysis"
+title: "EDA for the AGORA (AI Governance and Regulatory Archive) dataset"
 format:
   html:
-    code-fold: true
+    code-fold: false
 
 ---
 
+The AGORA (AI GOvernance and Regulatory Archive) dataset is a living collection of AI-relevant laws, regulations, standards, and other governance documents from the United States and around the world. AGORA includes document text, metadata, summaries, and thematic tags to enable deep analysis of the global AI governance landscape.
+
+
+
+This section proviodes basic EDA for three of the main categories used in our network graph: U.S. regulations, executive orders, and agency policies, U.S. state and local documents and U.S. federal laws. 
 ```{python}
 # imports 
 import pandas as pd 
@@ -22,6 +27,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import os as os
 import shutil as shutil
 import glob
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 df = pd.read_csv("documents.csv")
 ```
 
@@ -32,8 +38,10 @@ print("total number of txt files per Collection type:")
 print(collection_counts.to_string())
 ```
 
-It looks like some txt files may belong to multiple Collections, or that there are disinct subcategories for some collections (ex.U.S. federal laws;NDAA provisions;FY2023 NDAA and U.S. federal laws;NDAA provisions;FY2022 NDAA). 
 
+The code above looks at the documents.csv file to determine the number of .txt files that are included in each Collection. It looks like some topics have mutiple subcategories for Collections (ex. U.S. federal laws;NDAA provisions; FY2023 NDAA and U.S. federal laws; NDAA provisions;FY2022 NDAA) while others are more generalized. 
+
+The cell below filters the documents.csv file to provide a list of matching Agora IDs. these IDs correspond to the .txt file that contains the contents of that policy. 
 ```{python}
 
 # filtering txt files by collection 
@@ -52,25 +60,27 @@ def get_agora_ids_by_collection(df, collections):
     return id_list
 ```
 
+The cell below uses the get_agora_ids_by_collection function to match IDs with the coresponding .txt file, filtering by collection. This scope of this EDA section is limited to U.S. regulations, executive orders, and agency policies, U.S. state and local documents, and U.S. federal laws. 
+
 ```{python}
 
-# extracting targested collection 
-target_collection = "Chinese law and policy"
+# extracting targeted collection 
+target_collection = "U.S. federal laws;NDAA provisions;FY2021 NDAA"
 matching_ids = get_agora_ids_by_collection(df, target_collection)
 # id_string = ", ".join(str(id) for id in matching_ids)
 
 # view results 
-print(f"IDs found for '{target_collection}':", matching_ids)
-print(f'total number of matches:  {len(matching_ids)}')
+# print(f"IDs found for '{target_collection}':", matching_ids)
+# print(f'total number of matches:  {len(matching_ids)}')
 ```
 
-if id = id.txt, then do eda (word count, sentinment, frequency of words, length) 
-or, if id = id.txt, then create a seperate folder with the all the txt files for collection name
+The cell below evaluates the .txt files in the fulltext folder to to match them to the collection type, and then creates a new folder for .txt files that are included in that collection. 
+
 
 ```{python}
 def group_collection_text_files(df, collection_name, source_folder="fulltext", output_base_folder="."):
     """
-    looks inside the 'fulltext' subfolder for {id}.txt files matching a collection and copies them into a new collection folder.
+    looks inside the 'fulltext' folder for {id}.txt files matching a collection and copies them into a new collection folder.
     """
 
     # filter and extract integer IDs, drop NA's, make int, convert to list 
@@ -109,19 +119,22 @@ def group_collection_text_files(df, collection_name, source_folder="fulltext", o
 
 ```
 
+The cell below applies the group_collection_text_files function to the targeted collections for this EDA section. This was repeated for each collection to create new subfolders for them. 
 ```{python}
 # running function 
-target_collection = "U.S. regulations, executive orders, and agency policies"
+target_collection = "NDAA provisions;U.S. federal laws;FY2026 NDAA "
 matching_ids = group_collection_text_files(df, target_collection)
 ```
 
 EDA
 
+The cell below reads all the .txt files in the specificed collection folder and provides information on word count, file length, and word frequences. 
+
 ```{python}
 def eda_function(folder_path, stop_words_lang = 'english'):
     '''
     reads all txt files in the collection folders and perfoms text EDA focusing 
-    on word counts, file length, sentiment, and word frequencies
+    on word counts, file length, and word frequencies
     '''
     search_path = os.path.join(folder_path, '*.txt')
     file_paths = glob.glob(search_path)
@@ -211,29 +224,256 @@ def eda_function(folder_path, stop_words_lang = 'english'):
     
 ```
 
-```{python}
 
-print("Files actually found by Python:", os.listdir("./US state and local documents"))
-```
 
-US state and local documents
+US state and local documents - EDA
 
 ```{python}
 folder_to_analyze = "US state and local documents"
 analysis_results_df = eda_function(folder_path=folder_to_analyze)
 ```
 
-US regulations executive orders and agency policies
+the top 10 most frequent meaningful words excluding stop words for the "US state and local documents" folder were: 
+
+  • section: 4689
+  • shall: 4673
+  • intelligence: 3063
+  • artificial: 3057
+  • state: 2649
+  • ai: 2552
+  • information: 2463
+  • use: 2431
+  • b: 2319
+  • system: 2206
+
+These documents are typically under 2000 words, which ison average  shorter than some of the other texts used in our network.
+
+US regulations executive orders and agency policies - EDA
 
 ```{python}
 folder_to_analyze = "US regulations executive orders and agency policies"
 analysis_results_df = eda_function(folder_path=folder_to_analyze)
 ```
 
-US regulations executive orders and agency policies
+These documents are typically under 5000 words. The top 10 most frequent meaningful words give us some insight into the focus for AI at the federal level, although further analysis is needed. 
+
+The National Defense Authorization Act is any of a series of United States federal laws specifying the annual budget and expenditures of the U.S. Department of Defense. The dataset provides .txt data for 2021-2024 and 2026
+
+US federal lawsNDAA provisionsFY2021 NDAA - EDA
 
 ```{python}
-folder_to_analyze = "US regulations executive orders and agency policies"
+folder_to_analyze = "US federal lawsNDAA provisionsFY2021 NDAA"
 analysis_results_df = eda_function(folder_path=folder_to_analyze)
 ```
 
+
+US federal lawsNDAA provisionsFY2022 NDAA - EDA
+
+```{python}
+folder_to_analyze = "US federal lawsNDAA provisionsFY2022 NDAA"
+analysis_results_df = eda_function(folder_path=folder_to_analyze)
+```
+
+US federal lawsNDAA provisionsFY2023 NDAA - EDA
+
+```{python}
+folder_to_analyze = "US federal lawsNDAA provisionsFY2023 NDAA"
+analysis_results_df = eda_function(folder_path=folder_to_analyze)
+```
+
+
+US federal lawsNDAA provisionsFY2024 NDAA - EDA
+
+```{python}
+folder_to_analyze = "US federal lawsNDAA provisionsFY2024 NDAA"
+analysis_results_df = eda_function(folder_path=folder_to_analyze)
+```
+
+NDAA provisionsUS federal lawsFY2026 NDAA
+
+```{python}
+folder_to_analyze = "NDAA provisionsUS federal lawsFY2026 NDAA"
+analysis_results_df = eda_function(folder_path=folder_to_analyze)
+```
+
+
+Sentiment Analysis 
+
+The function below calculates VADER sentiment score the the .txt files in each folder, and prints out a summary. 
+
+```{python}
+# sentiment analysis function 
+
+def sentiment_analyzer(folder_path):
+    ''' 
+    reads all .txt foles is a specific folder, calculates VADER sentiment score 
+    for each file, prints summary
+    '''
+    search_path = os.path.join(folder_path, '*.txt')
+    file_paths = glob.glob(search_path)
+
+    print (f"sentiment analysis for folder: '{folder_path}")
+    print(f'total text files found: {len(file_paths)}')
+
+    if not file_paths: 
+        print('no .txt files found in this directory')
+        return None 
+    
+    # initalize 
+    sia = SentimentIntensityAnalyzer()
+    sentiment_data = []
+
+    for path in file_paths: 
+        file_name = os.path.basename(path)
+
+        try: 
+            with open(path, 'r', errors = 'ignore') as f:
+                raw_text = f.read().strip() 
+        except Exception as e: 
+            print(f"read error on '{file_name}': {e} ")
+            continue
+        if not raw_text: 
+            continue 
+
+        # VADAR scores 
+        scores = sia.polarity_scores(raw_text)
+
+        # classifier 
+
+        if scores['compound'] >= 0.05:
+            stance = 'Positive'
+        elif scores['compound'] <= -0.05:
+            stance = 'Negative'
+        else:
+            stance = 'Neutral'
+            
+        sentiment_data.append({
+            'file name': file_name, 
+            'negative score': scores['neg'],
+            'neutral score': scores['neu'],
+            'positive score': scores['pos'], 
+            'compound score': scores['compound'], 
+            'overall stance': stance })
+        
+    # make df
+    sentiment_df = pd.DataFrame(sentiment_data) 
+
+    # show summary data
+
+    # numerical summaries 
+    print('sentiment intensity metrics summary')
+    print(sentiment_df[['negative score', 'neutral score', 'positive score', 'compound score']].describe().to_string())
+    
+    # categorical distributions 
+    print('categorical distributions ')
+    print(sentiment_df['overall stance'].value_counts().to_string())
+
+    # 3. graphs 
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    
+    # compound score 
+    sns.histplot(sentiment_df['compound score'], kde=True, ax=axes[0], color='blue', bins=10)
+    axes[0].set_title('distribution of compound sentiment scores')
+    axes[0].set_xlabel('compound score (-1 = negative to +1 = positive)')
+    
+    # categorical breakdown 
+    sns.countplot(data=sentiment_df, x='overall stance', hue = 'overall stance' , ax=axes[1], palette='coolwarm', order=['Positive', 'Neutral', 'Negative'])
+    axes[1].set_title('document stance classification counts')
+    axes[1].set_xlabel('stance category')
+    axes[1].set_ylabel('number of files')
+    
+    plt.tight_layout()
+    plt.show()
+    
+    return sentiment_df
+```
+
+
+
+US regulations executive orders and agency policies - Sentiment Analysis 
+
+```{python}
+
+target_folder = "US regulations executive orders and agency policies"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+Sentiment around AI tends to be postitive in these txt files 
+
+US Federal laws — Sentiment Analysis 
+
+```{python}
+
+target_folder = "US federal laws"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+Overall sentiment around AI tends to be positive in the US federal laws evaluated, but less so than other categories 
+
+
+US state and local documents - Sentiment Analysis 
+```{python}
+
+target_folder = "US state and local documents"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+US State and local documents appear to have the highest level of polarization when it comes to AI, although the overall stance is still positive. 
+
+US federal lawsNDAA provisionsFY2021 NDAA - Sentiment Analysis 
+```{python}
+
+target_folder = "US federal lawsNDAA provisionsFY2021 NDAA"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+The 2021 National Defense Authorization Act has mostly positive sentiment.
+
+US federal lawsNDAA provisionsFY2022 NDAA - Sentiment Analysis 
+```{python}
+
+target_folder = "US federal lawsNDAA provisionsFY2022 NDAA"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+The 2021 National Defense Authorization Act demonstrates postitive sentiment based on the 12 documents 
+rds AI 
+
+
+US federal lawsNDAA provisionsFY2023 NDAA - Sentiment Analysis 
+```{python}
+
+target_folder = "US federal lawsNDAA provisionsFY2023 NDAA"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+The 2023 National Defense Authorization Act continues to show positive sentiment. 
+
+
+US federal lawsNDAA provisionsFY2024 NDAA - Sentiment Analysis 
+```{python}
+
+target_folder = "US federal lawsNDAA provisionsFY2024 NDAA"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+The 2024 National Defense Authorization Act shows a slight uptick in potentially negative sentiment. 
+
+
+NDAA provisionsUS federal lawsFY2026 NDAA- Sentiment Analysis 
+```{python}
+
+target_folder = "NDAA provisionsUS federal lawsFY2026 NDAA"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+
+The 2026 National Defense Authorization Act shows mostly positive sentiment. 

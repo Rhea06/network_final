@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Text Dataset Exploratory Data Analysis</title>
+<title>EDA for the AGORA (AI Governance and Regulatory Archive) dataset</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Text Dataset Exploratory Data Analysis</h1>
+<h1 class="title">EDA for the AGORA (AI Governance and Regulatory Archive) dataset</h1>
 </div>
 
 
@@ -98,9 +98,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="1f85434e" class="cell" data-execution_count="1">
-<details class="code-fold">
-<summary>Code</summary>
+<p>The AGORA (AI GOvernance and Regulatory Archive) dataset is a living collection of AI-relevant laws, regulations, standards, and other governance documents from the United States and around the world. AGORA includes document text, metadata, summaries, and thematic tags to enable deep analysis of the global AI governance landscape.</p>
+<p>This section proviodes basic EDA for three of the main categories used in our network graph: U.S. regulations, executive orders, and agency policies, U.S. state and local documents and U.S. federal laws.</p>
+<div id="9ab6940a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imports </span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
@@ -115,17 +115,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os <span class="im">as</span> os</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil <span class="im">as</span> shutil</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"documents.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.sentiment.vader <span class="im">import</span> SentimentIntensityAnalyzer</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"documents.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="5e9197a9" class="cell" data-execution_count="2">
-<details class="code-fold">
-<summary>Code</summary>
+<div id="11ac70d6" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>collection_counts <span class="op">=</span> df[<span class="st">'Collections'</span>].value_counts()</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"total number of txt files per Collection type:"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(collection_counts.to_string())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>total number of txt files per Collection type:
 Collections
@@ -155,10 +152,9 @@ U.S. state and local documents;Editors' Picks                               1
 Chinese law and policy;Editors' Picks                                       1</code></pre>
 </div>
 </div>
-<p>It looks like some txt files may belong to multiple Collections, or that there are disinct subcategories for some collections (ex.U.S. federal laws;NDAA provisions;FY2023 NDAA and U.S. federal laws;NDAA provisions;FY2022 NDAA).</p>
-<div id="074e3acd" class="cell" data-execution_count="3">
-<details class="code-fold">
-<summary>Code</summary>
+<p>The code above looks at the documents.csv file to determine the number of .txt files that are included in each Collection. It looks like some topics have mutiple subcategories for Collections (ex. U.S. federal laws;NDAA provisions; FY2023 NDAA and U.S. federal laws; NDAA provisions;FY2022 NDAA) while others are more generalized.</p>
+<p>The cell below filters the documents.csv file to provide a list of matching Agora IDs. these IDs correspond to the .txt file that contains the contents of that policy.</p>
+<div id="8bb6f9de" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtering txt files by collection </span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_agora_ids_by_collection(df, collections):</span>
@@ -173,194 +169,168 @@ Chinese law and policy;Editors' Picks                                       1</c
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    id_list <span class="op">=</span> matched_rows[<span class="st">'AGORA ID'</span>].dropna().astype(<span class="bu">str</span>).tolist()</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> id_list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
-<div id="b9489ef3" class="cell" data-execution_count="4">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extracting targested collection </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>target_collection <span class="op">=</span> <span class="st">"Chinese law and policy"</span></span>
+<p>The cell below uses the get_agora_ids_by_collection function to match IDs with the coresponding .txt file, filtering by collection. This scope of this EDA section is limited to U.S. regulations, executive orders, and agency policies, U.S. state and local documents, and U.S. federal laws.</p>
+<div id="e43e1bc0" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extracting targeted collection </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>target_collection <span class="op">=</span> <span class="st">"U.S. federal laws;NDAA provisions;FY2021 NDAA"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>matching_ids <span class="op">=</span> get_agora_ids_by_collection(df, target_collection)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># id_string = ", ".join(str(id) for id in matching_ids)</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># view results </span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IDs found for '</span><span class="sc">{</span>target_collection<span class="sc">}</span><span class="ss">':"</span>, matching_ids)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'total number of matches:  </span><span class="sc">{</span><span class="bu">len</span>(matching_ids)<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"IDs found for '{target_collection}':", matching_ids)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f'total number of matches:  {len(matching_ids)}')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The cell below evaluates the .txt files in the fulltext folder to to match them to the collection type, and then creates a new folder for .txt files that are included in that collection.</p>
+<div id="9b2eee47" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> group_collection_text_files(df, collection_name, source_folder<span class="op">=</span><span class="st">"fulltext"</span>, output_base_folder<span class="op">=</span><span class="st">"."</span>):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">    looks inside the 'fulltext' folder for {id}.txt files matching a collection and copies them into a new collection folder.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filter and extract integer IDs, drop NA's, make int, convert to list </span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    matched_rows <span class="op">=</span> df[df[<span class="st">'Collections'</span>].astype(<span class="bu">str</span>).<span class="bu">str</span>.strip() <span class="op">==</span> collection_name.strip()]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    matching_ids <span class="op">=</span> matched_rows[<span class="st">'AGORA ID'</span>].dropna().astype(<span class="bu">int</span>).tolist()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"found </span><span class="sc">{</span><span class="bu">len</span>(matching_ids)<span class="sc">}</span><span class="ss"> matching records in the documents csv for: '</span><span class="sc">{</span>collection_name<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> matching_ids:</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"no matching IDs found for this collection name."</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> matching_ids</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. create destination folder </span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    safe_folder_name <span class="op">=</span> <span class="st">""</span>.join(c <span class="cf">for</span> c <span class="kw">in</span> collection_name <span class="cf">if</span> c.isalnum() <span class="kw">or</span> c <span class="kw">in</span> (<span class="st">' '</span>, <span class="st">'_'</span>, <span class="st">'-'</span>)).strip()</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    destination_folder <span class="op">=</span> os.path.join(output_base_folder, safe_folder_name)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    os.makedirs(destination_folder, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"created/verified destination folder at: '</span><span class="sc">{</span>destination_folder<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. search 'fulltext' folder and copy corresponding '{id}.txt' files</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    copied_count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> agora_id <span class="kw">in</span> matching_ids:</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        filename <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>agora_id<span class="sc">}</span><span class="ss">.txt"</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># look INSIDE the fulltext subfolder</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        source_file_path <span class="op">=</span> os.path.join(source_folder, filename)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># put INSIDE the newly created collection folder</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        destination_file_path <span class="op">=</span> os.path.join(destination_folder, filename)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> os.path.exists(source_file_path):</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>            shutil.copy2(source_file_path, destination_file_path)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>            copied_count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"successfully copied </span><span class="sc">{</span>copied_count<span class="sc">}</span><span class="ss"> out of </span><span class="sc">{</span><span class="bu">len</span>(matching_ids)<span class="sc">}</span><span class="ss"> text files into '</span><span class="sc">{</span>safe_folder_name<span class="sc">}</span><span class="ss">/'"</span>)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> matching_ids</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The cell below applies the group_collection_text_files function to the targeted collections for this EDA section. This was repeated for each collection to create new subfolders for them.</p>
+<div id="4e2ffd6f" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># running function </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>target_collection <span class="op">=</span> <span class="st">"NDAA provisions;U.S. federal laws;FY2026 NDAA "</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>matching_ids <span class="op">=</span> group_collection_text_files(df, target_collection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>IDs found for 'Chinese law and policy': ['1117', '1064', '6736', '6683', '6769', '2099', '1123', '1373', '1144', '2098', '1125', '1390', '1137', '1127', '1126', '1129', '1395', '1151', '1128', '1138', '1135', '2261', '1065', '37', '1723', '35']
-total number of matches:  26</code></pre>
-</div>
-</div>
-<p>if id = id.txt, then do eda (word count, sentinment, frequency of words, length) or, if id = id.txt, then create a seperate folder with the all the txt files for collection name</p>
-<div id="dbb587ff" class="cell" data-execution_count="5">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> group_collection_text_files(df, collection_name, source_folder<span class="op">=</span><span class="st">"fulltext"</span>, output_base_folder<span class="op">=</span><span class="st">"."</span>):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">    looks inside the 'fulltext' subfolder for {id}.txt files matching a collection and copies them into a new collection folder.</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filter and extract integer IDs, drop NA's, make int, convert to list </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    matched_rows <span class="op">=</span> df[df[<span class="st">'Collections'</span>].astype(<span class="bu">str</span>).<span class="bu">str</span>.strip() <span class="op">==</span> collection_name.strip()]</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    matching_ids <span class="op">=</span> matched_rows[<span class="st">'AGORA ID'</span>].dropna().astype(<span class="bu">int</span>).tolist()</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"found </span><span class="sc">{</span><span class="bu">len</span>(matching_ids)<span class="sc">}</span><span class="ss"> matching records in the documents csv for: '</span><span class="sc">{</span>collection_name<span class="sc">}</span><span class="ss">'"</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> matching_ids:</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"no matching IDs found for this collection name."</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> matching_ids</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. create destination folder </span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    safe_folder_name <span class="op">=</span> <span class="st">""</span>.join(c <span class="cf">for</span> c <span class="kw">in</span> collection_name <span class="cf">if</span> c.isalnum() <span class="kw">or</span> c <span class="kw">in</span> (<span class="st">' '</span>, <span class="st">'_'</span>, <span class="st">'-'</span>)).strip()</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    destination_folder <span class="op">=</span> os.path.join(output_base_folder, safe_folder_name)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    os.makedirs(destination_folder, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"created/verified destination folder at: '</span><span class="sc">{</span>destination_folder<span class="sc">}</span><span class="ss">'"</span>)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. search 'fulltext' folder and copy corresponding '{id}.txt' files</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    copied_count <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> agora_id <span class="kw">in</span> matching_ids:</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        filename <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>agora_id<span class="sc">}</span><span class="ss">.txt"</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># look INSIDE the fulltext subfolder</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        source_file_path <span class="op">=</span> os.path.join(source_folder, filename)</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># put INSIDE the newly created collection folder</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        destination_file_path <span class="op">=</span> os.path.join(destination_folder, filename)</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> os.path.exists(source_file_path):</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>            shutil.copy2(source_file_path, destination_file_path)</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>            copied_count <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"successfully copied </span><span class="sc">{</span>copied_count<span class="sc">}</span><span class="ss"> out of </span><span class="sc">{</span><span class="bu">len</span>(matching_ids)<span class="sc">}</span><span class="ss"> text files into '</span><span class="sc">{</span>safe_folder_name<span class="sc">}</span><span class="ss">/'"</span>)</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> matching_ids</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="59062aed" class="cell" data-execution_count="6">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># running function </span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>target_collection <span class="op">=</span> <span class="st">"U.S. regulations, executive orders, and agency policies"</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>matching_ids <span class="op">=</span> group_collection_text_files(df, target_collection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>found 37 matching records in the documents csv for: 'U.S. regulations, executive orders, and agency policies'
-created/verified destination folder at: './US regulations executive orders and agency policies'
-successfully copied 37 out of 37 text files into 'US regulations executive orders and agency policies/'</code></pre>
+<pre><code>found 37 matching records in the documents csv for: 'NDAA provisions;U.S. federal laws;FY2026 NDAA '
+created/verified destination folder at: './NDAA provisionsUS federal lawsFY2026 NDAA'
+successfully copied 37 out of 37 text files into 'NDAA provisionsUS federal lawsFY2026 NDAA/'</code></pre>
 </div>
 </div>
 <p>EDA</p>
-<div id="00fe6f27" class="cell" data-execution_count="7">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eda_function(folder_path, stop_words_lang <span class="op">=</span> <span class="st">'english'</span>):</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">    reads all txt files in the collection folders and perfoms text EDA focusing </span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">    on word counts, file length, sentiment, and word frequencies</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    search_path <span class="op">=</span> os.path.join(folder_path, <span class="st">'*.txt'</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    file_paths <span class="op">=</span> glob.glob(search_path)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"text EDA report for folder: '</span><span class="sc">{</span>folder_path<span class="sc">}</span><span class="ss">'"</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"total text files found: </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># metrics </span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    data_metrics <span class="op">=</span> []</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    all_words_compiled <span class="op">=</span> []</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    stop_words_set <span class="op">=</span> <span class="bu">set</span>(stopwords.words(stop_words_lang))</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> path <span class="kw">in</span> file_paths: </span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        file_name <span class="op">=</span> os.path.basename(path)</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(f"DEBUG: attempting to read file -&gt; {file_name}")</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>: </span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(path, <span class="st">'r'</span>, errors <span class="op">=</span> <span class="st">'ignore'</span>) <span class="im">as</span> f:</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                raw_text <span class="op">=</span> f.read().strip()</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"read error on '</span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">': </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span> </span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> raw_text:</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"SKIPPED: '</span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">' is completely empty (0 characters)."</span>) </span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># convert text structure </span></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        char_counts <span class="op">=</span> <span class="bu">len</span>(raw_text)</span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        words <span class="op">=</span> word_tokenize(raw_text)</span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        sentences <span class="op">=</span> sent_tokenize(raw_text)</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        word_count <span class="op">=</span> <span class="bu">len</span>(words)</span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>        sentence_count <span class="op">=</span> <span class="bu">len</span>(sentences)</span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># avg word length </span></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>        avg_word_length <span class="op">=</span> np.mean([<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words]) <span class="cf">if</span> word_count <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># frequency analysis </span></span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>        clean_file_words <span class="op">=</span> [w.lower() <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> w.isalpha()]</span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>        all_words_compiled.extend(clean_file_words)</span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># entry metrics </span></span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>        data_metrics.append({</span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>            <span class="st">'file name'</span> : file_name, </span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>            <span class="st">'charecter length'</span>: char_counts, </span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>            <span class="st">'word count'</span>: word_count,</span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">'sentence count'</span>: sentence_count, </span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>            <span class="st">'avg word length'</span>: avg_word_length, </span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>        })</span>
-<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(f"parsed '{file_name}' successfully")</span></span>
-<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>    metrics_df <span class="op">=</span> pd.DataFrame(data_metrics)</span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metrics_df.empty: </span>
-<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'warning: no readable data extracted from .txt files'</span>)</span>
-<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># statistical summaries </span></span>
-<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'length and summary profiles:'</span>)</span>
-<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(metrics_df[[<span class="st">'charecter length'</span>, <span class="st">'word count'</span>, <span class="st">'sentence count'</span>, <span class="st">'avg word length'</span>]].describe().to_string())</span>
-<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># frequency </span></span>
-<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>    meaningful_words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> all_words_compiled <span class="cf">if</span> w <span class="kw">not</span> <span class="kw">in</span> stop_words_set]</span>
-<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>    word_frequencies <span class="op">=</span> Counter(meaningful_words)</span>
-<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'top 10 most frequent meaningful words, excluding stop words'</span>)</span>
-<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word, count <span class="kw">in</span> word_frequencies.most_common(<span class="dv">10</span>):</span>
-<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  • </span><span class="sc">{</span>word<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>count<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>        <span class="co"># visualizations </span></span>
-<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize <span class="op">=</span> (<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>        <span class="co"># word count distributions </span></span>
-<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>    sns.histplot(metrics_df[<span class="st">'word count'</span>], kde <span class="op">=</span> <span class="va">True</span>, ax <span class="op">=</span> axes[<span class="dv">0</span>], color <span class="op">=</span> <span class="st">'blue'</span>, bins <span class="op">=</span> <span class="dv">5</span>)</span>
-<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_title(<span class="st">'distribution of file word counts'</span>)</span>
-<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_xlabel(<span class="st">'words per file'</span>)</span>
-<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>        <span class="co"># file length </span></span>
-<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>    sns.histplot(metrics_df[<span class="st">'charecter length'</span>], kde <span class="op">=</span> <span class="va">True</span>,ax<span class="op">=</span>axes[<span class="dv">1</span>], color<span class="op">=</span><span class="st">'indigo'</span>, bins <span class="op">=</span> <span class="dv">5</span> )</span>
-<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_title(<span class="st">'distribution of file character lengths'</span>)</span>
-<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_xlabel(<span class="st">'characters per file'</span>)</span>
-<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a>    plt.show() </span>
-<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> metrics_df </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<p>The cell below reads all the .txt files in the specificed collection folder and provides information on word count, file length, and word frequences.</p>
+<div id="8ad31287" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eda_function(folder_path, stop_words_lang <span class="op">=</span> <span class="st">'english'</span>):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">    reads all txt files in the collection folders and perfoms text EDA focusing </span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">    on word counts, file length, and word frequencies</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    search_path <span class="op">=</span> os.path.join(folder_path, <span class="st">'*.txt'</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    file_paths <span class="op">=</span> glob.glob(search_path)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"text EDA report for folder: '</span><span class="sc">{</span>folder_path<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"total text files found: </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># metrics </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    data_metrics <span class="op">=</span> []</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    all_words_compiled <span class="op">=</span> []</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    stop_words_set <span class="op">=</span> <span class="bu">set</span>(stopwords.words(stop_words_lang))</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> path <span class="kw">in</span> file_paths: </span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        file_name <span class="op">=</span> os.path.basename(path)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(f"DEBUG: attempting to read file -&gt; {file_name}")</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>: </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(path, <span class="st">'r'</span>, errors <span class="op">=</span> <span class="st">'ignore'</span>) <span class="im">as</span> f:</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>                raw_text <span class="op">=</span> f.read().strip()</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"read error on '</span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">': </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span> </span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> raw_text:</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"SKIPPED: '</span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">' is completely empty (0 characters)."</span>) </span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># convert text structure </span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        char_counts <span class="op">=</span> <span class="bu">len</span>(raw_text)</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        words <span class="op">=</span> word_tokenize(raw_text)</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>        sentences <span class="op">=</span> sent_tokenize(raw_text)</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        word_count <span class="op">=</span> <span class="bu">len</span>(words)</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        sentence_count <span class="op">=</span> <span class="bu">len</span>(sentences)</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># avg word length </span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>        avg_word_length <span class="op">=</span> np.mean([<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words]) <span class="cf">if</span> word_count <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># frequency analysis </span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>        clean_file_words <span class="op">=</span> [w.lower() <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> w.isalpha()]</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        all_words_compiled.extend(clean_file_words)</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># entry metrics </span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>        data_metrics.append({</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>            <span class="st">'file name'</span> : file_name, </span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>            <span class="st">'charecter length'</span>: char_counts, </span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>            <span class="st">'word count'</span>: word_count,</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">'sentence count'</span>: sentence_count, </span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>            <span class="st">'avg word length'</span>: avg_word_length, </span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># print(f"parsed '{file_name}' successfully")</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>    metrics_df <span class="op">=</span> pd.DataFrame(data_metrics)</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metrics_df.empty: </span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'warning: no readable data extracted from .txt files'</span>)</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># statistical summaries </span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'length and summary profiles:'</span>)</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(metrics_df[[<span class="st">'charecter length'</span>, <span class="st">'word count'</span>, <span class="st">'sentence count'</span>, <span class="st">'avg word length'</span>]].describe().to_string())</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># frequency </span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>    meaningful_words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> all_words_compiled <span class="cf">if</span> w <span class="kw">not</span> <span class="kw">in</span> stop_words_set]</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>    word_frequencies <span class="op">=</span> Counter(meaningful_words)</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'top 10 most frequent meaningful words, excluding stop words'</span>)</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word, count <span class="kw">in</span> word_frequencies.most_common(<span class="dv">10</span>):</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  • </span><span class="sc">{</span>word<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>        <span class="co"># visualizations </span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize <span class="op">=</span> (<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>        <span class="co"># word count distributions </span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>    sns.histplot(metrics_df[<span class="st">'word count'</span>], kde <span class="op">=</span> <span class="va">True</span>, ax <span class="op">=</span> axes[<span class="dv">0</span>], color <span class="op">=</span> <span class="st">'blue'</span>, bins <span class="op">=</span> <span class="dv">5</span>)</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_title(<span class="st">'distribution of file word counts'</span>)</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_xlabel(<span class="st">'words per file'</span>)</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>        <span class="co"># file length </span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>    sns.histplot(metrics_df[<span class="st">'charecter length'</span>], kde <span class="op">=</span> <span class="va">True</span>,ax<span class="op">=</span>axes[<span class="dv">1</span>], color<span class="op">=</span><span class="st">'indigo'</span>, bins <span class="op">=</span> <span class="dv">5</span> )</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_title(<span class="st">'distribution of file character lengths'</span>)</span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_xlabel(<span class="st">'characters per file'</span>)</span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>    plt.show() </span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> metrics_df </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c94079f1" class="cell" data-execution_count="8">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Files actually found by Python:"</span>, os.listdir(<span class="st">"./US state and local documents"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Files actually found by Python: ['1721.txt', '6728.txt', '6714.txt', '276.txt', '1537.txt', '2980.txt', '2002.txt', '2189.txt', '302.txt', '303.txt', '4062.txt', '1481.txt', '5022.txt', '1536.txt', '277.txt', '4857.txt', '6729.txt', '1734.txt', '6717.txt', '1508.txt', '1454.txt', '1468.txt', '1497.txt', '301.txt', '329.txt', '1680.txt', '314.txt', '300.txt', '4713.txt', '1496.txt', '2014.txt', '1535.txt', '1521.txt', '274.txt', '6716.txt', '4897.txt', '2212.txt', '6712.txt', '2010.txt', '1519.txt', '1525.txt', '1531.txt', '1445.txt', '4717.txt', '304.txt', '310.txt', '311.txt', '1444.txt', '1336.txt', '2159.txt', '2171.txt', '1726.txt', '6713.txt', '4104.txt', '6705.txt', '4106.txt', '6711.txt', '1730.txt', '2239.txt', '2013.txt', '1532.txt', '1526.txt', '1446.txt', '1485.txt', '2198.txt', '1484.txt', '1447.txt', '4271.txt', '1527.txt', '2012.txt', '1725.txt', '2210.txt', '1719.txt', '299.txt', '5256.txt', '6763.txt', '1781.txt', '4809.txt', '1554.txt', '1420.txt', '1434.txt', '2667.txt', '4982.txt', '375.txt', '4955.txt', '4968.txt', '360.txt', '374.txt', '4983.txt', '4571.txt', '1435.txt', '2074.txt', '3424.txt', '1555.txt', '2262.txt', '6762.txt', '2248.txt', '6760.txt', '1769.txt', '1782.txt', '1972.txt', '1543.txt', '2062.txt', '2089.txt', '1437.txt', '4995.txt', '1621.txt', '4771.txt', '3778.txt', '389.txt', '362.txt', '376.txt', '377.txt', '363.txt', '4770.txt', '4994.txt', '3745.txt', '2117.txt', '1556.txt', '1768.txt', '2249.txt', '6771.txt', '1778.txt', '2265.txt', '6765.txt', '3147.txt', '2067.txt', '1552.txt', '2107.txt', '1432.txt', '1426.txt', '3755.txt', '4953.txt', '367.txt', '366.txt', '1816.txt', '1625.txt', '2112.txt', '1553.txt', '2066.txt', '1989.txt', '3146.txt', '6758.txt', '2264.txt', '1779.txt', '2270.txt', '6772.txt', '1974.txt', '210.txt', '1579.txt', '2070.txt', '1551.txt', '2058.txt', '1545.txt', '5092.txt', '1431.txt', '4987.txt', '4978.txt', '4944.txt', '365.txt', '1829.txt', '4951.txt', '371.txt', '4979.txt', '4992.txt', '2111.txt', '72.txt', '1544.txt', '1550.txt', '1777.txt', '2242.txt', '1993.txt', '208.txt', '2068.txt', '1549.txt', '2732.txt', '2120.txt', '3772.txt', '3996.txt', '368.txt', '1830.txt', '1158.txt', '3767.txt', '1399.txt', '2121.txt', '2069.txt', '1560.txt', '2257.txt', '2243.txt', '1762.txt', '2269.txt', '1760.txt', '1774.txt', '6741.txt', '1562.txt', '2043.txt', '1416.txt', '1402.txt', '4234.txt', '380.txt', '4022.txt', '4977.txt', '4963.txt', '357.txt', '1826.txt', '356.txt', '4976.txt', '381.txt', '3764.txt', '1403.txt', '1417.txt', '1588.txt', '2081.txt', '6581.txt', '2042.txt', '1991.txt', '1775.txt', '1761.txt', '1759.txt', '2250.txt', '1765.txt', '2052.txt', '3364.txt', '2668.txt', '1407.txt', '3760.txt', '385.txt', '390.txt', '384.txt', '1406.txt', '2127.txt', '2047.txt', '1764.txt', '2245.txt', '2247.txt', '1996.txt', '1766.txt', '2045.txt', '2723.txt', '1558.txt', '2092.txt', '2125.txt', '392.txt', '4781.txt', '379.txt', '4970.txt', '1613.txt', '4757.txt', '1411.txt', '1439.txt', '2050.txt', '2044.txt', '2722.txt', '2252.txt', '1714.txt', '280.txt', '294.txt', '6709.txt', '6721.txt', '1728.txt', '2037.txt', '3063.txt', '4094.txt', '6697.txt', '6318.txt', '1517.txt', '4862.txt', '1729.txt', '281.txt', '1715.txt', '6722.txt', '1501.txt', '1515.txt', '2034.txt', '1663.txt', '4096.txt', '308.txt', '309.txt', '6694.txt', '5404.txt', '1460.txt', '1528.txt', '2021.txt', '2035.txt', '4322.txt', '1500.txt', '2009.txt', '5000.txt', '6723.txt', '1716.txt', '6733.txt', '6727.txt', '292.txt', '3111.txt', '286.txt', '3844.txt', '1538.txt', '2031.txt', '2025.txt', '5004.txt', '1504.txt', '1510.txt', '2019.txt', '5010.txt', '2145.txt', '2151.txt', '1470.txt', '1464.txt', '6684.txt', '4087.txt', '6691.txt', '6685.txt', '1459.txt', '6322.txt', '1505.txt', '1539.txt', '244.txt', '278.txt', '287.txt', '293.txt', '6726.txt', '6732.txt', '6730.txt', '285.txt', '3847.txt', '1513.txt', '1507.txt', '4523.txt', '6320.txt', '2146.txt', '4047.txt', '6693.txt', '6686.txt', '1664.txt', '4052.txt', '1658.txt', '6651.txt', '1499.txt', '5006.txt', '5012.txt', '4867.txt', '247.txt', '290.txt', '284.txt', '6731.txt']</code></pre>
-</div>
-</div>
-<p>US state and local documents</p>
-<div id="b084ea06" class="cell" data-execution_count="9">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US state and local documents"</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<p>US state and local documents - EDA</p>
+<div id="9e1d22d9" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US state and local documents"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>text EDA report for folder: 'US state and local documents'
 total text files found: 345
@@ -389,18 +359,18 @@ top 10 most frequent meaningful words, excluding stop words
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="EDA_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="EDA_files/figure-html/cell-9-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>US regulations executive orders and agency policies</p>
-<div id="7c4cfdf1" class="cell" data-execution_count="10">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US regulations executive orders and agency policies"</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<p>the top 10 most frequent meaningful words excluding stop words for the “US state and local documents” folder were:</p>
+<p>• section: 4689 • shall: 4673 • intelligence: 3063 • artificial: 3057 • state: 2649 • ai: 2552 • information: 2463 • use: 2431 • b: 2319 • system: 2206</p>
+<p>These documents are typically under 2000 words, which ison average shorter than some of the other texts used in our network.</p>
+<p>US regulations executive orders and agency policies - EDA</p>
+<div id="42ddcef2" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US regulations executive orders and agency policies"</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>text EDA report for folder: 'US regulations executive orders and agency policies'
 total text files found: 37
@@ -425,6 +395,45 @@ top 10 most frequent meaningful words, excluding stop words
   • may: 413
   • including: 389
   • federal: 303</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These documents are typically under 5000 words. The top 10 most frequent meaningful words give us some insight into the focus for AI at the federal level, although further analysis is needed.</p>
+<p>The National Defense Authorization Act is any of a series of United States federal laws specifying the annual budget and expenditures of the U.S. Department of Defense. The dataset provides .txt data for 2021-2024 and 2026</p>
+<p>US federal lawsNDAA provisionsFY2021 NDAA - EDA</p>
+<div id="22e362d3" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US federal lawsNDAA provisionsFY2021 NDAA"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>text EDA report for folder: 'US federal lawsNDAA provisionsFY2021 NDAA'
+total text files found: 24
+length and summary profiles:
+       charecter length   word count  sentence count  avg word length
+count         24.000000    24.000000       24.000000        24.000000
+mean        4858.416667   900.375000       18.708333         4.608577
+std         3569.336047   670.423799       13.668368         0.249451
+min          796.000000   146.000000        6.000000         4.011583
+25%         3010.000000   560.250000        9.000000         4.492789
+50%         3747.500000   693.500000       16.500000         4.625785
+75%         5557.750000  1046.250000       22.250000         4.788770
+max        18784.000000  3531.000000       68.000000         5.141066
+top 10 most frequent meaningful words, excluding stop words
+  • defense: 190
+  • secretary: 166
+  • shall: 162
+  • b: 128
+  • department: 106
+  • section: 105
+  • intelligence: 96
+  • artificial: 90
+  • including: 89
+  • subsection: 87</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -434,37 +443,34 @@ top 10 most frequent meaningful words, excluding stop words
 </div>
 </div>
 </div>
-<p>US regulations executive orders and agency policies</p>
-<div id="f1c169c2" class="cell" data-execution_count="11">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US regulations executive orders and agency policies"</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<p>US federal lawsNDAA provisionsFY2022 NDAA - EDA</p>
+<div id="1b876c5c" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US federal lawsNDAA provisionsFY2022 NDAA"</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>text EDA report for folder: 'US regulations executive orders and agency policies'
-total text files found: 37
+<pre><code>text EDA report for folder: 'US federal lawsNDAA provisionsFY2022 NDAA'
+total text files found: 12
 length and summary profiles:
-       charecter length    word count  sentence count  avg word length
-count         37.000000     37.000000       37.000000        37.000000
-mean       21206.621622   3701.837838      101.216216         4.831365
-std        27021.611165   4537.846403      123.368269         0.314888
-min          874.000000    163.000000        7.000000         3.735101
-25%         3446.000000    610.000000       21.000000         4.612097
-50%        10496.000000   1773.000000       51.000000         4.860370
-75%        30116.000000   5064.000000      135.000000         5.053120
-max       138992.000000  22344.000000      608.000000         5.336153
+       charecter length   word count  sentence count  avg word length
+count         12.000000    12.000000       12.000000        12.000000
+mean        3597.666667   650.833333       15.583333         4.734543
+std         1585.584339   291.494841        9.976867         0.364891
+min         1522.000000   287.000000        6.000000         3.924242
+25%         2689.250000   434.000000        9.750000         4.622303
+50%         3229.500000   626.000000       12.000000         4.774326
+75%         4412.250000   789.000000       19.500000         4.858388
+max         7356.000000  1311.000000       38.000000         5.508046
 top 10 most frequent meaningful words, excluding stop words
-  • ai: 1762
-  • use: 550
-  • data: 519
-  • agencies: 444
-  • must: 431
-  • information: 428
-  • systems: 420
-  • may: 413
-  • including: 389
-  • federal: 303</code></pre>
+  • defense: 106
+  • secretary: 86
+  • intelligence: 63
+  • shall: 57
+  • department: 57
+  • artificial: 44
+  • b: 42
+  • subsection: 38
+  • data: 33
+  • capabilities: 28</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -474,6 +480,459 @@ top 10 most frequent meaningful words, excluding stop words
 </div>
 </div>
 </div>
+<p>US federal lawsNDAA provisionsFY2023 NDAA - EDA</p>
+<div id="7dba306e" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US federal lawsNDAA provisionsFY2023 NDAA"</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>text EDA report for folder: 'US federal lawsNDAA provisionsFY2023 NDAA'
+total text files found: 30
+length and summary profiles:
+       charecter length   word count  sentence count  avg word length
+count         30.000000    30.000000       30.000000        30.000000
+mean        4798.366667   870.133333       18.266667         4.787119
+std         3473.479310   677.529016       13.513552         0.323062
+min          805.000000   146.000000        4.000000         4.064045
+25%         2775.500000   482.250000        8.250000         4.625168
+50%         3668.000000   644.000000       13.500000         4.736046
+75%         5158.250000   920.250000       21.000000         4.974188
+max        14738.000000  2873.000000       55.000000         5.516279
+top 10 most frequent meaningful words, excluding stop words
+  • intelligence: 272
+  • shall: 191
+  • b: 169
+  • section: 152
+  • artificial: 150
+  • defense: 142
+  • subsection: 114
+  • secretary: 102
+  • c: 95
+  • national: 91</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>US federal lawsNDAA provisionsFY2024 NDAA - EDA</p>
+<div id="d90d92e7" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"US federal lawsNDAA provisionsFY2024 NDAA"</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>text EDA report for folder: 'US federal lawsNDAA provisionsFY2024 NDAA'
+total text files found: 22
+length and summary profiles:
+       charecter length    word count  sentence count  avg word length
+count         22.000000     22.000000       22.000000        22.000000
+mean        8325.590909   1509.318182       34.227273         4.751270
+std        12268.348015   2254.447993       48.319307         0.286571
+min          453.000000     80.000000        4.000000         4.242647
+25%         2508.500000    415.250000        7.500000         4.564761
+50%         3472.000000    632.500000       11.000000         4.777406
+75%         6137.000000   1130.250000       40.500000         4.985781
+max        55253.000000  10217.000000      196.000000         5.286747
+top 10 most frequent meaningful words, excluding stop words
+  • defense: 307
+  • shall: 266
+  • intelligence: 228
+  • united: 180
+  • department: 171
+  • artificial: 167
+  • subsection: 165
+  • b: 163
+  • secretary: 162
+  • section: 138</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-14-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>NDAA provisionsUS federal lawsFY2026 NDAA</p>
+<div id="8eaa1cb2" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>folder_to_analyze <span class="op">=</span> <span class="st">"NDAA provisionsUS federal lawsFY2026 NDAA"</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>analysis_results_df <span class="op">=</span> eda_function(folder_path<span class="op">=</span>folder_to_analyze)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>text EDA report for folder: 'NDAA provisionsUS federal lawsFY2026 NDAA'
+total text files found: 37
+length and summary profiles:
+       charecter length   word count  sentence count  avg word length
+count         37.000000    37.000000       37.000000        37.000000
+mean        4865.459459   769.864865       17.027027         4.823803
+std         6560.185878  1050.619927       18.005380         0.271125
+min          524.000000    83.000000        4.000000         4.060790
+25%         2053.000000   344.000000        9.000000         4.657682
+50%         3209.000000   523.000000       12.000000         4.811448
+75%         5616.000000   900.000000       17.000000         5.042553
+max        41323.000000  6661.000000      111.000000         5.416490
+top 10 most frequent meaningful words, excluding stop words
+  • intelligence: 295
+  • artificial: 245
+  • secretary: 230
+  • defense: 221
+  • shall: 208
+  • b: 160
+  • security: 140
+  • department: 128
+  • subsection: 127
+  • national: 118</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Sentiment Analysis</p>
+<p>The function below calculates VADER sentiment score the the .txt files in each folder, and prints out a summary.</p>
+<div id="e0e53747" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sentiment analysis function </span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sentiment_analyzer(folder_path):</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">''' </span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">    reads all .txt foles is a specific folder, calculates VADER sentiment score </span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">    for each file, prints summary</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    search_path <span class="op">=</span> os.path.join(folder_path, <span class="st">'*.txt'</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    file_paths <span class="op">=</span> glob.glob(search_path)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span> (<span class="ss">f"sentiment analysis for folder: '</span><span class="sc">{</span>folder_path<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'total text files found: </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> file_paths: </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'no .txt files found in this directory'</span>)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span> </span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initalize </span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    sia <span class="op">=</span> SentimentIntensityAnalyzer()</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    sentiment_data <span class="op">=</span> []</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> path <span class="kw">in</span> file_paths: </span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>        file_name <span class="op">=</span> os.path.basename(path)</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>: </span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> <span class="bu">open</span>(path, <span class="st">'r'</span>, errors <span class="op">=</span> <span class="st">'ignore'</span>) <span class="im">as</span> f:</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>                raw_text <span class="op">=</span> f.read().strip() </span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e: </span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"read error on '</span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">': </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss"> "</span>)</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> raw_text: </span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span> </span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># VADAR scores </span></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>        scores <span class="op">=</span> sia.polarity_scores(raw_text)</span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># classifier </span></span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> scores[<span class="st">'compound'</span>] <span class="op">&gt;=</span> <span class="fl">0.05</span>:</span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>            stance <span class="op">=</span> <span class="st">'Positive'</span></span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> scores[<span class="st">'compound'</span>] <span class="op">&lt;=</span> <span class="op">-</span><span class="fl">0.05</span>:</span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>            stance <span class="op">=</span> <span class="st">'Negative'</span></span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>            stance <span class="op">=</span> <span class="st">'Neutral'</span></span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>        sentiment_data.append({</span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>            <span class="st">'file name'</span>: file_name, </span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>            <span class="st">'negative score'</span>: scores[<span class="st">'neg'</span>],</span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>            <span class="st">'neutral score'</span>: scores[<span class="st">'neu'</span>],</span>
+<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a>            <span class="st">'positive score'</span>: scores[<span class="st">'pos'</span>], </span>
+<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">'compound score'</span>: scores[<span class="st">'compound'</span>], </span>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a>            <span class="st">'overall stance'</span>: stance })</span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># make df</span></span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>    sentiment_df <span class="op">=</span> pd.DataFrame(sentiment_data) </span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># show summary data</span></span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># numerical summaries </span></span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'sentiment intensity metrics summary'</span>)</span>
+<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(sentiment_df[[<span class="st">'negative score'</span>, <span class="st">'neutral score'</span>, <span class="st">'positive score'</span>, <span class="st">'compound score'</span>]].describe().to_string())</span>
+<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a>    <span class="co"># categorical distributions </span></span>
+<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'categorical distributions '</span>)</span>
+<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(sentiment_df[<span class="st">'overall stance'</span>].value_counts().to_string())</span>
+<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. graphs </span></span>
+<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">5</span>))</span>
+<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a>    <span class="co"># compound score </span></span>
+<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a>    sns.histplot(sentiment_df[<span class="st">'compound score'</span>], kde<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>], color<span class="op">=</span><span class="st">'blue'</span>, bins<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_title(<span class="st">'distribution of compound sentiment scores'</span>)</span>
+<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_xlabel(<span class="st">'compound score (-1 = negative to +1 = positive)'</span>)</span>
+<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a>    <span class="co"># categorical breakdown </span></span>
+<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a>    sns.countplot(data<span class="op">=</span>sentiment_df, x<span class="op">=</span><span class="st">'overall stance'</span>, hue <span class="op">=</span> <span class="st">'overall stance'</span> , ax<span class="op">=</span>axes[<span class="dv">1</span>], palette<span class="op">=</span><span class="st">'coolwarm'</span>, order<span class="op">=</span>[<span class="st">'Positive'</span>, <span class="st">'Neutral'</span>, <span class="st">'Negative'</span>])</span>
+<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_title(<span class="st">'document stance classification counts'</span>)</span>
+<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_xlabel(<span class="st">'stance category'</span>)</span>
+<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_ylabel(<span class="st">'number of files'</span>)</span>
+<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sentiment_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>US regulations executive orders and agency policies - Sentiment Analysis</p>
+<div id="97595215" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>target_folder <span class="op">=</span> <span class="st">"US regulations executive orders and agency policies"</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>sentiment_results_df <span class="op">=</span> sentiment_analyzer(folder_path<span class="op">=</span>target_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sentiment analysis for folder: 'US regulations executive orders and agency policies
+total text files found: 37
+sentiment intensity metrics summary
+       negative score  neutral score  positive score  compound score
+count       37.000000      37.000000       37.000000       37.000000
+mean         0.031865       0.876459        0.091703        0.901476
+std          0.020150       0.045143        0.037764        0.257008
+min          0.000000       0.784000        0.047000       -0.440600
+25%          0.016000       0.855000        0.062000        0.927900
+50%          0.031000       0.877000        0.083000        0.997800
+75%          0.043000       0.916000        0.113000        0.999800
+max          0.083000       0.953000        0.185000        1.000000
+categorical distributions 
+overall stance
+Positive    36
+Negative     1</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-17-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Sentiment around AI tends to be postitive in these txt files</p>
+<p>US Federal laws — Sentiment Analysis</p>
+<div id="8de22a93" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>target_folder <span class="op">=</span> <span class="st">"US federal laws"</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>sentiment_results_df <span class="op">=</span> sentiment_analyzer(folder_path<span class="op">=</span>target_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sentiment analysis for folder: 'US federal laws
+total text files found: 572
+sentiment intensity metrics summary
+       negative score  neutral score  positive score  compound score
+count      572.000000     572.000000      572.000000      572.000000
+mean         0.023839       0.866886        0.109229        0.853366
+std          0.026124       0.047841        0.044986        0.456189
+min          0.000000       0.677000        0.010000       -0.999500
+25%          0.006000       0.842750        0.076000        0.978300
+50%          0.015000       0.873000        0.105000        0.996700
+75%          0.035000       0.897000        0.132250        0.999200
+max          0.146000       0.989000        0.288000        1.000000
+categorical distributions 
+overall stance
+Positive    534
+Negative     38</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-18-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Overall sentiment around AI tends to be positive in the US federal laws evaluated, but less so than other categories</p>
+<p>US state and local documents - Sentiment Analysis</p>
+<div id="ab4fc0c3" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>target_folder <span class="op">=</span> <span class="st">"US state and local documents"</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>sentiment_results_df <span class="op">=</span> sentiment_analyzer(folder_path<span class="op">=</span>target_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sentiment analysis for folder: 'US state and local documents
+total text files found: 345
+sentiment intensity metrics summary
+       negative score  neutral score  positive score  compound score
+count      345.000000     345.000000      345.000000      345.000000
+mean         0.039557       0.868014        0.092446        0.594285
+std          0.031180       0.043203        0.041480        0.745976
+min          0.000000       0.740000        0.019000       -0.999900
+25%          0.017000       0.837000        0.060000        0.844400
+50%          0.032000       0.872000        0.083000        0.989000
+75%          0.058000       0.899000        0.116000        0.998500
+max          0.153000       0.965000        0.248000        1.000000
+categorical distributions 
+overall stance
+Positive    278
+Negative     67</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-19-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>US State and local documents appear to have the highest level of polarization when it comes to AI, although the overall stance is still positive.</p>
+<p>US federal lawsNDAA provisionsFY2021 NDAA - Sentiment Analysis</p>
+<div id="61efbb8e" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>target_folder <span class="op">=</span> <span class="st">"US federal lawsNDAA provisionsFY2021 NDAA"</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>sentiment_results_df <span class="op">=</span> sentiment_analyzer(folder_path<span class="op">=</span>target_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sentiment analysis for folder: 'US federal lawsNDAA provisionsFY2021 NDAA
+total text files found: 24
+sentiment intensity metrics summary
+       negative score  neutral score  positive score  compound score
+count       24.000000      24.000000       24.000000       24.000000
+mean         0.018333       0.886583        0.094917        0.831354
+std          0.019796       0.038720        0.039519        0.425318
+min          0.000000       0.820000        0.024000       -0.951400
+25%          0.002750       0.866250        0.079500        0.968850
+50%          0.012500       0.890500        0.097500        0.991000
+75%          0.026000       0.903250        0.121500        0.995400
+max          0.077000       0.976000        0.160000        0.999900
+categorical distributions 
+overall stance
+Positive    23
+Negative     1</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-20-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The 2021 National Defense Authorization Act has mostly positive sentiment.</p>
+<p>US federal lawsNDAA provisionsFY2022 NDAA - Sentiment Analysis</p>
+<div id="e81fdeaa" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>target_folder <span class="op">=</span> <span class="st">"US federal lawsNDAA provisionsFY2022 NDAA"</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>sentiment_results_df <span class="op">=</span> sentiment_analyzer(folder_path<span class="op">=</span>target_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sentiment analysis for folder: 'US federal lawsNDAA provisionsFY2022 NDAA
+total text files found: 12
+sentiment intensity metrics summary
+       negative score  neutral score  positive score  compound score
+count       12.000000      12.000000       12.000000       12.000000
+mean         0.007833       0.869333        0.122583        0.966192
+std          0.011885       0.034629        0.038349        0.086417
+min          0.000000       0.799000        0.059000        0.694000
+25%          0.000000       0.850500        0.103500        0.991450
+50%          0.004000       0.865500        0.126000        0.992850
+75%          0.009500       0.887250        0.141750        0.996200
+max          0.041000       0.932000        0.201000        0.998400
+categorical distributions 
+overall stance
+Positive    12</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-21-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The 2021 National Defense Authorization Act demonstrates postitive sentiment based on the 12 documents rds AI</p>
+<p>US federal lawsNDAA provisionsFY2023 NDAA - Sentiment Analysis</p>
+<div id="82e828b2" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>target_folder <span class="op">=</span> <span class="st">"US federal lawsNDAA provisionsFY2023 NDAA"</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>sentiment_results_df <span class="op">=</span> sentiment_analyzer(folder_path<span class="op">=</span>target_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sentiment analysis for folder: 'US federal lawsNDAA provisionsFY2023 NDAA
+total text files found: 30
+sentiment intensity metrics summary
+       negative score  neutral score  positive score  compound score
+count       30.000000      30.000000       30.000000       30.000000
+mean         0.012033       0.861833        0.126267        0.958847
+std          0.014602       0.052141        0.051811        0.107907
+min          0.000000       0.750000        0.024000        0.476700
+25%          0.000250       0.827250        0.086000        0.992350
+50%          0.005500       0.861000        0.124000        0.996200
+75%          0.019250       0.901250        0.161500        0.998125
+max          0.056000       0.976000        0.235000        0.999600
+categorical distributions 
+overall stance
+Positive    30</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-22-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The 2023 National Defense Authorization Act continues to show positive sentiment.</p>
+<p>US federal lawsNDAA provisionsFY2024 NDAA - Sentiment Analysis</p>
+<div id="a61b070b" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>target_folder <span class="op">=</span> <span class="st">"US federal lawsNDAA provisionsFY2024 NDAA"</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>sentiment_results_df <span class="op">=</span> sentiment_analyzer(folder_path<span class="op">=</span>target_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sentiment analysis for folder: 'US federal lawsNDAA provisionsFY2024 NDAA
+total text files found: 22
+sentiment intensity metrics summary
+       negative score  neutral score  positive score  compound score
+count       22.000000      22.000000       22.000000       22.000000
+mean         0.014364       0.862045        0.123591        0.845109
+std          0.028181       0.045268        0.045011        0.466722
+min          0.000000       0.753000        0.054000       -0.952200
+25%          0.003000       0.833250        0.090000        0.993050
+50%          0.007500       0.867500        0.117500        0.995650
+75%          0.009750       0.892500        0.154500        0.998250
+max          0.122000       0.946000        0.241000        1.000000
+categorical distributions 
+overall stance
+Positive    20
+Negative     2</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-23-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The 2024 National Defense Authorization Act shows a slight uptick in potentially negative sentiment.</p>
+<p>NDAA provisionsUS federal lawsFY2026 NDAA- Sentiment Analysis</p>
+<div id="89d5ff43" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>target_folder <span class="op">=</span> <span class="st">"NDAA provisionsUS federal lawsFY2026 NDAA"</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>sentiment_results_df <span class="op">=</span> sentiment_analyzer(folder_path<span class="op">=</span>target_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sentiment analysis for folder: 'NDAA provisionsUS federal lawsFY2026 NDAA
+total text files found: 37
+sentiment intensity metrics summary
+       negative score  neutral score  positive score  compound score
+count       37.000000      37.000000       37.000000       37.000000
+mean         0.016730       0.849595        0.133568        0.920608
+std          0.027258       0.054289        0.049465        0.322611
+min          0.000000       0.725000        0.067000       -0.963800
+25%          0.005000       0.813000        0.092000        0.977900
+50%          0.011000       0.860000        0.117000        0.993000
+75%          0.018000       0.896000        0.170000        0.996700
+max          0.160000       0.931000        0.254000        0.999900
+categorical distributions 
+overall stance
+Positive    36
+Negative     1</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="EDA_files/figure-html/cell-24-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The 2026 National Defense Authorization Act shows mostly positive sentiment.</p>
 
 </main>
 <!-- /main column -->
