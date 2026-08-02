@@ -7,11 +7,12 @@ format:
 
 ---
 
-The AGORA (AI GOvernance and Regulatory Archive) dataset is a living collection of AI-relevant laws, regulations, standards, and other governance documents from the United States and around the world. AGORA includes document text, metadata, summaries, and thematic tags to enable deep analysis of the global AI governance landscape.
+The AGORA (AI Governance and Regulatory Archive) dataset is a living collection of AI-relevant laws, regulations, standards, and other governance documents from the United States and around the world. AGORA includes document text, metadata, summaries, and thematic tags to enable deep analysis of the global AI governance landscape.
 
 
 
-This section proviodes basic EDA for three of the main categories used in our network graph: U.S. regulations, executive orders, and agency policies, U.S. state and local documents and U.S. federal laws. 
+This section proviodes basic EDA forthe main categories used in our network graph. 
+
 ```{python}
 # imports 
 import pandas as pd 
@@ -65,7 +66,7 @@ The cell below uses the get_agora_ids_by_collection function to match IDs with t
 ```{python}
 
 # extracting targeted collection 
-target_collection = "U.S. federal laws;NDAA provisions;FY2021 NDAA"
+target_collection = "Multinational"
 matching_ids = get_agora_ids_by_collection(df, target_collection)
 # id_string = ", ".join(str(id) for id in matching_ids)
 
@@ -119,14 +120,16 @@ def group_collection_text_files(df, collection_name, source_folder="fulltext", o
 
 ```
 
+EDA
+
 The cell below applies the group_collection_text_files function to the targeted collections for this EDA section. This was repeated for each collection to create new subfolders for them. 
 ```{python}
 # running function 
-target_collection = "NDAA provisions;U.S. federal laws;FY2026 NDAA "
+target_collection = "Corporate policies and commitments"
 matching_ids = group_collection_text_files(df, target_collection)
 ```
 
-EDA
+
 
 The cell below reads all the .txt files in the specificed collection folder and provides information on word count, file length, and word frequences. 
 
@@ -224,7 +227,17 @@ def eda_function(folder_path, stop_words_lang = 'english'):
     
 ```
 
+Corporate policies and commitments - EDA 
+```{python}
+folder_to_analyze = "Corporate policies and commitments"
+analysis_results_df = eda_function(folder_path=folder_to_analyze)
+```
 
+Multinational - EDA 
+```{python}
+folder_to_analyze = "Multinational"
+analysis_results_df = eda_function(folder_path=folder_to_analyze)
+```
 
 US state and local documents - EDA
 
@@ -293,6 +306,12 @@ NDAA provisionsUS federal lawsFY2026 NDAA
 
 ```{python}
 folder_to_analyze = "NDAA provisionsUS federal lawsFY2026 NDAA"
+analysis_results_df = eda_function(folder_path=folder_to_analyze)
+```
+
+Chinese law and policy - EDA
+```{python}
+folder_to_analyze = "Chinese law and policy"
 analysis_results_df = eda_function(folder_path=folder_to_analyze)
 ```
 
@@ -388,12 +407,28 @@ def sentiment_analyzer(folder_path):
     return sentiment_df
 ```
 
+Corporate policies and commitments - Sentiment Analysis 
+
+```{python}
+target_folder = "Corporate policies and commitments"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+Sentiment from these documents are reported as positive.  
+Mutlinational — Sentiment Analysis 
+```{python}
+target_folder = "Multinational"
+
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+Mostly positive with one document for negative sentiment. 
 
 
 US regulations executive orders and agency policies - Sentiment Analysis 
 
 ```{python}
-
 target_folder = "US regulations executive orders and agency policies"
 
 sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
@@ -477,3 +512,13 @@ sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
 
 
 The 2026 National Defense Authorization Act shows mostly positive sentiment. 
+
+Chinese law and policy - Sentiment Analysis 
+
+```{python}
+target_folder = "Chinese law and policy"
+sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
+```
+
+Mostly postivie with 1 document with negative sentiment. 
+
