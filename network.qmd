@@ -1,0 +1,272 @@
+---
+title: "network"
+format: html
+---
+
+```{python}
+# imports
+import matplotlib.pyplot as plt 
+import random
+import networkx as nx 
+import string
+from pathlib import Path
+import nltk 
+import re
+import numpy as np
+from collections import defaultdict
+from nltk.corpus import stopwords
+# from nltk.tokenize import word_tokenize
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+nltk.download("punkt", quiet=True)
+nltk.download("stopwords", quiet=True)
+```
+
+```{python}
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+def extract_community_topics(community_assignment, corpus, file_paths, top_n=5):
+    """aggregates text by Louvain community and extracts the most distinctive keywords
+    using TF-IDF.
+    """
+    # 1group txt data by community ids 
+    community_texts = {}
+    for text, file_name in zip(corpus, file_paths):
+        # Find which community this file belongs to
+        comm_id = community_assignment.get(file_name)
+
+        if comm_id is not None:
+            if comm_id not in community_texts:
+                community_texts[comm_id] = []
+            community_texts[comm_id].append(text)
+
+    # combine all into a block 
+    ordered_communities = sorted(list(community_texts.keys()))
+    combined_corpus = [
+        " ".join(community_texts[cid]) for cid in ordered_communities
+    ]
+
+    # 3.find unique clusters 
+    custom_stops = (
+        list(TfidfVectorizer(stop_words="english").get_stop_words())
+        + ["section", "shall", "use", "b", "c"]
+    )
+    vectorizer = TfidfVectorizer(
+        stop_words=custom_stops, token_pattern=r"(?u)\b[a-zA-Z]{3,}\b"
+    )
+
+    tfidf_matrix = vectorizer.fit_transform(combined_corpus)
+    feature_names = np.array(vectorizer.get_feature_names_out())
+
+    # print defining terms
+    print("community determinants")
+    for idx, comm_id in enumerate(ordered_communities):
+  
+        row = tfidf_matrix.getrow(idx).toarray()[0]
+
+ 
+        top_indices = np.argsort(row)[::-1][:top_n]
+        top_keywords = feature_names[top_indices]
+
+
+        file_count = len(community_texts[comm_id])
+
+        print(f"community {comm_id} ({file_count} files)")
+        print(f"top keywords: {', '.join(top_keywords)}")
+
+```
+
+
+```{python}
+ 
+def map_folder_communities(dir_paths_list, similarity_threshold = 0.8): 
+    """
+    loads txt files, cacluates similarity between them, and identifies file communities using the loubain algorithim
+    """
+    file_paths = []
+    corpus = []
+
+    random.seed(42)
+
+
+    for dir_path in dir_paths_list:
+        folder = Path(dir_path)
+        if not folder.exists():
+            print(f"directory not found: {folder}")
+            continue
+            
+        print(f"reading files from: {folder.resolve()}")
+
+    # read .txt files 
+    for file_path in folder.rglob('*.txt'): 
+        try:
+            content = file_path.read_text()
+            if content.strip():
+                corpus.append(content)
+                # file_paths.append(file_path.name) # store filename as node
+                match = re.search(r"\d+", file_path.name)
+                if match:
+                    file_number = match.group()
+                else:
+                    file_number = file_path.stem
+
+                file_paths.append(file_number)
+                
+        except Exception as e: 
+            print(f"skipping file {file_path.name} : {e}")
+    if not corpus: 
+        print(' no valid .txt files found')
+        return {}, nx.Graph()
+        
+        # vectorize text and compare pairwaire similarity 
+
+    custom_stops = list(TfidfVectorizer(stop_words='english').get_stop_words()) + ['section', 'shall', 'use', 'b', ' c']
+    vectorizer = TfidfVectorizer(stop_words='english',token_pattern=r'(?u)\b[a-zA-Z]{3,}\b',max_df=0.85,min_df=1)
+
+    tfidf_matrix = vectorizer.fit_transform(corpus)
+    similarity_matrix = cosine_similarity(tfidf_matrix)
+
+
+        # network graph 
+
+    G = nx.Graph()
+    num_files = len(file_paths)
+
+    for i in range(num_files): 
+        G.add_node(file_paths[i])
+        for j in range(i + 1, num_files): 
+            weight = similarity_matrix[i, j]
+
+                # similarity threshold
+            if weight > similarity_threshold:
+                G.add_edge(file_paths[i], file_paths[j], weight = weight)
+
+        # lovain algo — returns {filename: community_id}
+    communities = nx.community.louvain_communities(G, weight = 'weight', resolution=2.5)
+    community_assignment = {}
+    for community_id, node_set in enumerate(communities):
+        for node in node_set:
+            community_assignment[node] = community_id
+
+    community_assignment = {}
+    for community_id, node_set in enumerate(communities): 
+        for node in node_set:
+            community_assignment[node] = community_id
+    print(f"processed {len(file_paths)} files into {len(communities)} distinct communities.")
+    return community_assignment, G, corpus, file_paths
+```
+
+
+```{python}
+
+def plot_file_communities(G, community_assignment, min_k_core=10, save_path="file_network.png"):
+    """
+    filters and plot network graph 
+    """
+    if G.number_of_nodes() == 0:
+        print("the graph is empty. nothing to plot.") # check 
+        return
+
+    plt.figure(figsize=(12, 12))
+    
+    # 1. reduce graph density 
+    # removes nodes with fewer than 'min_k_core' connections
+    try:
+        G_filtered = nx.k_core(G, k=min_k_core)
+    except nx.NetworkXError:
+        G_filtered = G  # fallback if k-core fails
+        print(f"graph too small for k-core={min_k_core}, plotting full graph.")
+
+    if G_filtered.number_of_nodes() == 0:
+        print(f"no nodes passed the k-core filter (k={min_k_core}). plotting full graph instead.")
+        G_filtered = G
+
+    # 2. position nodes using a spring layout
+    # k controls distance between nodes; iterations controls stabilization
+    pos = nx.spring_layout(G_filtered, k=0.3, iterations=50, seed=42)
+    
+    # 3. map nodes to colors based on their Louvain community ID
+    # default to community -1 if a node was completely filtered out of assignments
+    node_colors = [community_assignment.get(node, -1) for node in G_filtered.nodes()]
+    
+    # 4. map node sizes proportional to their connection degree
+    degrees = dict(G_filtered.degree())
+    node_sizes = [degrees[node] * 10 for node in G_filtered.nodes()]
+
+    
+    # 5. nraw the network 
+    nx.draw_networkx_nodes(
+        G_filtered, pos, 
+        node_size=node_sizes, 
+        node_color=node_colors, 
+        cmap=plt.cm.tab20,  
+        alpha=0.85
+    )
+    
+    # edges
+    nx.draw_networkx_edges(G_filtered, pos, alpha=0.08, edge_color="gray")
+    
+
+    
+    nx.draw_networkx_labels(G_filtered, pos, font_size=5)
+    
+    plt.title(f"File Communities (Filtered Layout: {G_filtered.number_of_nodes()} Nodes)", fontsize=14)
+    plt.axis("off")
+    plt.tight_layout()
+    
+    # show
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.show()
+
+```
+
+
+
+```{python}
+# Define your target directories in a list
+target_folders = [
+    "Chinese law and policy",
+    "Multinational",
+    "NDAA provisionsUS federal lawsFY2026 NDAA", 
+    "Corporate policies and commitments",
+    "US federal laws",
+    "US federal lawsNDAA provisionsFY2021 NDAA", 
+    "US federal lawsNDAA provisionsFY2022 NDAA", 
+    "US federal lawsNDAA provisionsFY2023 NDAA", 
+    "US federal lawsNDAA provisionsFY2024 NDAA", 
+    "US regulations executive orders and agency policies", 
+    "US state and local documents"
+]
+
+# run the pipeline
+communities, G, corpus, file_paths = map_folder_communities(target_folders, similarity_threshold=0.15)
+
+from collections import defaultdict
+groups = defaultdict(list)
+for file, cid in communities.items():
+    groups[cid].append(file)
+
+for cid, files in groups.items():
+    print(f"\n--- Community {cid} ---")
+    print("\n".join(files))
+
+
+plot_file_communities(G, communities, min_k_core=4, save_path="communities.png")
+
+extract_community_topics(communities, corpus, file_paths, top_n=30)
+
+```
+
+```{python}
+
+# if 'G' in locals():
+#     G.clear()
+#     del G
+density = nx.density(G)
+print(f"Graph Density: {density:.4f}") 
+
+
+```

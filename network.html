@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>network</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="network_files/libs/clipboard/clipboard.min.js"></script>
+<script src="network_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="network_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="network_files/libs/quarto-html/popper.min.js"></script>
+<script src="network_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="network_files/libs/quarto-html/anchor.min.js"></script>
+<link href="network_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="network_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="network_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="network_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="network_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">network</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="0c88783e" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imports</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># from nltk.tokenize import word_tokenize</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>True</code></pre>
+</div>
+</div>
+<div id="6bb198e2" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_community_topics(community_assignment, corpus, file_paths, top_n<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""aggregates text by Louvain community and extracts the most distinctive keywords</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    using TF-IDF.</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1group txt data by community ids </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    community_texts <span class="op">=</span> {}</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> text, file_name <span class="kw">in</span> <span class="bu">zip</span>(corpus, file_paths):</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Find which community this file belongs to</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        comm_id <span class="op">=</span> community_assignment.get(file_name)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> comm_id <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> comm_id <span class="kw">not</span> <span class="kw">in</span> community_texts:</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                community_texts[comm_id] <span class="op">=</span> []</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            community_texts[comm_id].append(text)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># combine all into a block </span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    ordered_communities <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(community_texts.keys()))</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    combined_corpus <span class="op">=</span> [</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">" "</span>.join(community_texts[cid]) <span class="cf">for</span> cid <span class="kw">in</span> ordered_communities</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3.find unique clusters </span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    custom_stops <span class="op">=</span> (</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">list</span>(TfidfVectorizer(stop_words<span class="op">=</span><span class="st">"english"</span>).get_stop_words())</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> [<span class="st">"section"</span>, <span class="st">"shall"</span>, <span class="st">"use"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>]</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    vectorizer <span class="op">=</span> TfidfVectorizer(</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        stop_words<span class="op">=</span>custom_stops, token_pattern<span class="op">=</span><span class="vs">r"</span><span class="fu">(?u)</span><span class="dv">\b</span><span class="pp">[a-zA-Z]</span><span class="op">{3,}</span><span class="dv">\b</span><span class="vs">"</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    tfidf_matrix <span class="op">=</span> vectorizer.fit_transform(combined_corpus)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    feature_names <span class="op">=</span> np.array(vectorizer.get_feature_names_out())</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print defining terms</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"community determinants"</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idx, comm_id <span class="kw">in</span> <span class="bu">enumerate</span>(ordered_communities):</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        row <span class="op">=</span> tfidf_matrix.getrow(idx).toarray()[<span class="dv">0</span>]</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        top_indices <span class="op">=</span> np.argsort(row)[::<span class="op">-</span><span class="dv">1</span>][:top_n]</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        top_keywords <span class="op">=</span> feature_names[top_indices]</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        file_count <span class="op">=</span> <span class="bu">len</span>(community_texts[comm_id])</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"community </span><span class="sc">{</span>comm_id<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>file_count<span class="sc">}</span><span class="ss"> files)"</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"top keywords: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(top_keywords)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="86c5c807" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map_folder_communities(dir_paths_list, similarity_threshold <span class="op">=</span> <span class="fl">0.8</span>): </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    loads txt files, cacluates similarity between them, and identifies file communities using the loubain algorithim</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    file_paths <span class="op">=</span> []</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    corpus <span class="op">=</span> []</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    random.seed(<span class="dv">42</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> dir_path <span class="kw">in</span> dir_paths_list:</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        folder <span class="op">=</span> Path(dir_path)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> folder.exists():</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"directory not found: </span><span class="sc">{</span>folder<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"reading files from: </span><span class="sc">{</span>folder<span class="sc">.</span>resolve()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># read .txt files </span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> file_path <span class="kw">in</span> folder.rglob(<span class="st">'*.txt'</span>): </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            content <span class="op">=</span> file_path.read_text()</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> content.strip():</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                corpus.append(content)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                file_paths.append(file_path.name) <span class="co"># store filename as node</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e: </span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"skipping file </span><span class="sc">{</span>file_path<span class="sc">.</span>name<span class="sc">}</span><span class="ss"> : </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> corpus: </span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">' no valid .txt files found'</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {}, nx.Graph()</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># vectorize text and compare pairwaire similarity </span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    custom_stops <span class="op">=</span> <span class="bu">list</span>(TfidfVectorizer(stop_words<span class="op">=</span><span class="st">'english'</span>).get_stop_words()) <span class="op">+</span> [<span class="st">'section'</span>, <span class="st">'shall'</span>, <span class="st">'use'</span>, <span class="st">'b'</span>, <span class="st">' c'</span>]</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    vectorizer <span class="op">=</span> TfidfVectorizer(stop_words<span class="op">=</span><span class="st">'english'</span>,token_pattern<span class="op">=</span><span class="vs">r'</span><span class="fu">(?u)</span><span class="dv">\b</span><span class="pp">[a-zA-Z]</span><span class="op">{3,}</span><span class="dv">\b</span><span class="vs">'</span>,max_df<span class="op">=</span><span class="fl">0.85</span>,min_df<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    tfidf_matrix <span class="op">=</span> vectorizer.fit_transform(corpus)</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    similarity_matrix <span class="op">=</span> cosine_similarity(tfidf_matrix)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># network graph </span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> nx.Graph()</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    num_files <span class="op">=</span> <span class="bu">len</span>(file_paths)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_files): </span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        G.add_node(file_paths[i])</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i <span class="op">+</span> <span class="dv">1</span>, num_files): </span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>            weight <span class="op">=</span> similarity_matrix[i, j]</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>                <span class="co"># similarity threshold</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> weight <span class="op">&gt;</span> similarity_threshold:</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>                G.add_edge(file_paths[i], file_paths[j], weight <span class="op">=</span> weight)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># lovain algo — returns {filename: community_id}</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    communities <span class="op">=</span> nx.community.louvain_communities(G, weight <span class="op">=</span> <span class="st">'weight'</span>, resolution<span class="op">=</span><span class="fl">2.5</span>)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    community_assignment <span class="op">=</span> {}</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> community_id, node_set <span class="kw">in</span> <span class="bu">enumerate</span>(communities):</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> node <span class="kw">in</span> node_set:</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>            community_assignment[node] <span class="op">=</span> community_id</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    community_assignment <span class="op">=</span> {}</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> community_id, node_set <span class="kw">in</span> <span class="bu">enumerate</span>(communities): </span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> node <span class="kw">in</span> node_set:</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>            community_assignment[node] <span class="op">=</span> community_id</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"processed </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss"> files into </span><span class="sc">{</span><span class="bu">len</span>(communities)<span class="sc">}</span><span class="ss"> distinct communities."</span>)</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> community_assignment, G, corpus, file_paths</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c9c27e51" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_file_communities(G, community_assignment, min_k_core<span class="op">=</span><span class="dv">10</span>, save_path<span class="op">=</span><span class="st">"file_network.png"</span>):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    filters and plot network graph </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> G.number_of_nodes() <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"the graph is empty. nothing to plot."</span>) <span class="co"># check </span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. reduce graph density </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># removes nodes with fewer than 'min_k_core' connections</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        G_filtered <span class="op">=</span> nx.k_core(G, k<span class="op">=</span>min_k_core)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> nx.NetworkXError:</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        G_filtered <span class="op">=</span> G  <span class="co"># fallback if k-core fails</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"graph too small for k-core=</span><span class="sc">{</span>min_k_core<span class="sc">}</span><span class="ss">, plotting full graph."</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> G_filtered.number_of_nodes() <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"no nodes passed the k-core filter (k=</span><span class="sc">{</span>min_k_core<span class="sc">}</span><span class="ss">). plotting full graph instead."</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        G_filtered <span class="op">=</span> G</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. position nodes using a spring layout</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># k controls distance between nodes; iterations controls stabilization</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> nx.spring_layout(G_filtered, k<span class="op">=</span><span class="fl">0.3</span>, iterations<span class="op">=</span><span class="dv">50</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. map nodes to colors based on their Louvain community ID</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># default to community -1 if a node was completely filtered out of assignments</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    node_colors <span class="op">=</span> [community_assignment.get(node, <span class="op">-</span><span class="dv">1</span>) <span class="cf">for</span> node <span class="kw">in</span> G_filtered.nodes()]</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. map node sizes proportional to their connection degree</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    degrees <span class="op">=</span> <span class="bu">dict</span>(G_filtered.degree())</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    node_sizes <span class="op">=</span> [degrees[node] <span class="op">*</span> <span class="dv">10</span> <span class="cf">for</span> node <span class="kw">in</span> G_filtered.nodes()]</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 5. nraw the network </span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    nx.draw_networkx_nodes(</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        G_filtered, pos, </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        node_size<span class="op">=</span>node_sizes, </span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        node_color<span class="op">=</span>node_colors, </span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        cmap<span class="op">=</span>plt.cm.tab20,  </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.85</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># edges</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    nx.draw_networkx_edges(G_filtered, pos, alpha<span class="op">=</span><span class="fl">0.08</span>, edge_color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    nx.draw_networkx_labels(G_filtered, pos, font_size<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"File Communities (Filtered Layout: </span><span class="sc">{</span>G_filtered<span class="sc">.</span>number_of_nodes()<span class="sc">}</span><span class="ss"> Nodes)"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    plt.axis(<span class="st">"off"</span>)</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># show</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> save_path:</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        plt.savefig(save_path, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="4244dce5" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your target directories in a list</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>target_folders <span class="op">=</span> [</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chinese law and policy"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Multinational"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NDAA provisionsUS federal lawsFY2026 NDAA"</span>, </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Corporate policies and commitments"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal laws"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2021 NDAA"</span>, </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2022 NDAA"</span>, </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2023 NDAA"</span>, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2024 NDAA"</span>, </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US regulations executive orders and agency policies"</span>, </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US state and local documents"</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># run the pipeline</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>communities, G, corpus, file_paths <span class="op">=</span> map_folder_communities(target_folders, similarity_threshold<span class="op">=</span><span class="fl">0.15</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span>, cid <span class="kw">in</span> communities.items():</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    groups[cid].append(<span class="bu">file</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cid, files <span class="kw">in</span> groups.items():</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- Community </span><span class="sc">{</span>cid<span class="sc">}</span><span class="ss"> ---"</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(files))</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>plot_file_communities(G, communities, min_k_core<span class="op">=</span><span class="dv">4</span>, save_path<span class="op">=</span><span class="st">"communities.png"</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>extract_community_topics(communities, corpus, file_paths, top_n<span class="op">=</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>reading files from: /Users/rhea/Desktop/network_analytics/agora/Chinese law and policy
+reading files from: /Users/rhea/Desktop/network_analytics/agora/Multinational
+reading files from: /Users/rhea/Desktop/network_analytics/agora/NDAA provisionsUS federal lawsFY2026 NDAA
+reading files from: /Users/rhea/Desktop/network_analytics/agora/Corporate policies and commitments
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US federal laws
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US federal lawsNDAA provisionsFY2021 NDAA
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US federal lawsNDAA provisionsFY2022 NDAA
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US federal lawsNDAA provisionsFY2023 NDAA
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US federal lawsNDAA provisionsFY2024 NDAA
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US regulations executive orders and agency policies
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US state and local documents
+processed 345 files into 24 distinct communities.
+
+--- Community 0 ---
+5010.txt
+2189.txt
+4096.txt
+379.txt
+5022.txt
+1560.txt
+1972.txt
+2145.txt
+4982.txt
+1680.txt
+247.txt
+392.txt
+290.txt
+1552.txt
+6717.txt
+1553.txt
+3147.txt
+2146.txt
+1721.txt
+4953.txt
+4862.txt
+356.txt
+
+--- Community 1 ---
+6760.txt
+6730.txt
+2668.txt
+6714.txt
+6729.txt
+6697.txt
+6741.txt
+4944.txt
+5404.txt
+6732.txt
+6694.txt
+4781.txt
+2723.txt
+6728.txt
+6733.txt
+6726.txt
+3760.txt
+301.txt
+6727.txt
+2732.txt
+
+--- Community 2 ---
+362.txt
+3996.txt
+293.txt
+2151.txt
+
+--- Community 3 ---
+390.txt
+1556.txt
+4976.txt
+2248.txt
+3111.txt
+1551.txt
+2052.txt
+4968.txt
+5006.txt
+2245.txt
+292.txt
+1558.txt
+4094.txt
+4983.txt
+4857.txt
+1719.txt
+
+--- Community 4 ---
+2044.txt
+2014.txt
+2034.txt
+2037.txt
+2252.txt
+2043.txt
+2010.txt
+2069.txt
+2042.txt
+2031.txt
+2012.txt
+2019.txt
+2074.txt
+210.txt
+1781.txt
+2062.txt
+2067.txt
+1426.txt
+2058.txt
+2021.txt
+2013.txt
+2247.txt
+6763.txt
+2081.txt
+2047.txt
+2035.txt
+2068.txt
+2249.txt
+4047.txt
+2009.txt
+2045.txt
+6765.txt
+2250.txt
+
+--- Community 5 ---
+287.txt
+284.txt
+277.txt
+274.txt
+4897.txt
+294.txt
+4087.txt
+2002.txt
+4995.txt
+363.txt
+360.txt
+285.txt
+6713.txt
+2269.txt
+1816.txt
+1158.txt
+4867.txt
+3778.txt
+286.txt
+4970.txt
+208.txt
+278.txt
+1336.txt
+329.txt
+72.txt
+2089.txt
+299.txt
+
+--- Community 6 ---
+6731.txt
+365.txt
+1725.txt
+6686.txt
+3755.txt
+368.txt
+4771.txt
+6711.txt
+1531.txt
+4757.txt
+1545.txt
+2980.txt
+1768.txt
+3745.txt
+1446.txt
+
+--- Community 7 ---
+302.txt
+4234.txt
+2112.txt
+303.txt
+1454.txt
+4271.txt
+300.txt
+377.txt
+2198.txt
+381.txt
+311.txt
+310.txt
+374.txt
+2159.txt
+2171.txt
+376.txt
+1411.txt
+2025.txt
+1445.txt
+2111.txt
+385.txt
+1726.txt
+4322.txt
+3764.txt
+2239.txt
+4978.txt
+375.txt
+2270.txt
+1406.txt
+
+--- Community 8 ---
+1464.txt
+380.txt
+1432.txt
+2210.txt
+2243.txt
+4713.txt
+244.txt
+
+--- Community 9 ---
+1830.txt
+6722.txt
+4979.txt
+6758.txt
+6691.txt
+1996.txt
+5000.txt
+6762.txt
+1829.txt
+4062.txt
+6705.txt
+6772.txt
+280.txt
+1991.txt
+5092.txt
+1993.txt
+1989.txt
+1782.txt
+6709.txt
+3772.txt
+2667.txt
+6716.txt
+6721.txt
+6723.txt
+1826.txt
+6771.txt
+
+--- Community 10 ---
+1402.txt
+1460.txt
+276.txt
+1497.txt
+5256.txt
+1435.txt
+366.txt
+1485.txt
+1515.txt
+1499.txt
+1521.txt
+1431.txt
+3424.txt
+2242.txt
+1528.txt
+1734.txt
+1535.txt
+1470.txt
+3767.txt
+308.txt
+1407.txt
+1484.txt
+1507.txt
+1513.txt
+1762.txt
+2212.txt
+1519.txt
+1538.txt
+1399.txt
+1526.txt
+1500.txt
+3063.txt
+1549.txt
+
+--- Community 11 ---
+304.txt
+2107.txt
+4809.txt
+4955.txt
+5004.txt
+314.txt
+2127.txt
+
+--- Community 12 ---
+357.txt
+1974.txt
+4994.txt
+4963.txt
+6684.txt
+6712.txt
+2125.txt
+2722.txt
+281.txt
+
+--- Community 13 ---
+1403.txt
+3364.txt
+2092.txt
+1439.txt
+3146.txt
+1417.txt
+6651.txt
+6581.txt
+371.txt
+2257.txt
+384.txt
+2070.txt
+389.txt
+1539.txt
+2050.txt
+1459.txt
+2265.txt
+1777.txt
+2066.txt
+
+--- Community 14 ---
+1663.txt
+4992.txt
+4104.txt
+4977.txt
+4022.txt
+4717.txt
+1621.txt
+1579.txt
+1664.txt
+1588.txt
+4052.txt
+1562.txt
+1613.txt
+3844.txt
+4106.txt
+1625.txt
+4571.txt
+1658.txt
+
+--- Community 15 ---
+3847.txt
+6318.txt
+1774.txt
+2121.txt
+
+--- Community 16 ---
+1728.txt
+1766.txt
+1716.txt
+2264.txt
+6685.txt
+2117.txt
+1761.txt
+1715.txt
+1481.txt
+1759.txt
+1468.txt
+1779.txt
+1775.txt
+1769.txt
+1760.txt
+1730.txt
+1554.txt
+1420.txt
+1778.txt
+1550.txt
+
+--- Community 17 ---
+1447.txt
+
+--- Community 18 ---
+2262.txt
+367.txt
+1434.txt
+
+--- Community 19 ---
+6320.txt
+1537.txt
+1544.txt
+1501.txt
+1437.txt
+1496.txt
+1536.txt
+4770.txt
+5012.txt
+6693.txt
+1532.txt
+1555.txt
+4987.txt
+1517.txt
+1510.txt
+1444.txt
+2120.txt
+1416.txt
+4951.txt
+1527.txt
+1543.txt
+1765.txt
+309.txt
+1508.txt
+1525.txt
+1505.txt
+4523.txt
+1504.txt
+
+--- Community 20 ---
+1764.txt
+
+--- Community 21 ---
+1714.txt
+
+--- Community 22 ---
+1729.txt
+
+--- Community 23 ---
+6322.txt</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="network_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>community determinants
+community 0 (22 files)
+top keywords: health, care, patient, services, insurer, medical, provider, plan, clinical, enrollee, utilization, artificial, intelligence, licensed, information, review, lenses, code, act, providers, eye, mental, physician, department, person, retrospectively, nursing, necessity, prescription, means
+community 1 (20 files)
+top keywords: companion, chatbot, user, operator, minor, conversational, artificial, intelligence, account, means, holder, ideation, act, service, child, harm, suicidal, crisis, violation, information, mental, platform, chapter, human, suicide, entity, person, health, interactions, emotional
+community 2 (4 files)
+top keywords: automated, artificial, intelligence, officer, state, systems, agency, legislature, board, pending, technology, implementation, decision, procedures, appointed, data, including, individual, office, rights, information, task, pursuant, means, public, limited, person, principles, ensuring, members
+community 3 (16 files)
+top keywords: genai, agency, government, state, provenance, california, content, information, technology, data, department, artificial, intelligence, services, public, cybersecurity, tool, means, following, including, office, subsidy, platform, provider, digital, covered, agencies, auditor, training, code
+community 4 (33 files)
+top keywords: data, city, generative, information, surveillance, technology, state, tools, systems, policy, privacy, public, security, intelligence, used, agencies, responsible, ensure, chatgpt, content, agency, guidelines, artificial, employees, ethical, slmpd, department, technologies, using, potential
+community 5 (27 files)
+top keywords: employer, decision, automated, ads, employment, data, worker, tool, employee, making, state, agency, aedt, information, including, department, vendor, systems, impact, means, work, accommodation, workers, subdivision, notice, public, violation, used, following, artificial
+community 6 (15 files)
+top keywords: artificial, intelligence, generative, datasets, data, model, developer, chapter, service, occupation, means, consumer, act, used, person, general, violation, purpose, division, state, information, law, following, include, tennessee, human, including, individual, points, title
+community 7 (29 files)
+top keywords: intelligence, artificial, state, commission, committee, technology, appointed, office, members, automation, chief, chair, senate, officer, department, council, resolved, workforce, alabama, house, robotics, minority, information, systems, laboratory, development, study, governor, report, act
+community 8 (7 files)
+top keywords: state, facial, department, recognition, artificial, agency, intelligence, systems, general, individual, subsection, impact, procedures, government, including, limited, human, cognitive, comparison, act, said, unlawful, decision, group, policies, chapter, subdivision, cognizance, data, disparate
+community 9 (26 files)
+top keywords: deployer, developer, frontier, risk, decision, intelligence, artificial, high, information, consequential, act, business, automated, consumer, disclosure, subsection, general, pursuant, discrimination, assessment, attorney, large, covered, algorithmic, model, state, means, decisionmaking, law, including
+community 10 (33 files)
+top keywords: media, election, candidate, person, advertisement, ballot, communication, audio, campaign, content, video, means, disclaimer, political, state, synthetic, violation, elections, individual, image, deceptive, materially, subsection, depicted, act, television, station, artificial, action, intelligence
+community 11 (7 files)
+top keywords: artificial, intelligence, agency, person, state, sec, systems, department, chapter, applicant, bot, information, program, general, interview, council, report, attorney, violation, code, data, applicants, law, subchapter, means, participant, video, texas, enforcement, biometric
+community 12 (9 files)
+top keywords: information, consumer, personal, business, pricing, data, algorithmic, means, including, person, act, consumers, price, code, insurance, covered, california, algorithm, service, opt, entity, used, purposes, attorney, systems, sources, sensitive, law, columbia, determinations
+community 13 (19 files)
+top keywords: task, force, intelligence, artificial, state, technology, member, members, appointed, data, governor, public, agency, executive, designee, systems, recommendations, genai, education, illinois, house, office, generative, including, information, general, act, representing, senate, department
+community 14 (18 files)
+top keywords: vehicle, autonomous, vehicles, driving, driver, department, motor, roads, manufacturer, public, technology, operator, regulations, equipped, collision, safety, state, pursuant, testing, subdivision, task, traffic, means, emergency, road, disengagement, highway, operation, driverless, transportation
+community 15 (4 files)
+top keywords: deep, technology, board, council, advisory, funding, program, talent, utah, proposal, initiative, graduates, participating, education, members, higher, programs, appointed, university, provide, state, subsection, described, appropriations, member, subcommittee, institution, following, leads, iii
+community 16 (20 files)
+top keywords: school, pupils, fund, educators, michigan, virtual, program, intelligence, artificial, wyoming, state, education, appropriation, grant, university, dollars, funds, schools, pupil, pretrial, public, pilot, thousand, learning, department, fiscal, district, research, sme, purpose
+community 17 (1 files)
+top keywords: personhood, means, legal, water, land, accumulation, state, body, object, political, entity, subdivision, solid, species, static, gases, taxonomic, subsurface, adjudicatory, terrestrial, hydrological, appurtenance, sapiens, plant, homo, astronomical, atmospheric, enacted, obligations, governmental
+community 18 (3 files)
+top keywords: tax, credits, business, eligible, credit, jersey, new, authority, program, project, awarded, film, investment, year, period, act, pursuant, qualified, sections, projects, taxpayer, production, agreement, studio, aspire, certificate, lease, means, capital, time
+community 19 (28 files)
+top keywords: person, intimate, image, depiction, depicted, individual, sexual, offense, means, defendant, minor, photograph, act, child, digital, computer, deceased, dissemination, conduct, years, court, material, visual, personality, digitization, victim, matter, age, law, including
+community 20 (1 files)
+top keywords: mnfc, sars, rfis, number, information, law, agencies, federal, briefs, data, processed, publications, fusion, report, activities, received, names, requests, center, enforcement, superintendent, description, utilized, sarsreceived, requestsreceived, watchlist, apprehension, suspicious, terrorism, quantifiable
+community 21 (1 files)
+top keywords: ftes, iowa, positions, regents, equivalent, miscellaneous, salaries, time, following, state, university, purposes, maintenance, support, college, board, center, science, cancer, engineering, registry, initiative, ending, moneys, medicine, waterman, larned, pappajohn, biocatalysis, lettered
+community 22 (1 files)
+top keywords: firearm, microstamp, personalized, appointed, technologies, utility, fired, technology, firearms, legislative, study, special, commission, designee, member, evaluation, emerging, feasibility, chairs, representatives, house, leader, minority, microscopic, array, colonel, imprinting, imprinted, etched, members
+community 23 (1 files)
+top keywords: aircraft, airport, unmanned, mobility, air, equipment, ordinance, operator, advanced, controllers, takeoff, payload, means, electric, landing, political, navigation, including, subdivision, rule, unpiloted, uncontrolled, autopilot, term, defined, law, operated, communications, transports, vertical</code></pre>
+</div>
+</div>
+<div id="d33a8504" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if 'G' in locals():</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.clear()</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     del G</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>density <span class="op">=</span> nx.density(G)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Graph Density: </span><span class="sc">{</span>density<span class="sc">:.4f}</span><span class="ss">"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Graph Density: 0.0847</code></pre>
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
