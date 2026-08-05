@@ -175,30 +175,30 @@ def plot_file_communities(
         return
     if community_legend_mapping is None:
         community_legend_mapping = {
-            0: "0: Healthcare",
-            1: "1: Chatbots",
-            2: "2: Oversight",
-            3: "3: Government - California",
-            4: "4: Privacy",
-            5: "5: Employment",
-            6: "6: Models",
-            7: "7: Commissions",
-            8: "8: Biometrics",
-            9: "9: Risk",
-            10: "10: Elections",
-            11: "11: Hiring",
-            12: "12: Consumer Protection",
-            13: "13: Government - State and local",
-            14: "14: Vehicles",
-            15: "15: Education - Higher ED",
-            16: "16: Education",
-            17: "17: Legal",
-            18: "18: Tax",
-            19: "19: Welfare",
-            20: "20: Government -Federal", # dropped 
-            21: "21: Misc.", # dropped 
-            22: "22: Defense", # dropped
-            23: "23: Aviation", # dropped 
+            0: "Healthcare",
+            1: "Chatbots",
+            2: "Oversight",
+            3: "Government - California",
+            4: "Privacy",
+            5: "Employment",
+            6: "Models",
+            7: "Commissions",
+            8: "Biometrics",
+            9: "Risk",
+            10:"Elections",
+            11: "Hiring",
+            12: "Consumer Protection",
+            13: "Government - State and local",
+            14: "Vehicles",
+            15: "Education - Higher ED",
+            16: "Education",
+            17: "Legal",
+            18: "Tax",
+            19: "Welfare",
+            20: "Government -Federal", # dropped 
+            21: "Misc.", # dropped 
+            22: "Defense", # dropped
+            23: "Aviation", # dropped 
         }
 
     if community_legend_mapping is None:

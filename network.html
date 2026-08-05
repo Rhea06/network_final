@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="762104a4" class="cell" data-execution_count="1">
+<div id="502a8b57" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imports</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
@@ -116,11 +116,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>True</code></pre>
 </div>
 </div>
-<div id="f79ed0e7" class="cell" data-execution_count="2">
+<div id="2820ddf1" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -174,7 +174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"community </span><span class="sc">{</span>comm_id<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>file_count<span class="sc">}</span><span class="ss"> files)"</span>)</span>
 <span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"top keywords: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(top_keywords)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="22aa76e0" class="cell" data-execution_count="3">
+<div id="06de683f" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map_folder_communities(dir_paths_list, similarity_threshold <span class="op">=</span> <span class="fl">0.15</span>): </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    loads txt files, cacluates similarity between them, and identifies file communities using the loubain algorithim</span></span>
@@ -251,7 +251,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"processed </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss"> files into </span><span class="sc">{</span><span class="bu">len</span>(communities)<span class="sc">}</span><span class="ss"> distinct communities."</span>)</span>
 <span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> community_assignment, G, corpus, file_paths</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="768fffbd" class="cell" data-execution_count="4">
+<div id="3df48af7" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_file_communities(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    G,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    community_assignment,</span>
@@ -265,30 +265,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> community_legend_mapping <span class="kw">is</span> <span class="va">None</span>:</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        community_legend_mapping <span class="op">=</span> {</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>: <span class="st">"0: Healthcare"</span>,</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>: <span class="st">"1: Chatbots"</span>,</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="dv">2</span>: <span class="st">"2: Oversight"</span>,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="dv">3</span>: <span class="st">"3: Government - California"</span>,</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            <span class="dv">4</span>: <span class="st">"4: Privacy"</span>,</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="dv">5</span>: <span class="st">"5: Employment"</span>,</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="dv">6</span>: <span class="st">"6: Models"</span>,</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="dv">7</span>: <span class="st">"7: Commissions"</span>,</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            <span class="dv">8</span>: <span class="st">"8: Biometrics"</span>,</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>            <span class="dv">9</span>: <span class="st">"9: Risk"</span>,</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>            <span class="dv">10</span>: <span class="st">"10: Elections"</span>,</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>            <span class="dv">11</span>: <span class="st">"11: Hiring"</span>,</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            <span class="dv">12</span>: <span class="st">"12: Consumer Protection"</span>,</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>            <span class="dv">13</span>: <span class="st">"13: Government - State and local"</span>,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>            <span class="dv">14</span>: <span class="st">"14: Vehicles"</span>,</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            <span class="dv">15</span>: <span class="st">"15: Education - Higher ED"</span>,</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            <span class="dv">16</span>: <span class="st">"16: Education"</span>,</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>            <span class="dv">17</span>: <span class="st">"17: Legal"</span>,</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            <span class="dv">18</span>: <span class="st">"18: Tax"</span>,</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>            <span class="dv">19</span>: <span class="st">"19: Welfare"</span>,</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>            <span class="dv">20</span>: <span class="st">"20: Government -Federal"</span>, <span class="co"># dropped </span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="dv">21</span>: <span class="st">"21: Misc."</span>, <span class="co"># dropped </span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>            <span class="dv">22</span>: <span class="st">"22: Defense"</span>, <span class="co"># dropped</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>            <span class="dv">23</span>: <span class="st">"23: Aviation"</span>, <span class="co"># dropped </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>: <span class="st">"Healthcare"</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>: <span class="st">"Chatbots"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="dv">2</span>: <span class="st">"Oversight"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="dv">3</span>: <span class="st">"Government - California"</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            <span class="dv">4</span>: <span class="st">"Privacy"</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="dv">5</span>: <span class="st">"Employment"</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="dv">6</span>: <span class="st">"Models"</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="dv">7</span>: <span class="st">"Commissions"</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            <span class="dv">8</span>: <span class="st">"Biometrics"</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>            <span class="dv">9</span>: <span class="st">"Risk"</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>            <span class="dv">10</span>:<span class="st">"Elections"</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>            <span class="dv">11</span>: <span class="st">"Hiring"</span>,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            <span class="dv">12</span>: <span class="st">"Consumer Protection"</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>            <span class="dv">13</span>: <span class="st">"Government - State and local"</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>            <span class="dv">14</span>: <span class="st">"Vehicles"</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            <span class="dv">15</span>: <span class="st">"Education - Higher ED"</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            <span class="dv">16</span>: <span class="st">"Education"</span>,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>            <span class="dv">17</span>: <span class="st">"Legal"</span>,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            <span class="dv">18</span>: <span class="st">"Tax"</span>,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>            <span class="dv">19</span>: <span class="st">"Welfare"</span>,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>            <span class="dv">20</span>: <span class="st">"Government -Federal"</span>, <span class="co"># dropped </span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="dv">21</span>: <span class="st">"Misc."</span>, <span class="co"># dropped </span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>            <span class="dv">22</span>: <span class="st">"Defense"</span>, <span class="co"># dropped</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>            <span class="dv">23</span>: <span class="st">"Aviation"</span>, <span class="co"># dropped </span></span>
 <span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        }</span>
 <span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> community_legend_mapping <span class="kw">is</span> <span class="va">None</span>:</span>
@@ -379,7 +379,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a>        plt.savefig(save_path, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
 <span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="494eaf8f" class="cell" data-execution_count="5">
+<div id="34afce5b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>target_folders <span class="op">=</span> [</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chinese law and policy"</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Multinational"</span>,</span>
@@ -425,385 +425,385 @@ reading files from: /Users/rhea/Desktop/network_analytics/agora/US state and loc
 processed 345 files into 24 distinct communities.
 
 --- Community 0 ---
-356
-392
-2145
-2146
-3147
 4862
-247
-2189
-4982
-379
-1552
-4096
-1553
-5010
 5022
-1721
-6717
+3147
 290
-4953
+5010
+2146
+6717
+2189
 1680
 1560
+2145
+1721
 1972
+4953
+4096
+379
+247
+356
+4982
+1552
+1553
+392
 
 --- Community 1 ---
-301
-6728
-6694
-6729
-6697
-2668
-6714
-4781
-5404
-3760
-6733
-6727
-6760
-6741
 2732
-4944
-6726
-6730
+6727
+6729
+6741
+3760
 2723
+6730
+6714
+6728
+4781
+4944
+6694
 6732
+5404
+2668
+6697
+6726
+6760
+6733
+301
 
 --- Community 2 ---
-2151
 293
-3996
 362
+2151
+3996
 
 --- Community 3 ---
-292
-5006
+1556
+1551
+4983
 2248
 4976
-1719
-2245
-1558
-1551
-1556
-4968
-390
 2052
-4983
-4857
 3111
+5006
+2245
+390
+1558
+292
+1719
+4968
+4857
 4094
 
 --- Community 4 ---
-2068
-2062
-4047
 2009
 2031
-2019
-2043
-2250
-2034
-2013
-2047
-2021
-2074
-2037
-2058
-2247
-2010
-2069
-1781
-2067
-2045
-2042
-1426
-6765
-2012
 2081
-6763
-2252
-2014
+2042
 2249
-2044
+2014
+2021
 2035
+1426
+2037
+2074
+2047
+2250
+2044
+2252
+2013
 210
+2045
+6765
+1781
+2247
+2067
+4047
+6763
+2010
+2058
+2069
+2062
+2043
+2012
+2034
+2068
+2019
 
 --- Community 5 ---
-1158
-4897
-208
-363
-72
-287
-4087
-360
-2002
-299
-277
-274
 4867
-3778
-2269
 1816
-6713
-4995
+299
+2002
+287
+1158
 278
-285
-1336
-286
 4970
+4087
+2269
+208
+6713
+363
 284
+4897
 294
+286
+274
+1336
+3778
+285
 2089
+72
+360
+4995
 329
+277
 
 --- Community 6 ---
-4757
-368
 1545
 3745
-1531
-6686
-1768
-6731
-365
-4771
-1725
-1446
-3755
-6711
 2980
+365
+1446
+1531
+1768
+4771
+4757
+6731
+3755
+368
+1725
+6686
+6711
 
 --- Community 7 ---
-2270
-1411
-3764
-1726
-4234
-2159
-300
-376
-1445
-2025
-1454
-374
-385
-311
-302
 377
-310
-1406
-2198
-303
-2239
-375
-2111
-381
-4271
 2171
+4271
+1406
+2239
+300
+1445
+303
+374
+302
+2111
+311
+310
 4322
+376
+2198
+2270
+385
+4234
+375
 2112
+2159
+2025
+1726
+1411
+1454
 4978
+381
+3764
 
 --- Community 8 ---
-1464
-244
 380
-2243
+1464
 4713
 1432
 2210
+244
+2243
 
 --- Community 9 ---
-1826
-280
-1782
-1996
-6691
-5092
-6723
-6762
-6705
-1830
-1993
-6758
-1989
-1991
-6716
-2667
 6722
 4979
-1829
 6771
-5000
-6709
-4062
-3772
+6705
+1996
+1991
+1989
+1993
 6721
+5092
+6709
+6723
+1826
+3772
+6691
+6716
+1782
+1829
+280
+5000
+6758
+2667
 6772
+6762
+4062
+1830
 
 --- Community 10 ---
-1484
-1485
-1515
-1407
-1402
-1435
-3767
 308
-1513
-1734
-2242
-1507
-5256
-1499
-1521
-1431
-2212
-1538
 366
-1460
-1500
-1519
-3063
-1549
+1431
 1470
 1535
-1497
+1484
 1528
-1762
-1399
-3424
-276
+1521
 1526
+1549
+5256
+276
+1402
+1499
+1460
+1519
+1762
+2212
+1500
+1435
+2242
+1513
+1407
+1399
+1538
+3424
+3063
+3767
+1734
+1485
+1497
+1515
+1507
 
 --- Community 11 ---
-5004
-4955
 2127
+5004
 2107
-314
+4955
 304
 4809
+314
 
 --- Community 12 ---
-1974
-6712
-2722
-357
-6684
-4963
-281
 2125
 4994
+1974
+6712
+281
+6684
+2722
+4963
+357
 
 --- Community 13 ---
-1539
-2092
-384
-2050
-3146
-1777
-6581
-2257
 371
-3364
-2066
+1539
 1459
-2070
-1403
-2265
+3146
 6651
-1439
-389
+2092
 1417
+1777
+1439
+2066
+2257
+2050
+3364
+384
+2070
+389
+6581
+2265
+1403
 
 --- Community 14 ---
-1663
 4992
-1625
-4106
+3844
+1562
 1658
+1663
+4977
+4052
+1625
 4571
 1621
-4022
-4052
-4977
-1579
-4717
 4104
-1613
 1664
-1562
+1579
+4106
+1613
+4717
 1588
-3844
+4022
 
 --- Community 15 ---
-6318
-1774
-2121
 3847
+1774
+6318
+2121
 
 --- Community 16 ---
-1420
-1550
-2117
-6685
-1779
-1775
-1554
-1769
-1761
 1760
-1481
+1779
+1761
 1715
-1716
-1730
+1420
 1728
 1778
 1468
-1766
-2264
+1775
+6685
+1769
 1759
+2117
+1730
+1766
+1481
+1716
+1550
+2264
+1554
 
 --- Community 17 ---
 1447
 
 --- Community 18 ---
-2262
-367
 1434
+367
+2262
 
 --- Community 19 ---
-1532
-1536
-1555
-1765
-1525
-4951
-1537
-6320
-6693
-1527
-1508
-4987
-1510
 1496
-1504
-1505
-2120
-1437
-5012
-1444
-309
-4523
-1543
-1544
-1517
 1501
+6693
+1505
+1504
+1537
+1544
 1416
+1543
+1765
+4987
+1555
+1536
 4770
+1532
+1527
+2120
+1525
+1510
+5012
+6320
+309
+1437
+4951
+1508
+4523
+1444
+1517
 
 --- Community 20 ---
 1764
@@ -818,7 +818,7 @@ processed 345 files into 24 distinct communities.
 6322</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/5v/prfffqm9421dxy2dzj6_hrj80000gp/T/ipykernel_46011/2895504393.py:59: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+<pre><code>/var/folders/5v/prfffqm9421dxy2dzj6_hrj80000gp/T/ipykernel_46712/986869743.py:59: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
   cmap = plt.cm.get_cmap("tab20", max(len(unique_communities), 1))</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -880,7 +880,7 @@ community 23 (1 files)
 top keywords: aircraft, airport, unmanned, mobility, air, equipment, ordinance, operator, advanced, controllers, takeoff, payload, means, electric, landing, political, navigation, including, subdivision, rule, unpiloted, uncontrolled, autopilot, term, defined, law, operated, communications, transports, vertical</code></pre>
 </div>
 </div>
-<div id="145d6eee" class="cell" data-execution_count="6">
+<div id="1edf5ee3" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if 'G' in locals():</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.clear()</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     del G</span></span>
