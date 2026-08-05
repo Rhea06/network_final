@@ -18,6 +18,7 @@ from nltk.corpus import stopwords
 # from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import plotly.graph_objects as go
 nltk.download("punkt", quiet=True)
 nltk.download("stopwords", quiet=True)
 ```
@@ -31,10 +32,10 @@ def extract_community_topics(community_assignment, corpus, file_paths, top_n=5):
     """aggregates text by Louvain community and extracts the most distinctive keywords
     using TF-IDF.
     """
-    # 1group txt data by community ids 
+    #  txt data by community ids 
     community_texts = {}
     for text, file_name in zip(corpus, file_paths):
-        # Find which community this file belongs to
+        # find which community this file belongs to
         comm_id = community_assignment.get(file_name)
 
         if comm_id is not None:
@@ -48,7 +49,7 @@ def extract_community_topics(community_assignment, corpus, file_paths, top_n=5):
         " ".join(community_texts[cid]) for cid in ordered_communities
     ]
 
-    # 3.find unique clusters 
+    # find unique clusters 
     custom_stops = (
         list(TfidfVectorizer(stop_words="english").get_stop_words())
         + ["section", "shall", "use", "b", "c"]
@@ -81,7 +82,7 @@ def extract_community_topics(community_assignment, corpus, file_paths, top_n=5):
 
 ```{python}
  
-def map_folder_communities(dir_paths_list, similarity_threshold = 0.8): 
+def map_folder_communities(dir_paths_list, similarity_threshold = 0.15): 
     """
     loads txt files, cacluates similarity between them, and identifies file communities using the loubain algorithim
     """
@@ -161,72 +162,137 @@ def map_folder_communities(dir_paths_list, similarity_threshold = 0.8):
 
 ```{python}
 
-def plot_file_communities(G, community_assignment, min_k_core=10, save_path="file_network.png"):
-    """
-    filters and plot network graph 
-    """
+def plot_file_communities(
+    G,
+    community_assignment,
+    min_k_core=10,
+    save_path="file_network.png",
+    community_legend_mapping=None,
+):
+    """filters and plots network graph with localized community sizes and labels."""
     if G.number_of_nodes() == 0:
-        print("the graph is empty. nothing to plot.") # check 
+        print("the graph is empty. Nothing to plot.")
         return
+    if community_legend_mapping is None:
+        community_legend_mapping = {
+            0: "0: Healthcare",
+            1: "1: Chatbots",
+            2: "2: Oversight",
+            3: "3: Government - California",
+            4: "4: Privacy",
+            5: "5: Employment",
+            6: "6: Models",
+            7: "7: Commissions",
+            8: "8: Biometrics",
+            9: "9: Risk",
+            10: "10: Elections",
+            11: "11: Hiring",
+            12: "12: Consumer Protection",
+            13: "13: Government - State and local",
+            14: "14: Vehicles",
+            15: "15: Education - Higher ED",
+            16: "16: Education",
+            17: "17: Legal",
+            18: "18: Tax",
+            19: "19: Welfare",
+            20: "20: Government -Federal", # dropped 
+            21: "21: Misc.", # dropped 
+            22: "22: Defense", # dropped
+            23: "23: Aviation", # dropped 
+        }
+
+    if community_legend_mapping is None:
+        community_legend_mapping = {}
 
     plt.figure(figsize=(12, 12))
-    
-    # 1. reduce graph density 
-    # removes nodes with fewer than 'min_k_core' connections
+
+    # reduce graph density
     try:
         G_filtered = nx.k_core(G, k=min_k_core)
     except nx.NetworkXError:
-        G_filtered = G  # fallback if k-core fails
+        G_filtered = G
         print(f"graph too small for k-core={min_k_core}, plotting full graph.")
 
-    if G_filtered.number_of_nodes() == 0:
-        print(f"no nodes passed the k-core filter (k={min_k_core}). plotting full graph instead.")
-        G_filtered = G
-
-    # 2. position nodes using a spring layout
-    # k controls distance between nodes; iterations controls stabilization
+    # spring layput
     pos = nx.spring_layout(G_filtered, k=0.3, iterations=50, seed=42)
-    
-    # 3. map nodes to colors based on their Louvain community ID
-    # default to community -1 if a node was completely filtered out of assignments
-    node_colors = [community_assignment.get(node, -1) for node in G_filtered.nodes()]
-    
-    # 4. map node sizes proportional to their connection degree
-    degrees = dict(G_filtered.degree())
-    node_sizes = [degrees[node] * 10 for node in G_filtered.nodes()]
 
-    
-    # 5. nraw the network 
-    nx.draw_networkx_nodes(
-        G_filtered, pos, 
-        node_size=node_sizes, 
-        node_color=node_colors, 
-        cmap=plt.cm.tab20,  
-        alpha=0.85
+    filtered_communities = set(
+        community_assignment.get(node, -1) for node in G_filtered.nodes()
     )
-    
-    # edges
-    nx.draw_networkx_edges(G_filtered, pos, alpha=0.08, edge_color="gray")
-    
+    unique_communities = sorted(list(filtered_communities))
+    cmap = plt.cm.get_cmap("tab20", max(len(unique_communities), 1))
+    num_communities = max(len(unique_communities), 1)
 
-    
+    # map node size correlated with degree
+    degrees = dict(G_filtered.degree())
+
+    for i, community_id in enumerate(unique_communities):
+        # filter nodes in the loop
+        node_list = [
+            node
+            for node in G_filtered.nodes()
+            if community_assignment.get(node, -1) == community_id
+            and node in pos
+        ]
+        if not node_list:
+            continue
+
+        # calculate sizes ONLY for the nodes in the current node_list
+        node_sizes = [degrees[node] * 10 for node in node_list]
+        color = cmap(i / num_communities)
+
+        # Resolve legend labels
+        if community_id in community_legend_mapping:
+            label_text = community_legend_mapping[community_id]
+        elif community_id == -1:
+            label_text = "Unassigned"
+        else:
+            label_text = f"Community {community_id} (Unknown)"
+
+        # draw netowrk nodes
+        nx.draw_networkx_nodes(
+            G_filtered,
+            pos,
+            node_size=node_sizes,
+            nodelist=node_list,
+            node_color=[color] * len(node_list),
+            alpha=0.85,
+            label=label_text,  
+        )
+
+    # edges and labels 
+    nx.draw_networkx_edges(G_filtered, pos, alpha=0.08, edge_color="gray")
     nx.draw_networkx_labels(G_filtered, pos, font_size=5)
-    
-    plt.title(f"File Communities (Filtered Layout: {G_filtered.number_of_nodes()} Nodes)", fontsize=14)
+
+    # legend placement 
+    plt.legend(
+        scatterpoints=1,
+        markerscale=.5,
+        loc="upper left",
+        bbox_to_anchor=(
+            1.02,
+            1,
+        ),  
+        borderaxespad=0, 
+        fontsize=9,  
+        labelspacing=0.4, 
+    )
+
+    plt.title(
+        f"AGORA Network Mapping (Filtered Layout: {G_filtered.number_of_nodes()} Nodes)",
+        fontsize=14,
+    )
     plt.axis("off")
     plt.tight_layout()
-    
-    # show
+
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
     plt.show()
 
 ```
 
-
-
 ```{python}
-# Define your target directories in a list
+
 target_folders = [
     "Chinese law and policy",
     "Multinational",
@@ -268,5 +334,5 @@ extract_community_topics(communities, corpus, file_paths, top_n=30)
 density = nx.density(G)
 print(f"Graph Density: {density:.4f}") 
 
-
 ```
+

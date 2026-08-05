@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="0c88783e" class="cell" data-execution_count="1">
+<div id="762104a4" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imports</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
@@ -106,19 +106,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># from nltk.tokenize import word_tokenize</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># from nltk.tokenize import word_tokenize</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>True</code></pre>
 </div>
 </div>
-<div id="6bb198e2" class="cell" data-execution_count="2">
+<div id="f79ed0e7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -127,10 +129,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""aggregates text by Louvain community and extracts the most distinctive keywords</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    using TF-IDF.</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1group txt data by community ids </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  txt data by community ids </span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    community_texts <span class="op">=</span> {}</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> text, file_name <span class="kw">in</span> <span class="bu">zip</span>(corpus, file_paths):</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Find which community this file belongs to</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># find which community this file belongs to</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        comm_id <span class="op">=</span> community_assignment.get(file_name)</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> comm_id <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
@@ -144,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">" "</span>.join(community_texts[cid]) <span class="cf">for</span> cid <span class="kw">in</span> ordered_communities</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3.find unique clusters </span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># find unique clusters </span></span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    custom_stops <span class="op">=</span> (</span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">list</span>(TfidfVectorizer(stop_words<span class="op">=</span><span class="st">"english"</span>).get_stop_words())</span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> [<span class="st">"section"</span>, <span class="st">"shall"</span>, <span class="st">"use"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>]</span>
@@ -172,8 +174,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"community </span><span class="sc">{</span>comm_id<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>file_count<span class="sc">}</span><span class="ss"> files)"</span>)</span>
 <span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"top keywords: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(top_keywords)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="86c5c807" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map_folder_communities(dir_paths_list, similarity_threshold <span class="op">=</span> <span class="fl">0.8</span>): </span>
+<div id="22aa76e0" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map_folder_communities(dir_paths_list, similarity_threshold <span class="op">=</span> <span class="fl">0.15</span>): </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    loads txt files, cacluates similarity between them, and identifies file communities using the loubain algorithim</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
@@ -197,143 +199,217 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            content <span class="op">=</span> file_path.read_text()</span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> content.strip():</span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                corpus.append(content)</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                file_paths.append(file_path.name) <span class="co"># store filename as node</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e: </span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"skipping file </span><span class="sc">{</span>file_path<span class="sc">.</span>name<span class="sc">}</span><span class="ss"> : </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> corpus: </span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">' no valid .txt files found'</span>)</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {}, nx.Graph()</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># vectorize text and compare pairwaire similarity </span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    custom_stops <span class="op">=</span> <span class="bu">list</span>(TfidfVectorizer(stop_words<span class="op">=</span><span class="st">'english'</span>).get_stop_words()) <span class="op">+</span> [<span class="st">'section'</span>, <span class="st">'shall'</span>, <span class="st">'use'</span>, <span class="st">'b'</span>, <span class="st">' c'</span>]</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    vectorizer <span class="op">=</span> TfidfVectorizer(stop_words<span class="op">=</span><span class="st">'english'</span>,token_pattern<span class="op">=</span><span class="vs">r'</span><span class="fu">(?u)</span><span class="dv">\b</span><span class="pp">[a-zA-Z]</span><span class="op">{3,}</span><span class="dv">\b</span><span class="vs">'</span>,max_df<span class="op">=</span><span class="fl">0.85</span>,min_df<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    tfidf_matrix <span class="op">=</span> vectorizer.fit_transform(corpus)</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    similarity_matrix <span class="op">=</span> cosine_similarity(tfidf_matrix)</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># network graph </span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> nx.Graph()</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    num_files <span class="op">=</span> <span class="bu">len</span>(file_paths)</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_files): </span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        G.add_node(file_paths[i])</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i <span class="op">+</span> <span class="dv">1</span>, num_files): </span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>            weight <span class="op">=</span> similarity_matrix[i, j]</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                <span class="co"># file_paths.append(file_path.name) # store filename as node</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                match <span class="op">=</span> re.search(<span class="vs">r"</span><span class="dv">\d</span><span class="op">+</span><span class="vs">"</span>, file_path.name)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> match:</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>                    file_number <span class="op">=</span> match.group()</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>                <span class="cf">else</span>:</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                    file_number <span class="op">=</span> file_path.stem</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>                file_paths.append(file_number)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e: </span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"skipping file </span><span class="sc">{</span>file_path<span class="sc">.</span>name<span class="sc">}</span><span class="ss"> : </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> corpus: </span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">' no valid .txt files found'</span>)</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {}, nx.Graph()</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># vectorize text and compare pairwaire similarity </span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    custom_stops <span class="op">=</span> <span class="bu">list</span>(TfidfVectorizer(stop_words<span class="op">=</span><span class="st">'english'</span>).get_stop_words()) <span class="op">+</span> [<span class="st">'section'</span>, <span class="st">'shall'</span>, <span class="st">'use'</span>, <span class="st">'b'</span>, <span class="st">' c'</span>]</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    vectorizer <span class="op">=</span> TfidfVectorizer(stop_words<span class="op">=</span><span class="st">'english'</span>,token_pattern<span class="op">=</span><span class="vs">r'</span><span class="fu">(?u)</span><span class="dv">\b</span><span class="pp">[a-zA-Z]</span><span class="op">{3,}</span><span class="dv">\b</span><span class="vs">'</span>,max_df<span class="op">=</span><span class="fl">0.85</span>,min_df<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    tfidf_matrix <span class="op">=</span> vectorizer.fit_transform(corpus)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    similarity_matrix <span class="op">=</span> cosine_similarity(tfidf_matrix)</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># network graph </span></span>
 <span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>                <span class="co"># similarity threshold</span></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> weight <span class="op">&gt;</span> similarity_threshold:</span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>                G.add_edge(file_paths[i], file_paths[j], weight <span class="op">=</span> weight)</span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># lovain algo — returns {filename: community_id}</span></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    communities <span class="op">=</span> nx.community.louvain_communities(G, weight <span class="op">=</span> <span class="st">'weight'</span>, resolution<span class="op">=</span><span class="fl">2.5</span>)</span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    community_assignment <span class="op">=</span> {}</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> community_id, node_set <span class="kw">in</span> <span class="bu">enumerate</span>(communities):</span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> node <span class="kw">in</span> node_set:</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>            community_assignment[node] <span class="op">=</span> community_id</span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    community_assignment <span class="op">=</span> {}</span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> community_id, node_set <span class="kw">in</span> <span class="bu">enumerate</span>(communities): </span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> node <span class="kw">in</span> node_set:</span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>            community_assignment[node] <span class="op">=</span> community_id</span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"processed </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss"> files into </span><span class="sc">{</span><span class="bu">len</span>(communities)<span class="sc">}</span><span class="ss"> distinct communities."</span>)</span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> community_assignment, G, corpus, file_paths</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> nx.Graph()</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    num_files <span class="op">=</span> <span class="bu">len</span>(file_paths)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_files): </span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>        G.add_node(file_paths[i])</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i <span class="op">+</span> <span class="dv">1</span>, num_files): </span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>            weight <span class="op">=</span> similarity_matrix[i, j]</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>                <span class="co"># similarity threshold</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> weight <span class="op">&gt;</span> similarity_threshold:</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>                G.add_edge(file_paths[i], file_paths[j], weight <span class="op">=</span> weight)</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>        <span class="co"># lovain algo — returns {filename: community_id}</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    communities <span class="op">=</span> nx.community.louvain_communities(G, weight <span class="op">=</span> <span class="st">'weight'</span>, resolution<span class="op">=</span><span class="fl">2.5</span>)</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>    community_assignment <span class="op">=</span> {}</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> community_id, node_set <span class="kw">in</span> <span class="bu">enumerate</span>(communities):</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> node <span class="kw">in</span> node_set:</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>            community_assignment[node] <span class="op">=</span> community_id</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    community_assignment <span class="op">=</span> {}</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> community_id, node_set <span class="kw">in</span> <span class="bu">enumerate</span>(communities): </span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> node <span class="kw">in</span> node_set:</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>            community_assignment[node] <span class="op">=</span> community_id</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"processed </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss"> files into </span><span class="sc">{</span><span class="bu">len</span>(communities)<span class="sc">}</span><span class="ss"> distinct communities."</span>)</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> community_assignment, G, corpus, file_paths</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c9c27e51" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_file_communities(G, community_assignment, min_k_core<span class="op">=</span><span class="dv">10</span>, save_path<span class="op">=</span><span class="st">"file_network.png"</span>):</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    filters and plot network graph </span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> G.number_of_nodes() <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"the graph is empty. nothing to plot."</span>) <span class="co"># check </span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. reduce graph density </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># removes nodes with fewer than 'min_k_core' connections</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        G_filtered <span class="op">=</span> nx.k_core(G, k<span class="op">=</span>min_k_core)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> nx.NetworkXError:</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        G_filtered <span class="op">=</span> G  <span class="co"># fallback if k-core fails</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"graph too small for k-core=</span><span class="sc">{</span>min_k_core<span class="sc">}</span><span class="ss">, plotting full graph."</span>)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> G_filtered.number_of_nodes() <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"no nodes passed the k-core filter (k=</span><span class="sc">{</span>min_k_core<span class="sc">}</span><span class="ss">). plotting full graph instead."</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        G_filtered <span class="op">=</span> G</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. position nodes using a spring layout</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># k controls distance between nodes; iterations controls stabilization</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> nx.spring_layout(G_filtered, k<span class="op">=</span><span class="fl">0.3</span>, iterations<span class="op">=</span><span class="dv">50</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. map nodes to colors based on their Louvain community ID</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># default to community -1 if a node was completely filtered out of assignments</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    node_colors <span class="op">=</span> [community_assignment.get(node, <span class="op">-</span><span class="dv">1</span>) <span class="cf">for</span> node <span class="kw">in</span> G_filtered.nodes()]</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. map node sizes proportional to their connection degree</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    degrees <span class="op">=</span> <span class="bu">dict</span>(G_filtered.degree())</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    node_sizes <span class="op">=</span> [degrees[node] <span class="op">*</span> <span class="dv">10</span> <span class="cf">for</span> node <span class="kw">in</span> G_filtered.nodes()]</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 5. nraw the network </span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    nx.draw_networkx_nodes(</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        G_filtered, pos, </span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        node_size<span class="op">=</span>node_sizes, </span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        node_color<span class="op">=</span>node_colors, </span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        cmap<span class="op">=</span>plt.cm.tab20,  </span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.85</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># edges</span></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    nx.draw_networkx_edges(G_filtered, pos, alpha<span class="op">=</span><span class="fl">0.08</span>, edge_color<span class="op">=</span><span class="st">"gray"</span>)</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    nx.draw_networkx_labels(G_filtered, pos, font_size<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"File Communities (Filtered Layout: </span><span class="sc">{</span>G_filtered<span class="sc">.</span>number_of_nodes()<span class="sc">}</span><span class="ss"> Nodes)"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    plt.axis(<span class="st">"off"</span>)</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># show</span></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> save_path:</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        plt.savefig(save_path, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="768fffbd" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_file_communities(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    G,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    community_assignment,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    min_k_core<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    save_path<span class="op">=</span><span class="st">"file_network.png"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    community_legend_mapping<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""filters and plots network graph with localized community sizes and labels."""</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> G.number_of_nodes() <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"the graph is empty. Nothing to plot."</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> community_legend_mapping <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        community_legend_mapping <span class="op">=</span> {</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>: <span class="st">"0: Healthcare"</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>: <span class="st">"1: Chatbots"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="dv">2</span>: <span class="st">"2: Oversight"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="dv">3</span>: <span class="st">"3: Government - California"</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            <span class="dv">4</span>: <span class="st">"4: Privacy"</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="dv">5</span>: <span class="st">"5: Employment"</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="dv">6</span>: <span class="st">"6: Models"</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="dv">7</span>: <span class="st">"7: Commissions"</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            <span class="dv">8</span>: <span class="st">"8: Biometrics"</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>            <span class="dv">9</span>: <span class="st">"9: Risk"</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>            <span class="dv">10</span>: <span class="st">"10: Elections"</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>            <span class="dv">11</span>: <span class="st">"11: Hiring"</span>,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            <span class="dv">12</span>: <span class="st">"12: Consumer Protection"</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>            <span class="dv">13</span>: <span class="st">"13: Government - State and local"</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>            <span class="dv">14</span>: <span class="st">"14: Vehicles"</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            <span class="dv">15</span>: <span class="st">"15: Education - Higher ED"</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            <span class="dv">16</span>: <span class="st">"16: Education"</span>,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>            <span class="dv">17</span>: <span class="st">"17: Legal"</span>,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            <span class="dv">18</span>: <span class="st">"18: Tax"</span>,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>            <span class="dv">19</span>: <span class="st">"19: Welfare"</span>,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>            <span class="dv">20</span>: <span class="st">"20: Government -Federal"</span>, <span class="co"># dropped </span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="dv">21</span>: <span class="st">"21: Misc."</span>, <span class="co"># dropped </span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>            <span class="dv">22</span>: <span class="st">"22: Defense"</span>, <span class="co"># dropped</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>            <span class="dv">23</span>: <span class="st">"23: Aviation"</span>, <span class="co"># dropped </span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> community_legend_mapping <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        community_legend_mapping <span class="op">=</span> {}</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># reduce graph density</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>        G_filtered <span class="op">=</span> nx.k_core(G, k<span class="op">=</span>min_k_core)</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> nx.NetworkXError:</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>        G_filtered <span class="op">=</span> G</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"graph too small for k-core=</span><span class="sc">{</span>min_k_core<span class="sc">}</span><span class="ss">, plotting full graph."</span>)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># spring layput</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> nx.spring_layout(G_filtered, k<span class="op">=</span><span class="fl">0.3</span>, iterations<span class="op">=</span><span class="dv">50</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    filtered_communities <span class="op">=</span> <span class="bu">set</span>(</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>        community_assignment.get(node, <span class="op">-</span><span class="dv">1</span>) <span class="cf">for</span> node <span class="kw">in</span> G_filtered.nodes()</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    unique_communities <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(filtered_communities))</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    cmap <span class="op">=</span> plt.cm.get_cmap(<span class="st">"tab20"</span>, <span class="bu">max</span>(<span class="bu">len</span>(unique_communities), <span class="dv">1</span>))</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>    num_communities <span class="op">=</span> <span class="bu">max</span>(<span class="bu">len</span>(unique_communities), <span class="dv">1</span>)</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>    <span class="co"># map node size correlated with degree</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>    degrees <span class="op">=</span> <span class="bu">dict</span>(G_filtered.degree())</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, community_id <span class="kw">in</span> <span class="bu">enumerate</span>(unique_communities):</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># filter nodes in the loop</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        node_list <span class="op">=</span> [</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>            node</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> node <span class="kw">in</span> G_filtered.nodes()</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> community_assignment.get(node, <span class="op">-</span><span class="dv">1</span>) <span class="op">==</span> community_id</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>            <span class="kw">and</span> node <span class="kw">in</span> pos</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> node_list:</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>        <span class="co"># calculate sizes ONLY for the nodes in the current node_list</span></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>        node_sizes <span class="op">=</span> [degrees[node] <span class="op">*</span> <span class="dv">10</span> <span class="cf">for</span> node <span class="kw">in</span> node_list]</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>        color <span class="op">=</span> cmap(i <span class="op">/</span> num_communities)</span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Resolve legend labels</span></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> community_id <span class="kw">in</span> community_legend_mapping:</span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>            label_text <span class="op">=</span> community_legend_mapping[community_id]</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> community_id <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>:</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>            label_text <span class="op">=</span> <span class="st">"Unassigned"</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>            label_text <span class="op">=</span> <span class="ss">f"Community </span><span class="sc">{</span>community_id<span class="sc">}</span><span class="ss"> (Unknown)"</span></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>        <span class="co"># draw netowrk nodes</span></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>        nx.draw_networkx_nodes(</span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>            G_filtered,</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>            pos,</span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>            node_size<span class="op">=</span>node_sizes,</span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>            nodelist<span class="op">=</span>node_list,</span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>            node_color<span class="op">=</span>[color] <span class="op">*</span> <span class="bu">len</span>(node_list),</span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>            alpha<span class="op">=</span><span class="fl">0.85</span>,</span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span>label_text,  </span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>    <span class="co"># edges and labels </span></span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>    nx.draw_networkx_edges(G_filtered, pos, alpha<span class="op">=</span><span class="fl">0.08</span>, edge_color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>    nx.draw_networkx_labels(G_filtered, pos, font_size<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>    <span class="co"># legend placement </span></span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>    plt.legend(</span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>        scatterpoints<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>        markerscale<span class="op">=</span><span class="fl">.5</span>,</span>
+<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>        loc<span class="op">=</span><span class="st">"upper left"</span>,</span>
+<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>        bbox_to_anchor<span class="op">=</span>(</span>
+<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>            <span class="fl">1.02</span>,</span>
+<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>,</span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>        ),  </span>
+<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>        borderaxespad<span class="op">=</span><span class="dv">0</span>, </span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">9</span>,  </span>
+<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>        labelspacing<span class="op">=</span><span class="fl">0.4</span>, </span>
+<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a>    plt.title(</span>
+<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"AGORA Network Mapping (Filtered Layout: </span><span class="sc">{</span>G_filtered<span class="sc">.</span>number_of_nodes()<span class="sc">}</span><span class="ss"> Nodes)"</span>,</span>
+<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">14</span>,</span>
+<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a>    plt.axis(<span class="st">"off"</span>)</span>
+<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> save_path:</span>
+<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a>        plt.savefig(save_path, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="4244dce5" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your target directories in a list</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>target_folders <span class="op">=</span> [</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chinese law and policy"</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Multinational"</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NDAA provisionsUS federal lawsFY2026 NDAA"</span>, </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Corporate policies and commitments"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal laws"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2021 NDAA"</span>, </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2022 NDAA"</span>, </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2023 NDAA"</span>, </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2024 NDAA"</span>, </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US regulations executive orders and agency policies"</span>, </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US state and local documents"</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># run the pipeline</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>communities, G, corpus, file_paths <span class="op">=</span> map_folder_communities(target_folders, similarity_threshold<span class="op">=</span><span class="fl">0.15</span>)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span>, cid <span class="kw">in</span> communities.items():</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    groups[cid].append(<span class="bu">file</span>)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cid, files <span class="kw">in</span> groups.items():</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- Community </span><span class="sc">{</span>cid<span class="sc">}</span><span class="ss"> ---"</span>)</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(files))</span>
+<div id="494eaf8f" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>target_folders <span class="op">=</span> [</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chinese law and policy"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Multinational"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NDAA provisionsUS federal lawsFY2026 NDAA"</span>, </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Corporate policies and commitments"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal laws"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2021 NDAA"</span>, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2022 NDAA"</span>, </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2023 NDAA"</span>, </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal lawsNDAA provisionsFY2024 NDAA"</span>, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US regulations executive orders and agency policies"</span>, </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US state and local documents"</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># run the pipeline</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>communities, G, corpus, file_paths <span class="op">=</span> map_folder_communities(target_folders, similarity_threshold<span class="op">=</span><span class="fl">0.15</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span>, cid <span class="kw">in</span> communities.items():</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    groups[cid].append(<span class="bu">file</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cid, files <span class="kw">in</span> groups.items():</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- Community </span><span class="sc">{</span>cid<span class="sc">}</span><span class="ss"> ---"</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(files))</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>plot_file_communities(G, communities, min_k_core<span class="op">=</span><span class="dv">4</span>, save_path<span class="op">=</span><span class="st">"communities.png"</span>)</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>extract_community_topics(communities, corpus, file_paths, top_n<span class="op">=</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>plot_file_communities(G, communities, min_k_core<span class="op">=</span><span class="dv">4</span>, save_path<span class="op">=</span><span class="st">"communities.png"</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>extract_community_topics(communities, corpus, file_paths, top_n<span class="op">=</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>reading files from: /Users/rhea/Desktop/network_analytics/agora/Chinese law and policy
 reading files from: /Users/rhea/Desktop/network_analytics/agora/Multinational
@@ -349,402 +425,406 @@ reading files from: /Users/rhea/Desktop/network_analytics/agora/US state and loc
 processed 345 files into 24 distinct communities.
 
 --- Community 0 ---
-5010.txt
-2189.txt
-4096.txt
-379.txt
-5022.txt
-1560.txt
-1972.txt
-2145.txt
-4982.txt
-1680.txt
-247.txt
-392.txt
-290.txt
-1552.txt
-6717.txt
-1553.txt
-3147.txt
-2146.txt
-1721.txt
-4953.txt
-4862.txt
-356.txt
+356
+392
+2145
+2146
+3147
+4862
+247
+2189
+4982
+379
+1552
+4096
+1553
+5010
+5022
+1721
+6717
+290
+4953
+1680
+1560
+1972
 
 --- Community 1 ---
-6760.txt
-6730.txt
-2668.txt
-6714.txt
-6729.txt
-6697.txt
-6741.txt
-4944.txt
-5404.txt
-6732.txt
-6694.txt
-4781.txt
-2723.txt
-6728.txt
-6733.txt
-6726.txt
-3760.txt
-301.txt
-6727.txt
-2732.txt
+301
+6728
+6694
+6729
+6697
+2668
+6714
+4781
+5404
+3760
+6733
+6727
+6760
+6741
+2732
+4944
+6726
+6730
+2723
+6732
 
 --- Community 2 ---
-362.txt
-3996.txt
-293.txt
-2151.txt
+2151
+293
+3996
+362
 
 --- Community 3 ---
-390.txt
-1556.txt
-4976.txt
-2248.txt
-3111.txt
-1551.txt
-2052.txt
-4968.txt
-5006.txt
-2245.txt
-292.txt
-1558.txt
-4094.txt
-4983.txt
-4857.txt
-1719.txt
+292
+5006
+2248
+4976
+1719
+2245
+1558
+1551
+1556
+4968
+390
+2052
+4983
+4857
+3111
+4094
 
 --- Community 4 ---
-2044.txt
-2014.txt
-2034.txt
-2037.txt
-2252.txt
-2043.txt
-2010.txt
-2069.txt
-2042.txt
-2031.txt
-2012.txt
-2019.txt
-2074.txt
-210.txt
-1781.txt
-2062.txt
-2067.txt
-1426.txt
-2058.txt
-2021.txt
-2013.txt
-2247.txt
-6763.txt
-2081.txt
-2047.txt
-2035.txt
-2068.txt
-2249.txt
-4047.txt
-2009.txt
-2045.txt
-6765.txt
-2250.txt
+2068
+2062
+4047
+2009
+2031
+2019
+2043
+2250
+2034
+2013
+2047
+2021
+2074
+2037
+2058
+2247
+2010
+2069
+1781
+2067
+2045
+2042
+1426
+6765
+2012
+2081
+6763
+2252
+2014
+2249
+2044
+2035
+210
 
 --- Community 5 ---
-287.txt
-284.txt
-277.txt
-274.txt
-4897.txt
-294.txt
-4087.txt
-2002.txt
-4995.txt
-363.txt
-360.txt
-285.txt
-6713.txt
-2269.txt
-1816.txt
-1158.txt
-4867.txt
-3778.txt
-286.txt
-4970.txt
-208.txt
-278.txt
-1336.txt
-329.txt
-72.txt
-2089.txt
-299.txt
+1158
+4897
+208
+363
+72
+287
+4087
+360
+2002
+299
+277
+274
+4867
+3778
+2269
+1816
+6713
+4995
+278
+285
+1336
+286
+4970
+284
+294
+2089
+329
 
 --- Community 6 ---
-6731.txt
-365.txt
-1725.txt
-6686.txt
-3755.txt
-368.txt
-4771.txt
-6711.txt
-1531.txt
-4757.txt
-1545.txt
-2980.txt
-1768.txt
-3745.txt
-1446.txt
+4757
+368
+1545
+3745
+1531
+6686
+1768
+6731
+365
+4771
+1725
+1446
+3755
+6711
+2980
 
 --- Community 7 ---
-302.txt
-4234.txt
-2112.txt
-303.txt
-1454.txt
-4271.txt
-300.txt
-377.txt
-2198.txt
-381.txt
-311.txt
-310.txt
-374.txt
-2159.txt
-2171.txt
-376.txt
-1411.txt
-2025.txt
-1445.txt
-2111.txt
-385.txt
-1726.txt
-4322.txt
-3764.txt
-2239.txt
-4978.txt
-375.txt
-2270.txt
-1406.txt
+2270
+1411
+3764
+1726
+4234
+2159
+300
+376
+1445
+2025
+1454
+374
+385
+311
+302
+377
+310
+1406
+2198
+303
+2239
+375
+2111
+381
+4271
+2171
+4322
+2112
+4978
 
 --- Community 8 ---
-1464.txt
-380.txt
-1432.txt
-2210.txt
-2243.txt
-4713.txt
-244.txt
+1464
+244
+380
+2243
+4713
+1432
+2210
 
 --- Community 9 ---
-1830.txt
-6722.txt
-4979.txt
-6758.txt
-6691.txt
-1996.txt
-5000.txt
-6762.txt
-1829.txt
-4062.txt
-6705.txt
-6772.txt
-280.txt
-1991.txt
-5092.txt
-1993.txt
-1989.txt
-1782.txt
-6709.txt
-3772.txt
-2667.txt
-6716.txt
-6721.txt
-6723.txt
-1826.txt
-6771.txt
+1826
+280
+1782
+1996
+6691
+5092
+6723
+6762
+6705
+1830
+1993
+6758
+1989
+1991
+6716
+2667
+6722
+4979
+1829
+6771
+5000
+6709
+4062
+3772
+6721
+6772
 
 --- Community 10 ---
-1402.txt
-1460.txt
-276.txt
-1497.txt
-5256.txt
-1435.txt
-366.txt
-1485.txt
-1515.txt
-1499.txt
-1521.txt
-1431.txt
-3424.txt
-2242.txt
-1528.txt
-1734.txt
-1535.txt
-1470.txt
-3767.txt
-308.txt
-1407.txt
-1484.txt
-1507.txt
-1513.txt
-1762.txt
-2212.txt
-1519.txt
-1538.txt
-1399.txt
-1526.txt
-1500.txt
-3063.txt
-1549.txt
+1484
+1485
+1515
+1407
+1402
+1435
+3767
+308
+1513
+1734
+2242
+1507
+5256
+1499
+1521
+1431
+2212
+1538
+366
+1460
+1500
+1519
+3063
+1549
+1470
+1535
+1497
+1528
+1762
+1399
+3424
+276
+1526
 
 --- Community 11 ---
-304.txt
-2107.txt
-4809.txt
-4955.txt
-5004.txt
-314.txt
-2127.txt
+5004
+4955
+2127
+2107
+314
+304
+4809
 
 --- Community 12 ---
-357.txt
-1974.txt
-4994.txt
-4963.txt
-6684.txt
-6712.txt
-2125.txt
-2722.txt
-281.txt
+1974
+6712
+2722
+357
+6684
+4963
+281
+2125
+4994
 
 --- Community 13 ---
-1403.txt
-3364.txt
-2092.txt
-1439.txt
-3146.txt
-1417.txt
-6651.txt
-6581.txt
-371.txt
-2257.txt
-384.txt
-2070.txt
-389.txt
-1539.txt
-2050.txt
-1459.txt
-2265.txt
-1777.txt
-2066.txt
+1539
+2092
+384
+2050
+3146
+1777
+6581
+2257
+371
+3364
+2066
+1459
+2070
+1403
+2265
+6651
+1439
+389
+1417
 
 --- Community 14 ---
-1663.txt
-4992.txt
-4104.txt
-4977.txt
-4022.txt
-4717.txt
-1621.txt
-1579.txt
-1664.txt
-1588.txt
-4052.txt
-1562.txt
-1613.txt
-3844.txt
-4106.txt
-1625.txt
-4571.txt
-1658.txt
+1663
+4992
+1625
+4106
+1658
+4571
+1621
+4022
+4052
+4977
+1579
+4717
+4104
+1613
+1664
+1562
+1588
+3844
 
 --- Community 15 ---
-3847.txt
-6318.txt
-1774.txt
-2121.txt
+6318
+1774
+2121
+3847
 
 --- Community 16 ---
-1728.txt
-1766.txt
-1716.txt
-2264.txt
-6685.txt
-2117.txt
-1761.txt
-1715.txt
-1481.txt
-1759.txt
-1468.txt
-1779.txt
-1775.txt
-1769.txt
-1760.txt
-1730.txt
-1554.txt
-1420.txt
-1778.txt
-1550.txt
+1420
+1550
+2117
+6685
+1779
+1775
+1554
+1769
+1761
+1760
+1481
+1715
+1716
+1730
+1728
+1778
+1468
+1766
+2264
+1759
 
 --- Community 17 ---
-1447.txt
+1447
 
 --- Community 18 ---
-2262.txt
-367.txt
-1434.txt
+2262
+367
+1434
 
 --- Community 19 ---
-6320.txt
-1537.txt
-1544.txt
-1501.txt
-1437.txt
-1496.txt
-1536.txt
-4770.txt
-5012.txt
-6693.txt
-1532.txt
-1555.txt
-4987.txt
-1517.txt
-1510.txt
-1444.txt
-2120.txt
-1416.txt
-4951.txt
-1527.txt
-1543.txt
-1765.txt
-309.txt
-1508.txt
-1525.txt
-1505.txt
-4523.txt
-1504.txt
+1532
+1536
+1555
+1765
+1525
+4951
+1537
+6320
+6693
+1527
+1508
+4987
+1510
+1496
+1504
+1505
+2120
+1437
+5012
+1444
+309
+4523
+1543
+1544
+1517
+1501
+1416
+4770
 
 --- Community 20 ---
-1764.txt
+1764
 
 --- Community 21 ---
-1714.txt
+1714
 
 --- Community 22 ---
-1729.txt
+1729
 
 --- Community 23 ---
-6322.txt</code></pre>
+6322</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/5v/prfffqm9421dxy2dzj6_hrj80000gp/T/ipykernel_46011/2895504393.py:59: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+  cmap = plt.cm.get_cmap("tab20", max(len(unique_communities), 1))</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="network_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="network_files/figure-html/cell-6-output-3.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -800,12 +880,12 @@ community 23 (1 files)
 top keywords: aircraft, airport, unmanned, mobility, air, equipment, ordinance, operator, advanced, controllers, takeoff, payload, means, electric, landing, political, navigation, including, subdivision, rule, unpiloted, uncontrolled, autopilot, term, defined, law, operated, communications, transports, vertical</code></pre>
 </div>
 </div>
-<div id="d33a8504" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if 'G' in locals():</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.clear()</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     del G</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>density <span class="op">=</span> nx.density(G)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Graph Density: </span><span class="sc">{</span>density<span class="sc">:.4f}</span><span class="ss">"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="145d6eee" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if 'G' in locals():</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.clear()</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     del G</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>density <span class="op">=</span> nx.density(G)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Graph Density: </span><span class="sc">{</span>density<span class="sc">:.4f}</span><span class="ss">"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Graph Density: 0.0847</code></pre>
 </div>
