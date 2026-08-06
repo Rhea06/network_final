@@ -98,86 +98,83 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="502a8b57" class="cell" data-execution_count="1">
+<div id="4170a031" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imports</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx </span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># from nltk.tokenize import word_tokenize</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># from nltk.tokenize import word_tokenize</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>, quiet<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>True</code></pre>
 </div>
 </div>
-<div id="2820ddf1" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_community_topics(community_assignment, corpus, file_paths, top_n<span class="op">=</span><span class="dv">5</span>):</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""aggregates text by Louvain community and extracts the most distinctive keywords</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    using TF-IDF.</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  txt data by community ids </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    community_texts <span class="op">=</span> {}</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> text, file_name <span class="kw">in</span> <span class="bu">zip</span>(corpus, file_paths):</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># find which community this file belongs to</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        comm_id <span class="op">=</span> community_assignment.get(file_name)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> comm_id <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> comm_id <span class="kw">not</span> <span class="kw">in</span> community_texts:</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                community_texts[comm_id] <span class="op">=</span> []</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            community_texts[comm_id].append(text)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># combine all into a block </span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    ordered_communities <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(community_texts.keys()))</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    combined_corpus <span class="op">=</span> [</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">" "</span>.join(community_texts[cid]) <span class="cf">for</span> cid <span class="kw">in</span> ordered_communities</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># find unique clusters </span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    custom_stops <span class="op">=</span> (</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">list</span>(TfidfVectorizer(stop_words<span class="op">=</span><span class="st">"english"</span>).get_stop_words())</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> [<span class="st">"section"</span>, <span class="st">"shall"</span>, <span class="st">"use"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>]</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    vectorizer <span class="op">=</span> TfidfVectorizer(</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        stop_words<span class="op">=</span>custom_stops, token_pattern<span class="op">=</span><span class="vs">r"</span><span class="fu">(?u)</span><span class="dv">\b</span><span class="pp">[a-zA-Z]</span><span class="op">{3,}</span><span class="dv">\b</span><span class="vs">"</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    tfidf_matrix <span class="op">=</span> vectorizer.fit_transform(combined_corpus)</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    feature_names <span class="op">=</span> np.array(vectorizer.get_feature_names_out())</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print defining terms</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"community determinants"</span>)</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idx, comm_id <span class="kw">in</span> <span class="bu">enumerate</span>(ordered_communities):</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        row <span class="op">=</span> tfidf_matrix.getrow(idx).toarray()[<span class="dv">0</span>]</span>
+<div id="bcd9e158" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_community_topics(community_assignment, corpus, file_paths, top_n<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""aggregates text by Louvain community and extracts the most distinctive keywords</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">    using TF-IDF.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  txt data by community ids </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    community_texts <span class="op">=</span> {}</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> text, file_name <span class="kw">in</span> <span class="bu">zip</span>(corpus, file_paths):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># find which community this file belongs to</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        comm_id <span class="op">=</span> community_assignment.get(file_name)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> comm_id <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> comm_id <span class="kw">not</span> <span class="kw">in</span> community_texts:</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                community_texts[comm_id] <span class="op">=</span> []</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>            community_texts[comm_id].append(text)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># combine all into a block </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    ordered_communities <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(community_texts.keys()))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    combined_corpus <span class="op">=</span> [</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">" "</span>.join(community_texts[cid]) <span class="cf">for</span> cid <span class="kw">in</span> ordered_communities</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># find unique clusters </span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    custom_stops <span class="op">=</span> (</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">list</span>(TfidfVectorizer(stop_words<span class="op">=</span><span class="st">"english"</span>).get_stop_words())</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> [<span class="st">"section"</span>, <span class="st">"shall"</span>, <span class="st">"use"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>]</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    vectorizer <span class="op">=</span> TfidfVectorizer(</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        stop_words<span class="op">=</span>custom_stops, token_pattern<span class="op">=</span><span class="vs">r"</span><span class="fu">(?u)</span><span class="dv">\b</span><span class="pp">[a-zA-Z]</span><span class="op">{3,}</span><span class="dv">\b</span><span class="vs">"</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    tfidf_matrix <span class="op">=</span> vectorizer.fit_transform(combined_corpus)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    feature_names <span class="op">=</span> np.array(vectorizer.get_feature_names_out())</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print defining terms</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"community determinants"</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idx, comm_id <span class="kw">in</span> <span class="bu">enumerate</span>(ordered_communities):</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        row <span class="op">=</span> tfidf_matrix.getrow(idx).toarray()[<span class="dv">0</span>]</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        top_indices <span class="op">=</span> np.argsort(row)[::<span class="op">-</span><span class="dv">1</span>][:top_n]</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        top_keywords <span class="op">=</span> feature_names[top_indices]</span>
 <span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        top_indices <span class="op">=</span> np.argsort(row)[::<span class="op">-</span><span class="dv">1</span>][:top_n]</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        top_keywords <span class="op">=</span> feature_names[top_indices]</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        file_count <span class="op">=</span> <span class="bu">len</span>(community_texts[comm_id])</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"community </span><span class="sc">{</span>comm_id<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>file_count<span class="sc">}</span><span class="ss"> files)"</span>)</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"top keywords: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(top_keywords)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        file_count <span class="op">=</span> <span class="bu">len</span>(community_texts[comm_id])</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"community </span><span class="sc">{</span>comm_id<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>file_count<span class="sc">}</span><span class="ss"> files)"</span>)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"top keywords: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(top_keywords)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="06de683f" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map_folder_communities(dir_paths_list, similarity_threshold <span class="op">=</span> <span class="fl">0.15</span>): </span>
+<div id="95423506" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map_folder_communities(dir_paths_list, similarity_threshold <span class="op">=</span> <span class="fl">0.25</span>): </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    loads txt files, cacluates similarity between them, and identifies file communities using the loubain algorithim</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    loads txt files, cacluates similarity between them, and identifies file communities using the louvain algorithim</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    file_paths <span class="op">=</span> []</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    corpus <span class="op">=</span> []</span>
@@ -251,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"processed </span><span class="sc">{</span><span class="bu">len</span>(file_paths)<span class="sc">}</span><span class="ss"> files into </span><span class="sc">{</span><span class="bu">len</span>(communities)<span class="sc">}</span><span class="ss"> distinct communities."</span>)</span>
 <span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> community_assignment, G, corpus, file_paths</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3df48af7" class="cell" data-execution_count="4">
+<div id="68510126" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_file_communities(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    G,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    community_assignment,</span>
@@ -268,7 +265,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>: <span class="st">"Healthcare"</span>,</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>: <span class="st">"Chatbots"</span>,</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="dv">2</span>: <span class="st">"Oversight"</span>,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="dv">3</span>: <span class="st">"Government - California"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="dv">3</span>: <span class="st">"Government - Other"</span>,</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            <span class="dv">4</span>: <span class="st">"Privacy"</span>,</span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="dv">5</span>: <span class="st">"Employment"</span>,</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="dv">6</span>: <span class="st">"Models"</span>,</span>
@@ -294,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> community_legend_mapping <span class="kw">is</span> <span class="va">None</span>:</span>
 <span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        community_legend_mapping <span class="op">=</span> {}</span>
 <span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
 <span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># reduce graph density</span></span>
 <span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
@@ -304,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"graph too small for k-core=</span><span class="sc">{</span>min_k_core<span class="sc">}</span><span class="ss">, plotting full graph."</span>)</span>
 <span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># spring layput</span></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> nx.spring_layout(G_filtered, k<span class="op">=</span><span class="fl">0.3</span>, iterations<span class="op">=</span><span class="dv">50</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> nx.spring_layout(G_filtered, k<span class="op">=</span><span class="fl">0.5</span>, iterations<span class="op">=</span><span class="dv">50</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
 <span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    filtered_communities <span class="op">=</span> <span class="bu">set</span>(</span>
 <span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>        community_assignment.get(node, <span class="op">-</span><span class="dv">1</span>) <span class="cf">for</span> node <span class="kw">in</span> G_filtered.nodes()</span>
@@ -364,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>,</span>
 <span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>        ),  </span>
 <span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>        borderaxespad<span class="op">=</span><span class="dv">0</span>, </span>
-<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">9</span>,  </span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">10</span>,  </span>
 <span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>        labelspacing<span class="op">=</span><span class="fl">0.4</span>, </span>
 <span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a></span>
@@ -379,7 +376,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a>        plt.savefig(save_path, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
 <span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="34afce5b" class="cell" data-execution_count="5">
+<div id="3684bfc9" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>target_folders <span class="op">=</span> [</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chinese law and policy"</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Multinational"</span>,</span>
@@ -395,7 +392,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>]</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># run the pipeline</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>communities, G, corpus, file_paths <span class="op">=</span> map_folder_communities(target_folders, similarity_threshold<span class="op">=</span><span class="fl">0.15</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>communities, G, corpus, file_paths <span class="op">=</span> map_folder_communities(target_folders, similarity_threshold<span class="op">=</span><span class="fl">0.10</span>)</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
@@ -422,403 +419,407 @@ reading files from: /Users/rhea/Desktop/network_analytics/agora/US federal lawsN
 reading files from: /Users/rhea/Desktop/network_analytics/agora/US federal lawsNDAA provisionsFY2024 NDAA
 reading files from: /Users/rhea/Desktop/network_analytics/agora/US regulations executive orders and agency policies
 reading files from: /Users/rhea/Desktop/network_analytics/agora/US state and local documents
-processed 345 files into 24 distinct communities.
+processed 345 files into 26 distinct communities.
 
 --- Community 0 ---
-4862
 5022
-3147
-290
 5010
-2146
-6717
-2189
+4781
 1680
-1560
-2145
-1721
-1972
-4953
-4096
-379
-247
-356
-4982
-1552
 1553
+2146
+4867
+4953
+2145
+1552
+1972
+6717
+379
+1721
+290
+4862
+247
+4982
+356
+2189
 392
+4096
+3147
 
 --- Community 1 ---
-2732
-6727
-6729
-6741
-3760
-2723
-6730
-6714
-6728
-4781
-4944
-6694
-6732
-5404
-2668
-6697
-6726
-6760
-6733
-301
-
---- Community 2 ---
-293
-362
-2151
-3996
-
---- Community 3 ---
-1556
-1551
-4983
-2248
-4976
-2052
-3111
-5006
-2245
-390
-1558
-292
-1719
-4968
-4857
-4094
-
---- Community 4 ---
-2009
-2031
-2081
-2042
-2249
-2014
-2021
-2035
-1426
-2037
-2074
-2047
-2250
-2044
-2252
-2013
-210
-2045
-6765
-1781
-2247
-2067
-4047
-6763
-2010
-2058
-2069
-2062
-2043
-2012
-2034
-2068
-2019
-
---- Community 5 ---
-4867
-1816
-299
-2002
-287
-1158
-278
-4970
-4087
-2269
-208
-6713
-363
-284
-4897
-294
-286
-274
-1336
-3778
-285
-2089
-72
-360
-4995
-329
-277
-
---- Community 6 ---
-1545
-3745
-2980
-365
-1446
-1531
-1768
-4771
 4757
 6731
-3755
-368
 1725
-6686
+1447
+
+--- Community 2 ---
+2210
+1432
+1768
+
+--- Community 3 ---
+3755
+1545
 6711
+6686
+365
+2980
+368
+
+--- Community 4 ---
+1526
+6320
+1431
+1560
+1416
+1555
+1517
+1515
+4951
+1435
+1507
+1762
+1521
+1525
+1549
+4987
+366
+1536
+2212
+1437
+1528
+1734
+1537
+1532
+3424
+1543
+5012
+3063
+1535
+1510
+1531
+2120
+1513
+4770
+1550
+276
+1538
+1484
+1527
+1508
+1519
+4523
+1402
+1501
+1500
+309
+1460
+1444
+1505
+6693
+5256
+3767
+1496
+1485
+1399
+1765
+2242
+1407
+1497
+1504
+1470
+308
+1499
+1544
+
+--- Community 5 ---
+6728
+6694
+3745
+301
+3760
+6730
+6729
+2732
+6732
+6727
+6733
+6726
+2723
+4944
+6741
+6714
+5404
+6760
+2668
+6697
+
+--- Community 6 ---
+5006
+4094
+4955
+1558
+1551
 
 --- Community 7 ---
-377
-2171
-4271
-1406
-2239
-300
-1445
-303
-374
-302
-2111
-311
-310
-4322
-376
-2198
-2270
-385
-4234
-375
-2112
-2159
-2025
-1726
-1411
-1454
-4978
-381
-3764
+244
+1464
+1426
 
 --- Community 8 ---
-380
-1464
-4713
-1432
-2210
-244
+1336
+4087
+284
+4995
+4897
+6713
+2002
+4970
 2243
 
 --- Community 9 ---
-6722
-4979
-6771
-6705
-1996
-1991
-1989
-1993
-6721
-5092
-6709
-6723
-1826
-3772
-6691
-6716
-1782
-1829
-280
-5000
-6758
-2667
-6772
-6762
-4062
-1830
+4809
 
 --- Community 10 ---
-308
-366
-1431
-1470
-1535
-1484
-1528
-1521
-1526
-1549
-5256
-276
-1402
-1499
-1460
-1519
-1762
-2212
-1500
-1435
-2242
-1513
-1407
-1399
-1538
-3424
-3063
-3767
-1734
-1485
-1497
-1515
-1507
+72
+278
+3778
+380
+363
+2269
+360
+294
+274
+286
+1816
+285
+277
+1158
+2089
+2171
+287
+208
+329
 
 --- Community 11 ---
-2127
-5004
-2107
-4955
-304
-4809
-314
-
---- Community 12 ---
-2125
-4994
-1974
-6712
-281
-6684
-2722
-4963
-357
-
---- Community 13 ---
-371
-1539
-1459
-3146
-6651
-2092
-1417
-1777
-1439
-2066
-2257
-2050
-3364
-384
-2070
-389
-6581
-2265
-1403
-
---- Community 14 ---
-4992
-3844
-1562
-1658
-1663
-4977
-4052
-1625
-4571
-1621
-4104
-1664
-1579
-4106
-1613
-4717
-1588
-4022
-
---- Community 15 ---
-3847
-1774
-6318
-2121
-
---- Community 16 ---
 1760
-1779
 1761
-1715
-1420
-1728
-1778
-1468
-1775
-6685
-1769
-1759
-2117
-1730
-1766
-1481
-1716
-1550
 2264
 1554
+1730
+1759
+1778
+1481
+6685
+1446
+
+--- Community 12 ---
+4047
+293
+3996
+1996
+2151
+
+--- Community 13 ---
+385
+1445
+1774
+4234
+300
+375
+1406
+3847
+2025
+310
+2111
+2198
+2112
+1729
+2270
+1454
+302
+4978
+4322
+1411
+381
+2121
+377
+374
+311
+1714
+303
+2159
+2239
+
+--- Community 14 ---
+4713
+292
+390
+1719
+2052
+4983
+1556
+4857
+
+--- Community 15 ---
+3364
+389
+1459
+2066
+2092
+1417
+1539
+1439
+371
+2050
+2257
+1403
+3146
+384
+2265
+1777
+6651
+2070
+
+--- Community 16 ---
+3111
+5004
+4771
+4968
 
 --- Community 17 ---
-1447
+1830
+4062
+1993
+5000
+6758
+6691
+1991
+6762
+280
+6721
+5092
+4979
+1782
+3772
+1829
+6771
+1826
+4976
+6723
+6772
+6709
+6722
+6705
+6716
+2667
 
 --- Community 18 ---
-1434
-367
-2262
+2014
+2042
+2044
+2074
+2249
+1781
+2247
+6763
+6765
+2045
+2069
+2252
+2062
+2047
+2037
+2058
+2021
+2031
+2034
+2043
+2013
+2035
+2067
+2250
+2009
+2068
+2010
+2019
+2012
+2248
+2081
+210
 
 --- Community 19 ---
-1496
-1501
-6693
-1505
-1504
-1537
-1544
-1416
-1543
-1765
-4987
-1555
-1536
-4770
-1532
-1527
-2120
-1525
-1510
-5012
-6320
-309
-1437
-4951
-1508
-4523
-1444
-1517
+4963
+357
+1989
+367
+1974
+2722
+6712
+4994
+1434
+6684
+2262
+281
+2125
 
 --- Community 20 ---
-1764
+362
 
 --- Community 21 ---
-1714
+1715
+1775
+2117
+1716
+1468
+6581
+2245
+1769
+1728
+299
+1766
+1420
+1779
 
 --- Community 22 ---
-1729
+304
+2127
+314
+4271
+376
+1726
+3764
+2107
 
 --- Community 23 ---
+1579
+1621
+1613
+1663
+4992
+1625
+1588
+1562
+4104
+4717
+4022
+1664
+4106
+4977
+1658
+6318
+4571
+3844
+4052
+
+--- Community 24 ---
+1764
+
+--- Community 25 ---
 6322</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/5v/prfffqm9421dxy2dzj6_hrj80000gp/T/ipykernel_46712/986869743.py:59: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+<pre><code>/var/folders/5v/prfffqm9421dxy2dzj6_hrj80000gp/T/ipykernel_58043/4115375340.py:59: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
   cmap = plt.cm.get_cmap("tab20", max(len(unique_communities), 1))</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -830,64 +831,246 @@ processed 345 files into 24 distinct communities.
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>community determinants
-community 0 (22 files)
-top keywords: health, care, patient, services, insurer, medical, provider, plan, clinical, enrollee, utilization, artificial, intelligence, licensed, information, review, lenses, code, act, providers, eye, mental, physician, department, person, retrospectively, nursing, necessity, prescription, means
-community 1 (20 files)
-top keywords: companion, chatbot, user, operator, minor, conversational, artificial, intelligence, account, means, holder, ideation, act, service, child, harm, suicidal, crisis, violation, information, mental, platform, chapter, human, suicide, entity, person, health, interactions, emotional
-community 2 (4 files)
-top keywords: automated, artificial, intelligence, officer, state, systems, agency, legislature, board, pending, technology, implementation, decision, procedures, appointed, data, including, individual, office, rights, information, task, pursuant, means, public, limited, person, principles, ensuring, members
-community 3 (16 files)
-top keywords: genai, agency, government, state, provenance, california, content, information, technology, data, department, artificial, intelligence, services, public, cybersecurity, tool, means, following, including, office, subsidy, platform, provider, digital, covered, agencies, auditor, training, code
-community 4 (33 files)
-top keywords: data, city, generative, information, surveillance, technology, state, tools, systems, policy, privacy, public, security, intelligence, used, agencies, responsible, ensure, chatgpt, content, agency, guidelines, artificial, employees, ethical, slmpd, department, technologies, using, potential
-community 5 (27 files)
-top keywords: employer, decision, automated, ads, employment, data, worker, tool, employee, making, state, agency, aedt, information, including, department, vendor, systems, impact, means, work, accommodation, workers, subdivision, notice, public, violation, used, following, artificial
-community 6 (15 files)
-top keywords: artificial, intelligence, generative, datasets, data, model, developer, chapter, service, occupation, means, consumer, act, used, person, general, violation, purpose, division, state, information, law, following, include, tennessee, human, including, individual, points, title
-community 7 (29 files)
-top keywords: intelligence, artificial, state, commission, committee, technology, appointed, office, members, automation, chief, chair, senate, officer, department, council, resolved, workforce, alabama, house, robotics, minority, information, systems, laboratory, development, study, governor, report, act
-community 8 (7 files)
-top keywords: state, facial, department, recognition, artificial, agency, intelligence, systems, general, individual, subsection, impact, procedures, government, including, limited, human, cognitive, comparison, act, said, unlawful, decision, group, policies, chapter, subdivision, cognizance, data, disparate
-community 9 (26 files)
-top keywords: deployer, developer, frontier, risk, decision, intelligence, artificial, high, information, consequential, act, business, automated, consumer, disclosure, subsection, general, pursuant, discrimination, assessment, attorney, large, covered, algorithmic, model, state, means, decisionmaking, law, including
-community 10 (33 files)
-top keywords: media, election, candidate, person, advertisement, ballot, communication, audio, campaign, content, video, means, disclaimer, political, state, synthetic, violation, elections, individual, image, deceptive, materially, subsection, depicted, act, television, station, artificial, action, intelligence
-community 11 (7 files)
-top keywords: artificial, intelligence, agency, person, state, sec, systems, department, chapter, applicant, bot, information, program, general, interview, council, report, attorney, violation, code, data, applicants, law, subchapter, means, participant, video, texas, enforcement, biometric
-community 12 (9 files)
-top keywords: information, consumer, personal, business, pricing, data, algorithmic, means, including, person, act, consumers, price, code, insurance, covered, california, algorithm, service, opt, entity, used, purposes, attorney, systems, sources, sensitive, law, columbia, determinations
-community 13 (19 files)
-top keywords: task, force, intelligence, artificial, state, technology, member, members, appointed, data, governor, public, agency, executive, designee, systems, recommendations, genai, education, illinois, house, office, generative, including, information, general, act, representing, senate, department
-community 14 (18 files)
-top keywords: vehicle, autonomous, vehicles, driving, driver, department, motor, roads, manufacturer, public, technology, operator, regulations, equipped, collision, safety, state, pursuant, testing, subdivision, task, traffic, means, emergency, road, disengagement, highway, operation, driverless, transportation
-community 15 (4 files)
-top keywords: deep, technology, board, council, advisory, funding, program, talent, utah, proposal, initiative, graduates, participating, education, members, higher, programs, appointed, university, provide, state, subsection, described, appropriations, member, subcommittee, institution, following, leads, iii
-community 16 (20 files)
-top keywords: school, pupils, fund, educators, michigan, virtual, program, intelligence, artificial, wyoming, state, education, appropriation, grant, university, dollars, funds, schools, pupil, pretrial, public, pilot, thousand, learning, department, fiscal, district, research, sme, purpose
-community 17 (1 files)
-top keywords: personhood, means, legal, water, land, accumulation, state, body, object, political, entity, subdivision, solid, species, static, gases, taxonomic, subsurface, adjudicatory, terrestrial, hydrological, appurtenance, sapiens, plant, homo, astronomical, atmospheric, enacted, obligations, governmental
-community 18 (3 files)
-top keywords: tax, credits, business, eligible, credit, jersey, new, authority, program, project, awarded, film, investment, year, period, act, pursuant, qualified, sections, projects, taxpayer, production, agreement, studio, aspire, certificate, lease, means, capital, time
-community 19 (28 files)
-top keywords: person, intimate, image, depiction, depicted, individual, sexual, offense, means, defendant, minor, photograph, act, child, digital, computer, deceased, dissemination, conduct, years, court, material, visual, personality, digitization, victim, matter, age, law, including
+community 0 (23 files)
+top keywords: health, care, patient, insurer, services, medical, provider, plan, enrollee, clinical, mental, licensed, utilization, review, artificial, intelligence, act, lenses, code, information, eye, physician, providers, retrospectively, nursing, chapter, necessity, prescription, means, concurrent
+community 1 (4 files)
+top keywords: occupation, artificial, intelligence, division, generative, violation, person, chapter, consumer, utah, state, regulated, individual, means, effective, court, interaction, noncertified, services, human, interacting, personhood, violative, act, advice, annotated, protection, enacted, law, provision
+community 2 (3 files)
+top keywords: chapter, state, systems, appears, agencies, excepted, department, effective, implemented, recommendation, date, following, procedures, information, technology, newly, relative, decision, human, compliance, circumstances, provisions, prohibited, person, agency, rsa, iii, used, removed, invalid
+community 3 (7 files)
+top keywords: datasets, artificial, intelligence, generative, data, developer, model, service, purpose, used, points, general, include, chapter, information, company, means, train, synthetic, including, following, act, intended, purposes, modification, security, consumer, new, types, public
+community 4 (64 files)
+top keywords: person, depicted, image, depiction, intimate, individual, media, sexual, election, means, offense, minor, defendant, candidate, advertisement, digital, act, state, communication, violation, photograph, court, visual, computer, subsection, ballot, audio, depicts, digitization, campaign
+community 5 (20 files)
+top keywords: companion, operator, chatbot, user, minor, conversational, account, artificial, intelligence, holder, means, ideation, service, child, suicidal, crisis, harm, platform, entity, suicide, self, emotional, violation, parent, interactions, information, human, person, reasonable, age
+community 6 (5 files)
+top keywords: provenance, content, subsidy, platform, data, provider, digital, genai, means, warehouse, user, device, tool, generative, covered, following, bot, online, code, economic, information, application, synthetic, california, person, service, development, chapter, including, capture
+community 7 (3 files)
+top keywords: artificial, general, intelligence, department, said, procedures, cognizance, subsection, working, policies, impact, subdivision, limited, disparate, group, including, unlawful, cognitive, designee, like, pursuant, subparagraph, perception, connecticut, appointed, act, state, standing, learning, matters
+community 8 (9 files)
+top keywords: employer, ads, worker, employment, data, employee, aedt, vendor, workers, department, notice, work, workplace, means, including, monitoring, accommodation, childbirth, decision, agency, job, violation, state, labor, electronic, aia, following, pregnancy, audit, conditions
+community 9 (1 files)
+top keywords: artificial, intelligence, agency, state, person, chapter, council, sec, systems, program, department, violation, attorney, information, general, participant, subchapter, texas, code, biometric, applicable, controller, public, sandbox, individual, extent, resources, including, business, insurance
+community 10 (19 files)
+top keywords: decision, automated, tool, making, state, employment, systems, lad, information, tools, agency, data, impact, including, artificial, intelligence, public, law, used, new, children, discrimination, algorithmic, human, technology, subdivision, individual, protected, existing, candidate
+community 11 (10 files)
+top keywords: school, pupils, educators, michigan, virtual, education, intelligence, artificial, schools, pupil, dollars, public, thousand, district, learning, charter, pilot, roads, highways, educational, state, teaching, university, fiscal, working, course, instruction, districts, seventy, courses
+community 12 (5 files)
+top keywords: systems, oklahoma, codified, numbering, reads, duplication, intelligence, council, law, new, artificial, deployers, principles, values, rights, state, deployment, risk, data, legislature, california, resolved, created, public, statutes, follows, biden, human, asilomar, civil
+community 13 (29 files)
+top keywords: intelligence, artificial, state, commission, council, technology, deep, appointed, committee, advisory, members, automation, chair, senate, board, resolved, workforce, robotics, university, alabama, minority, house, education, member, designee, development, study, program, ftes, funding
+community 14 (8 files)
+top keywords: government, genai, california, state, agency, cybersecurity, department, technology, facial, information, intelligence, artificial, services, recognition, training, public, comparison, operations, entity, cyber, including, integration, playbook, database, office, image, agencies, center, law, employees
+community 15 (18 files)
+top keywords: force, task, artificial, intelligence, state, member, technology, appointed, members, governor, public, data, designee, education, agency, executive, genai, illinois, house, generative, recommendations, systems, senate, office, serve, chair, information, report, including, representatives
+community 16 (4 files)
+top keywords: agency, auditor, audit, intelligence, artificial, auditee, report, enforcement, enrolled, law, tools, following, official, covered, state, pursuant, summary, means, generative, information, chapter, subdivision, draft, using, reductions, auditors, mechanism, officer, written, contracted
+community 17 (25 files)
+top keywords: deployer, developer, frontier, risk, intelligence, artificial, high, decision, consequential, information, act, pursuant, large, covered, disclosure, general, algorithmic, attorney, model, state, subsection, discrimination, means, used, automated, including, federal, assessment, person, consumer
+community 18 (32 files)
+top keywords: city, data, generative, surveillance, information, technology, state, tools, policy, systems, public, security, privacy, used, chatgpt, intelligence, responsible, agencies, agency, content, employees, technologies, ensure, slmpd, ethical, artificial, north, training, using, guidelines
+community 19 (13 files)
+top keywords: business, information, consumer, tax, personal, decisionmaking, credits, consumers, technology, credit, automated, eligible, pricing, opt, new, means, act, including, data, processing, jersey, forth, pursuant, price, subsection, person, set, algorithmic, risk, service
 community 20 (1 files)
-top keywords: mnfc, sars, rfis, number, information, law, agencies, federal, briefs, data, processed, publications, fusion, report, activities, received, names, requests, center, enforcement, superintendent, description, utilized, sarsreceived, requestsreceived, watchlist, apprehension, suspicious, terrorism, quantifiable
-community 21 (1 files)
-top keywords: ftes, iowa, positions, regents, equivalent, miscellaneous, salaries, time, following, state, university, purposes, maintenance, support, college, board, center, science, cancer, engineering, registry, initiative, ending, moneys, medicine, waterman, larned, pappajohn, biocatalysis, lettered
-community 22 (1 files)
-top keywords: firearm, microstamp, personalized, appointed, technologies, utility, fired, technology, firearms, legislative, study, special, commission, designee, member, evaluation, emerging, feasibility, chairs, representatives, house, leader, minority, microscopic, array, colonel, imprinting, imprinted, etched, members
-community 23 (1 files)
-top keywords: aircraft, airport, unmanned, mobility, air, equipment, ordinance, operator, advanced, controllers, takeoff, payload, means, electric, landing, political, navigation, including, subdivision, rule, unpiloted, uncontrolled, autopilot, term, defined, law, operated, communications, transports, vertical</code></pre>
+top keywords: automated, officer, artificial, intelligence, state, board, pending, agency, systems, implementation, technology, decision, legislature, procedures, appointed, pursuant, individual, task, information, including, force, members, means, limited, ensuring, office, later, subsection, jersey, data
+community 21 (13 files)
+top keywords: fund, appropriation, state, wyoming, grant, program, funds, pretrial, technology, intelligence, university, artificial, fiscal, department, office, project, services, innovation, sme, general, grants, purpose, talent, subtitle, maryland, industry, revolving, dollar, consolidated, information
+community 22 (8 files)
+top keywords: intelligence, artificial, state, office, laboratory, chief, officer, participant, applicant, interview, systems, data, learning, department, commissions, applicants, committee, advise, decision, director, regulatory, making, automated, technology, mitigation, agencies, boards, information, report, participation
+community 23 (19 files)
+top keywords: vehicle, autonomous, vehicles, driving, motor, driver, department, roads, manufacturer, operator, public, technology, equipped, regulations, collision, safety, pursuant, testing, state, traffic, subdivision, task, disengagement, highway, transportation, driverless, emergency, means, operation, road
+community 24 (1 files)
+top keywords: mnfc, sars, number, rfis, information, briefs, law, publications, fusion, federal, report, agencies, processed, received, activities, data, names, requests, center, superintendent, enforcement, utilized, description, requestsreceived, sarsreceived, apprehension, terrorism, watchlist, quantifiable, suspicious
+community 25 (1 files)
+top keywords: aircraft, airport, unmanned, mobility, air, equipment, operator, ordinance, advanced, takeoff, payload, controllers, electric, landing, means, political, navigation, rule, including, subdivision, term, uncontrolled, unpiloted, autopilot, defined, communications, chapter, vertical, transports, correctional</code></pre>
 </div>
 </div>
-<div id="1edf5ee3" class="cell" data-execution_count="6">
+<div id="bd18d089" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if 'G' in locals():</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.clear()</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     del G</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>density <span class="op">=</span> nx.density(G)</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Graph Density: </span><span class="sc">{</span>density<span class="sc">:.4f}</span><span class="ss">"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Graph Density: 0.0847</code></pre>
+<pre><code>Graph Density: 0.1893</code></pre>
+</div>
+</div>
+<p>CHINA US Graph:</p>
+<div id="1e383692" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>target_folders <span class="op">=</span> [</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chinese law and policy"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Multinational"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "NDAA provisionsUS federal lawsFY2026 NDAA", </span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Corporate policies and commitments"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US federal laws"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "US federal lawsNDAA provisionsFY2021 NDAA", </span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "US federal lawsNDAA provisionsFY2022 NDAA", </span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "US federal lawsNDAA provisionsFY2023 NDAA", </span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "US federal lawsNDAA provisionsFY2024 NDAA", </span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"US regulations executive orders and agency policies"</span>, </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "US state and local documents"</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co"># run the pipeline</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>communities, G, corpus, file_paths <span class="op">=</span> map_folder_communities(target_folders, similarity_threshold<span class="op">=</span><span class="fl">0.15</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span>, cid <span class="kw">in</span> communities.items():</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    groups[cid].append(<span class="bu">file</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cid, files <span class="kw">in</span> groups.items():</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- Community </span><span class="sc">{</span>cid<span class="sc">}</span><span class="ss"> ---"</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(files))</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>plot_file_communities(G, communities, min_k_core<span class="op">=</span><span class="dv">4</span>, save_path<span class="op">=</span><span class="st">"communities.png"</span>)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>extract_community_topics(communities, corpus, file_paths, top_n<span class="op">=</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>reading files from: /Users/rhea/Desktop/network_analytics/agora/Chinese law and policy
+reading files from: /Users/rhea/Desktop/network_analytics/agora/Multinational
+reading files from: /Users/rhea/Desktop/network_analytics/agora/Corporate policies and commitments
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US federal laws
+reading files from: /Users/rhea/Desktop/network_analytics/agora/US regulations executive orders and agency policies
+processed 37 files into 19 distinct communities.
+
+--- Community 0 ---
+1322
+
+--- Community 1 ---
+1018
+1955
+181
+
+--- Community 2 ---
+177
+
+--- Community 3 ---
+176
+
+--- Community 4 ---
+73
+
+--- Community 5 ---
+173
+
+--- Community 6 ---
+169
+
+--- Community 7 ---
+182
+183
+
+--- Community 8 ---
+170
+174
+178
+
+--- Community 9 ---
+180
+179
+
+--- Community 10 ---
+1187
+2273
+
+--- Community 11 ---
+2268
+1036
+1112
+1806
+2267
+1033
+1034
+1026
+1027
+
+--- Community 12 ---
+2546
+1780
+1111
+
+--- Community 13 ---
+1025
+
+--- Community 14 ---
+175
+1029
+
+--- Community 15 ---
+1021
+
+--- Community 16 ---
+168
+
+--- Community 17 ---
+1188
+
+--- Community 18 ---
+1189</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/5v/prfffqm9421dxy2dzj6_hrj80000gp/T/ipykernel_58043/4115375340.py:59: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+  cmap = plt.cm.get_cmap("tab20", max(len(unique_communities), 1))</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="network_files/figure-html/cell-8-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>community determinants
+community 0 (1 files)
+top keywords: commission, political, candidate, acting, employee, agent, behalf, fraudulently, speaking, thereof, statute, writing, misrepresent, party, technology, does, media, donations, campaign, barring, ing, election, misrepresentation, act, participating, willfully, soliciting, conspiring, developments, knowingly
+community 1 (3 files)
+top keywords: iaas, icts, transaction, foreign, secretary, provider, determination, person, reseller, cip, information, paragraph, products, cyber, account, department, malicious, means, enabled, customer, security, united, initial, covered, states, jurisdiction, model, including, adversary, written
+community 2 (1 files)
+top keywords: acoustic, device, heart, coronary, artery, disease, testing, fully, justification, sounds, described, indicator, signals, performance, patient, placement, sensor, factors, risk, algorithm, population, instructions, fulfill, using, data, acquisition, following, include, bandwidth, vibrations
+community 3 (1 files)
+top keywords: testing, device, performance, shelf, life, monitor, intravascular, leakage, sterility, bleed, catheter, demonstrate, data, safety, integrity, mechanical, conditions, performs, anticipated, components, iii, intended, bleeding, vivo, tolerance, gross, progression, histopathology, joints, unlatching
+community 4 (1 files)
+top keywords: device, gastrointestinal, lesions, detection, software, testing, performance, video, detailed, demonstrate, clinical, delay, lesion, hardware, description, standalone, read, safety, assessment, compatibility, intended, associated, statistical, performs, anticipated, follows, including, include, summary, authority
+community 5 (1 files)
+top keywords: device, autism, disorder, spectrum, pediatric, diagnosis, predictive, value, symptomology, aid, clinical, description, interpretation, assessment, positive, behavioral, intended, demonstrate, negative, detailed, specificity, sensitivity, patient, include, summary, output, cutoff, ppv, npv, classification
+community 6 (1 files)
+top keywords: device, wsi, study, image, challenging, software, pathology, intended, encountered, subsets, detailed, scanned, analytical, dataset, performance, users, studies, cases, platform, include, site, communication, relevant, used, slides, slide, likely, diagnostic, algorithm, images
+community 7 (2 files)
+top keywords: detailed, device, performance, imaging, description, image, subsets, diagnostic, intended, dataset, reader, lesions, protocols, population, confounders, cancer, test, software, results, testing, characteristics, specification, equipment, protocol, appropriate, medical, lesion, analysis, inputs, document
+community 8 (3 files)
+top keywords: data, device, output, adjunctive, assessment, sensor, patient, rate, indicator, clinical, description, intended, hardware, cardiovascular, including, software, measurement, population, acquisition, expected, measurements, validation, parameters, signal, hemodynamic, provided, impact, predictive, iii, include
+community 9 (2 files)
+top keywords: device, performance, electrocardiograph, photoplethysmograph, software, testing, counter, detection, clinical, correctly, demonstrate, algorithm, user, labeling, analyzes, outputs, analysis, understand, controls, special, interpret, include, characterization, platform, medical, seek, provide, inputs, reading, anticipated
+community 10 (2 files)
+top keywords: standard, paragraph, intervention, loinc, health, version, paragraphs, specified, standards, incorporated, codes, accordance, ibr, minimum, decision, implementation, data, adding, reference, guide, approved, coded, interventions, cda, release, revising, support, answer, enable, stu
+community 11 (9 files)
+top keywords: agencies, systems, government, data, agency, research, rights, talent, public, programs, federal, memorandum, risks, benefits, program, human, impacting, automated, workforce, hiring, hhs, access, privacy, sltt, processes, resources, development, safety, algorithmic, information
+community 12 (3 files)
+top keywords: agencies, order, american, sec, omb, united, states, heads, federal, director, national, security, technologies, days, law, economic, data, president, models, consistent, agency, appropriate, committee, development, policy, plan, privacy, executive, llms, technology
+community 13 (1 files)
+top keywords: inventor, invention, patent, inventorship, natural, uspto, person, joint, inventors, conception, application, claimed, named, inventions, contribution, patents, cfr, claim, significant, assisted, pannu, significantly, practice, duty, contributed, plant, invented, applications, court, declaration
+community 14 (2 files)
+top keywords: audience, ads, housing, consumers, digital, advertisers, service, advertisements, protected, covered, delivery, marketers, space, marketing, platforms, consumer, tools, discriminatory, advertising, act, targeting, media, person, categorization, content, particular, related, financial, target, advertiser
+community 15 (1 files)
+top keywords: nucleic, screening, framework, acids, manufacturers, acid, providers, benchtop, synthetic, socs, adhere, orders, equipment, synthesis, sequences, sequence, legitimacy, soc, customer, funding, order, hhs, federal, screen, customers, purchase, sciences, institution, research, fbi
+community 16 (1 files)
+top keywords: copyright, registration, office, authorship, work, author, generated, material, works, human, applicants, authored, application, applicant, claim, technology, register, creative, content, information, elements, containing, supplementary, created, applications, field, statement, text, authors, artist
+community 17 (1 files)
+top keywords: recipient, department, conduct, title, education, commenters, campus, program, activity, sex, occurs, occurring, harassment, authority, disciplinary, students, proposed, alleged, davis, amendments, sponsored, student, outside, asked, hostile, context, court, disagrees, programs, responsible
+community 18 (1 files)
+top keywords: fra, rail, nprm, truck, commenters, technology, industry, freight, railroad, petition, automation, research, automated, safety, rule, ptc, railroads, operations, waiver, crew, dot, trucking, aar, shift, operation, train, rulemaking, suggested, regulatory, regulations</code></pre>
+</div>
+</div>
+<div id="116f4f7c" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if 'G' in locals():</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     G.clear()</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     del G</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>density <span class="op">=</span> nx.density(G)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Graph Density: </span><span class="sc">{</span>density<span class="sc">:.4f}</span><span class="ss">"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Graph Density: 0.1727</code></pre>
 </div>
 </div>
 
