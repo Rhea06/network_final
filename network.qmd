@@ -1,6 +1,12 @@
 ---
-title: "network"
-format: html
+title: "Network final - coding"
+author: "Rhea Kumar"
+format: 
+  html: 
+    code-fold: true
+    embed-resources: true
+  pdf: 
+    code-overflow: wrap
 ---
 
 ```{python}
@@ -22,6 +28,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 import plotly.graph_objects as go
 nltk.download("punkt", quiet=True)
 nltk.download("stopwords", quiet=True)
+import networkx as nx
+import networkx.algorithms.community as nx_comm
 ```
 
 ```{python}
@@ -83,7 +91,7 @@ def extract_community_topics(community_assignment, corpus, file_paths, top_n=5):
  
 def map_folder_communities(dir_paths_list, similarity_threshold = 0.25): 
     """
-    loads txt files, cacluates similarity between them, and identifies file communities using the louvain algorithim
+    loads txt files, calculate similarity between them, and identifies file communities using the louvain algorithim
     """
     file_paths = []
     corpus = []
@@ -203,7 +211,7 @@ def plot_file_communities(
     if community_legend_mapping is None:
         community_legend_mapping = {}
 
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(12, 12))
 
     # reduce graph density
     try:
@@ -333,6 +341,15 @@ extract_community_topics(communities, corpus, file_paths, top_n=30)
 density = nx.density(G)
 print(f"Graph Density: {density:.4f}") 
 
+
+
+communities = nx_comm.greedy_modularity_communities(G)
+
+
+modularity_score = nx_comm.modularity(G, communities)
+
+print(f"Modularity: {modularity_score:.4f}")
+
 ```
 
 CHINA US Graph: 
@@ -343,7 +360,7 @@ target_folders = [
     "Chinese law and policy",
     "Multinational",
     # "NDAA provisionsUS federal lawsFY2026 NDAA", 
-    "Corporate policies and commitments",
+    # "Corporate policies and commitments",
     "US federal laws",
     # "US federal lawsNDAA provisionsFY2021 NDAA", 
     # "US federal lawsNDAA provisionsFY2022 NDAA", 
@@ -379,5 +396,16 @@ extract_community_topics(communities, corpus, file_paths, top_n=30)
 #     del G
 density = nx.density(G)
 print(f"Graph Density: {density:.4f}") 
+
+
+import networkx as nx
+import networkx.algorithms.community as nx_comm
+
+#
+communities = nx_comm.greedy_modularity_communities(G)
+
+modularity_score = nx_comm.modularity(G, communities)
+
+print(f"Modularity: {modularity_score:.4f}")
 
 ```

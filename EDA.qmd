@@ -315,6 +315,12 @@ folder_to_analyze = "Chinese law and policy"
 analysis_results_df = eda_function(folder_path=folder_to_analyze)
 ```
 
+US Federal Laws  - EDA
+```{python}
+folder_to_analyze = "US federal laws"
+analysis_results_df = eda_function(folder_path=folder_to_analyze)
+```
+
 
 Sentiment Analysis 
 
@@ -434,6 +440,8 @@ target_folder = "US regulations executive orders and agency policies"
 sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
 ```
 
+
+
 Sentiment around AI tends to be postitive in these txt files 
 
 US Federal laws — Sentiment Analysis 
@@ -462,7 +470,7 @@ US federal lawsNDAA provisionsFY2021 NDAA - Sentiment Analysis
 ```{python}
 
 target_folder = "US federal lawsNDAA provisionsFY2021 NDAA"
-
+ 
 sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
 ```
 
@@ -521,4 +529,3 @@ sentiment_results_df = sentiment_analyzer(folder_path=target_folder)
 ```
 
 Mostly postivie with 1 document with negative sentiment. 
-
