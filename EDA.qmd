@@ -1,10 +1,12 @@
 ---
-jupyter: python3
-title: "EDA for the AGORA (AI Governance and Regulatory Archive) dataset"
-format:
-  html:
-    code-fold: false
-
+title: "Network final - coding / EDA"
+author: "Rhea Kumar"
+format: 
+  html: 
+    code-fold: true
+    embed-resources: true
+  pdf: 
+    code-overflow: wrap
 ---
 
 The AGORA (AI Governance and Regulatory Archive) dataset is a living collection of AI-relevant laws, regulations, standards, and other governance documents from the United States and around the world. AGORA includes document text, metadata, summaries, and thematic tags to enable deep analysis of the global AI governance landscape.
